@@ -4,7 +4,6 @@ title: "Documenting your database with SchemaSpy"
 date: "2019-01-29"
 coverImage: "Screenshot_2019-01-29-SchemaSpy-•-Database-Documentation-Built-Easy-1.jpg"
 ---
-
 ## Why?
 
 I'm a big fan of auto generating documentation to help visualise and understand complex artefacts such as codebases. In my new workplace, we also have a large complex database and not much in the way of support for understanding it or it's history.

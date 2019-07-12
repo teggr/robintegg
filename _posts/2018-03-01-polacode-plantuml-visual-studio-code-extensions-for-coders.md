@@ -3,7 +3,6 @@ layout: post
 title: "Polacode + PlantUML - Visual Studio Code extensions for coders"
 date: "2018-03-01"
 ---
-
 ## **Polacode**
 
 The [Polacode](https://marketplace.visualstudio.com/items?itemName=pnp.polacode) extension can generate screenshots of your code in Visual Studio Code.
@@ -14,7 +13,7 @@ It's a great extension to get example code into a well formatted and nicely disp
 
 ## **PlantUML**
 
-I'm a big fan of using PlantUML to generate technical diagrams on the fly using a text based dsl. I've previously written about deploying a [PlantUML editor in a docker container](https://www.robintegg.com/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io/) and having a solution in Visual Studio Code gives me a neat offline ability to edit files too.
+I'm a big fan of using PlantUML to generate technical diagrams on the fly using a text based dsl. I've previously written about deploying a [PlantUML editor in a docker container](/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io/) and having a solution in Visual Studio Code gives me a neat offline ability to edit files too.
 
 [PlantUML ](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml#overview) is one of a number of PlantUML extensions wrappers. This one by the author [jebbs](https://marketplace.visualstudio.com/search?term=publisher%3A%22jebbs%22&target=VSCode&category=All%20categories&sortBy=Relevance) seemed to be the most downloaded which can be an indicator of a good extension. It certainly has a number of supported features including image generation and document formatting.
 

@@ -3,14 +3,13 @@ layout: post
 title: "Testing Spring Boot applications with TestContainers - Part Two"
 date: "2019-02-12"
 ---
-
-- [Part One - Data access layer integration tests](http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/)
+- [Part One - Data access layer integration tests](/2019/02/09/testing-spring-boot-applications-with-testcontainers/)
 - Part Two - Application integration tests
-- [Part Three - UI tests](https://www.robintegg.com/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three/)
+- [Part Three - UI tests](/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three/)
 
 This is the second of a short series of posts showing how the [TestContainers](https://www.testcontainers.org/) project can be leveraged to help test a [Spring Boot](https://spring.io/projects/spring-boot) application in a variety of ways.
 
-In the [first post](http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/), we concentrated on using the [TestContainers database support](https://www.testcontainers.org/modules/databases/) to ensure that our [Flyway](https://flywaydb.org/) scripts and [Spring Data JPA](https://spring.io/projects/spring-data-jpa) configuration were integrated correctly.
+In the [first post](/2019/02/09/testing-spring-boot-applications-with-testcontainers/), we concentrated on using the [TestContainers database support](https://www.testcontainers.org/modules/databases/) to ensure that our [Flyway](https://flywaydb.org/) scripts and [Spring Data JPA](https://spring.io/projects/spring-data-jpa) configuration were integrated correctly.
 
 For this second part, we will move up a gear and look to use [TestContainers](https://www.testcontainers.org/) to run a Spring Boot test that will run all our dependencies using Docker containers.
 

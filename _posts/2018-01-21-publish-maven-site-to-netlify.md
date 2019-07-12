@@ -3,7 +3,6 @@ layout: post
 title: "Publish Maven Site to Netlify"
 date: "2018-01-21"
 ---
-
 Having written a couple of posts with the [Hexo](https://hexo.io/) static site generator I wanted to start building out my site with extras such as [Pocket](https://getpocket.com/) links and details about my side Projects. Trying to extend the site has proved harder that I thought it might, so I'm going to switch over to another platform for publishing. This is likely going to be based on Spring Boot which I had previously considered writing after trying [JBake](http://jbake.org/).
 
 What I liked about Hexo originally was that I could easily publish to [Netlify](https://www.netlify.com/) out of the box. It looked like I would only be able to publish the static output as part of a build step outside of Netlify. So I started to look around for an alternative and ended up on a site called [StaticGen](https://www.staticgen.com/) which I think is produced by Netlify and lists out all their known Static Site Generators. Turns out there were plenty of Java based generators. One of them, called [Orchid](https://javaeden.github.io/Orchid/latest/OrchidCore/), had a **Deploy to Netlify** badge indicating that a Java project might be supported by Netlify, if not offically documented or easily found.

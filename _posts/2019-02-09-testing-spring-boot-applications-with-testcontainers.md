@@ -3,12 +3,11 @@ layout: post
 title: "Testing Spring Boot applications with TestContainers"
 date: "2019-02-09"
 ---
-
 This is the first of a short series of posts showing how the [TestContainers](https://www.testcontainers.org/) project can be leveraged to help test a [Spring Boot](https://spring.io/projects/spring-boot) application in a variety of ways.
 
 - Part One - Data access layer integration tests
-- [Part Two - Application integration tests](https://robintegg.com/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/)
-- [Part Three - UI Tests](https://www.robintegg.com/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three/)
+- [Part Two - Application integration tests](/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/)
+- [Part Three - UI Tests](/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three/)
 
 In this first part, we are going to concentrate on using the [TestContainers database support](https://www.testcontainers.org/modules/databases/) to ensure that our [Flyway](https://flywaydb.org/) scripts and [Spring Data JPA](https://spring.io/projects/spring-data-jpa) configuration are integrated correctly.
 
@@ -239,4 +238,4 @@ public class NotificationRepositoryTest {
 
 So at the end of this post we have successfully created a JUnit test that executes the data access layer of the application against a Postgres database running in a Docker container
 
-In the [second part](https://robintegg.com/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/), we will move up a gear and look to use [TestContainers](https://www.testcontainers.org/) to run a Spring Boot test that will run all our dependencies using Docker containers.
+In the [second part](/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/), we will move up a gear and look to use [TestContainers](https://www.testcontainers.org/) to run a Spring Boot test that will run all our dependencies using Docker containers.

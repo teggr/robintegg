@@ -3,14 +3,13 @@ layout: post
 title: "Testing Spring Boot applications with TestContainers and Selenium WebDriver - Part Three"
 date: "2019-02-24"
 ---
-
-- [Part One - Data access layer integration tests](http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/)
-- [Part Two - Application integration tests](https://www.robintegg.com/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/)
+- [Part One - Data access layer integration tests](/2019/02/09/testing-spring-boot-applications-with-testcontainers/)
+- [Part Two - Application integration tests](/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/)
 - Part Three - UI tests
 
 This is the third of a short series of posts showing how the [TestContainers](https://www.testcontainers.org/) project can be leveraged to help test a [Spring Boot](https://spring.io/projects/spring-boot) application in a variety of ways.
 
-In the [first post](http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/), we concentrated on using the [TestContainers database support](https://www.testcontainers.org/modules/databases/) and the [second post](https://www.robintegg.com/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/)  
+In the [first post](/2019/02/09/testing-spring-boot-applications-with-testcontainers/), we concentrated on using the [TestContainers database support](https://www.testcontainers.org/modules/databases/) and the [second post](/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/)  
 used [TestContainers](https://www.testcontainers.org/) to run a Spring Boot test that ran all our dependencies using Docker containers.
 
 This third post looks at the final layer - UI. We will cover using the [WebDriver Container](https://www.testcontainers.org/modules/webdriver_containers/) support to spin up the UI, run our UI test and capture the whole session in a video.

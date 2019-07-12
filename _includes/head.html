@@ -1,0 +1,24 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@{{ site.twitter_username }}">
+    <meta name="twitter:title" content="{{ page.title }}">
+    {% if page.description %}
+    <meta name="twitter:description" content="{{ page.meta_description }}">
+    {% else %}
+    <meta name="twitter:description" content="{{ page.content | strip_html | xml_escape | truncate: 200 }}">
+    {% endif %}
+    {% if page.image.thumb %}
+    <meta name="twitter:image" content="{{ site.baseurl }}{{ page.image.thumb }}">
+    {% else %}
+    <meta name="twitter:image" content="{{ site.baseurl }}{{ site.posts_default_img }}">
+    {% endif %}
+    {%- seo -%}
+    <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+    {%- feed_meta -%}
+    {%- if jekyll.environment == 'production' and site.google_analytics -%}
+        {%- include google-analytics.html -%}
+    {%- endif -%}
+</head>

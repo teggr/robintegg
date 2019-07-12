@@ -3,7 +3,6 @@ layout: post
 title: "Why does Spring Initializr set the parent pom relativePath to empty?"
 date: "2019-01-20"
 ---
-
 If, like me, you use the [https://start.spring.io/](https://start.spring.io/) web service to create your new Spring Boot projects, then you may have noticed that the pom file defined an empty relativePath element with accompanying comment.
 
 ```
