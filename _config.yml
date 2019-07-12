@@ -17,8 +17,8 @@ title: Robin Tegg
 email: robin@tegg.me.uk
 description: >- # this means to ignore newlines until "baseurl:"
   A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design. 
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/robintegg" # the subpath of your site, e.g. /blog
+url: "https://teggr.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: robintegg
 github_username:  teggr
 
