@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="https://teggr.github.io/robintegg/feed.xml" rel="self" type="application/atom+xml" /><link href="https://teggr.github.io/robintegg/" rel="alternate" type="text/html" /><updated>2019-07-12T17:05:17+01:00</updated><id>https://teggr.github.io/robintegg/feed.xml</id><title type="html">Robin Tegg</title><subtitle>A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design. </subtitle><entry><title type="html">Testing Spring Boot applications with TestContainers and Selenium WebDriver - Part Three</title><link href="https://teggr.github.io/robintegg/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three.html" rel="alternate" type="text/html" title="Testing Spring Boot applications with TestContainers and Selenium WebDriver - Part Three" /><published>2019-02-24T00:00:00+00:00</published><updated>2019-02-24T00:00:00+00:00</updated><id>https://teggr.github.io/robintegg/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three</id><content type="html" xml:base="https://teggr.github.io/robintegg/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three.html">&lt;ul&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="https://teggr.github.io/robintegg/feed.xml" rel="self" type="application/atom+xml" /><link href="https://teggr.github.io/robintegg/" rel="alternate" type="text/html" /><updated>2019-07-12T17:10:52+01:00</updated><id>https://teggr.github.io/robintegg/feed.xml</id><title type="html">Robin Tegg</title><subtitle>A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design. </subtitle><entry><title type="html">Testing Spring Boot applications with TestContainers and Selenium WebDriver - Part Three</title><link href="https://teggr.github.io/robintegg/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three.html" rel="alternate" type="text/html" title="Testing Spring Boot applications with TestContainers and Selenium WebDriver - Part Three" /><published>2019-02-24T00:00:00+00:00</published><updated>2019-02-24T00:00:00+00:00</updated><id>https://teggr.github.io/robintegg/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three</id><content type="html" xml:base="https://teggr.github.io/robintegg/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three.html">&lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/&quot;&gt;Part One - Data access layer integration tests&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.robintegg.com/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/&quot;&gt;Part Two - Application integration tests&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;Part Three - UI tests&lt;/li&gt;
@@ -15,7 +15,7 @@ used &lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt
 
 &lt;p&gt;We will continue to use the &lt;a href=&quot;https://github.com/teggr/testcontainers-demo&quot;&gt;testcontainers-demo&lt;/a&gt; application as the System under test (SUT). The application routes notification messages from a JMS Queue to a RabbitMQ exchange, storing each notification in a Postgres database. This application also provides a web interface to see a list of all the messages that are routed by the application.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/testcontainers-demo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/testcontainers-demo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;ui-tests&quot;&gt;UI tests&lt;/h2&gt;
 
@@ -58,7 +58,7 @@ String url = &quot;http://host.docker.internal:&quot; + port + &quot;/&quot;;
 
 &lt;p&gt;If this test was to fail, then the target directory would have a &lt;em&gt;*.flv&lt;/em&gt; file created for playback. This is a great feature which provides a valuable feedback mechanism for debugging broken tests. I’ve downloaded VLC to playback the captured format.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/failed-capture-video-1024x638.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/failed-capture-video-1024x638.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Because the @SpringBootTest annotation requires that the entire application is loaded, this means that our JMS and RabbitMQ auto configuration is also enabled, so for this test we also need to ensure that our other containers are running.&lt;/p&gt;
 
@@ -202,7 +202,7 @@ String url = &quot;http://host.docker.internal:&quot; + port + &quot;/&quot;;
 
 &lt;p&gt;We will continue to use the &lt;a href=&quot;https://github.com/teggr/testcontainers-demo&quot;&gt;testcontainers-demo&lt;/a&gt; application as the System under test (SUT). The application routes notification messages from a JMS Queue to a RabbitMQ exchange, storing each notification in a Postgres database. This application also provides a web interface to see a list of all the messages that are routed by the application.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/testcontainers-demo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/testcontainers-demo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;application-integration-tests&quot;&gt;Application integration tests&lt;/h2&gt;
 
@@ -396,7 +396,7 @@ public static GenericContainer&amp;lt;?&amp;gt; rabbitMQContainer = new GenericC
 
 &lt;p&gt;We will be using the &lt;a href=&quot;https://github.com/teggr/testcontainers-demo&quot;&gt;testcontainers-demo&lt;/a&gt; application as the System under test (SUT). The application routes notification messages from a JMS Queue to a RabbitMQ exchange, storing each notification in a Postgres database. This application also provides a web interface to see a list of all the messages that are routed by the application.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/testcontainers-demo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/testcontainers-demo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;what-is-testcontainers&quot;&gt;What is TestContainers?&lt;/h2&gt;
 
@@ -680,15 +680,15 @@ schemaspy.schemas=public
 
 &lt;p&gt;The docker command will output to the console whilst executing…&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/Capture-1024x773.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/Capture-1024x773.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Once complete, the HTML documentation will be available in the output directory. The HTML can be explored to see all the table information and relationships.&lt;/p&gt;
 
 &lt;p&gt;Screenshot of the output&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/Screenshot_2019-01-29-world-db-Database-1024x834.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/Screenshot_2019-01-29-world-db-Database-1024x834.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/Screenshot_2019-01-29-country-world-db-Database-631x1024.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/Screenshot_2019-01-29-country-world-db-Database-631x1024.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;further-thoughts&quot;&gt;Further thoughts&lt;/h2&gt;
 
@@ -724,7 +724,7 @@ schemaspy.schemas=public
 
 &lt;p&gt;Great, so what does that mean? It means that if you leave it out, which may be the more common approach, similar to the &lt;a href=&quot;https://spring.io/guides&quot;&gt;Spring Boot guides&lt;/a&gt;, then maven will firstly look at parent directory, fail to find the pom and then fallback to looking up in your local repo and then remote repository. Spring Initializr, by using the empty relativePath, forces maven to move straight to your local/remote repositories, so missing a step that would obviously fail.&lt;/p&gt;
 
-&lt;p&gt;So, if nothing else, I’ve learnt a little bit about maven here and perhaps helped somebody else explain why things are what they are :)&lt;/p&gt;</content><author><name></name></author><summary type="html">If, like me, you use the https://start.spring.io/ web service to create your new Spring Boot projects, then you may have noticed that the pom file defined an empty relativePath element with accompanying comment.</summary></entry><entry><title type="html">Good Read: Web Form Design by Luke Wroblewski</title><link href="https://teggr.github.io/robintegg/2018/03/03/good-read-web-form-design-by-luke-wroblewski.html" rel="alternate" type="text/html" title="Good Read: Web Form Design by Luke Wroblewski" /><published>2018-03-03T00:00:00+00:00</published><updated>2018-03-03T00:00:00+00:00</updated><id>https://teggr.github.io/robintegg/2018/03/03/good-read-web-form-design-by-luke-wroblewski</id><content type="html" xml:base="https://teggr.github.io/robintegg/2018/03/03/good-read-web-form-design-by-luke-wroblewski.html">&lt;p&gt;&lt;img src=&quot;/images/web-form-design-luke-wroblewski.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;So, if nothing else, I’ve learnt a little bit about maven here and perhaps helped somebody else explain why things are what they are :)&lt;/p&gt;</content><author><name></name></author><summary type="html">If, like me, you use the https://start.spring.io/ web service to create your new Spring Boot projects, then you may have noticed that the pom file defined an empty relativePath element with accompanying comment.</summary></entry><entry><title type="html">Good Read: Web Form Design by Luke Wroblewski</title><link href="https://teggr.github.io/robintegg/2018/03/03/good-read-web-form-design-by-luke-wroblewski.html" rel="alternate" type="text/html" title="Good Read: Web Form Design by Luke Wroblewski" /><published>2018-03-03T00:00:00+00:00</published><updated>2018-03-03T00:00:00+00:00</updated><id>https://teggr.github.io/robintegg/2018/03/03/good-read-web-form-design-by-luke-wroblewski</id><content type="html" xml:base="https://teggr.github.io/robintegg/2018/03/03/good-read-web-form-design-by-luke-wroblewski.html">&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/web-form-design-luke-wroblewski.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;tldr&quot;&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/h2&gt;
 
@@ -774,7 +774,7 @@ schemaspy.schemas=public
 
 &lt;p&gt;It’s a great extension to get example code into a well formatted and nicely displayed image. Good for code snippets where you don’t see a need for any copy or pasting. Also useful for putting screenshots into chat windows like skype or slack.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/code.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/code.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;plantuml&quot;&gt;&lt;strong&gt;PlantUML&lt;/strong&gt;&lt;/h2&gt;
 
@@ -784,11 +784,11 @@ schemaspy.schemas=public
 
 &lt;p&gt;PlantUML documents can be recognised and edited if they have a supporting file extension such as *.puml&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/plantuml-code-1024x387.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/plantuml-code-1024x387.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Those documents can then be exported as diagrams of various formats.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/example.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/example.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;installation-notes&quot;&gt;&lt;strong&gt;Installation notes&lt;/strong&gt;&lt;/h2&gt;
 
@@ -798,7 +798,7 @@ schemaspy.schemas=public
   &lt;li&gt;Install the PlantUML extension through the Extension tab in Visual Studio Code and update your user settings to point at your latest PlantUML jar&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/plantuml-settings-1024x267.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">Polacode</summary></entry><entry><title type="html">Publish Maven Site to Netlify</title><link href="https://teggr.github.io/robintegg/2018/01/21/publish-maven-site-to-netlify.html" rel="alternate" type="text/html" title="Publish Maven Site to Netlify" /><published>2018-01-21T00:00:00+00:00</published><updated>2018-01-21T00:00:00+00:00</updated><id>https://teggr.github.io/robintegg/2018/01/21/publish-maven-site-to-netlify</id><content type="html" xml:base="https://teggr.github.io/robintegg/2018/01/21/publish-maven-site-to-netlify.html">&lt;p&gt;Having written a couple of posts with the &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt; static site generator I wanted to start building out my site with extras such as &lt;a href=&quot;https://getpocket.com/&quot;&gt;Pocket&lt;/a&gt; links and details about my side Projects. Trying to extend the site has proved harder that I thought it might, so I’m going to switch over to another platform for publishing. This is likely going to be based on Spring Boot which I had previously considered writing after trying &lt;a href=&quot;http://jbake.org/&quot;&gt;JBake&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/plantuml-settings-1024x267.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">Polacode</summary></entry><entry><title type="html">Publish Maven Site to Netlify</title><link href="https://teggr.github.io/robintegg/2018/01/21/publish-maven-site-to-netlify.html" rel="alternate" type="text/html" title="Publish Maven Site to Netlify" /><published>2018-01-21T00:00:00+00:00</published><updated>2018-01-21T00:00:00+00:00</updated><id>https://teggr.github.io/robintegg/2018/01/21/publish-maven-site-to-netlify</id><content type="html" xml:base="https://teggr.github.io/robintegg/2018/01/21/publish-maven-site-to-netlify.html">&lt;p&gt;Having written a couple of posts with the &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt; static site generator I wanted to start building out my site with extras such as &lt;a href=&quot;https://getpocket.com/&quot;&gt;Pocket&lt;/a&gt; links and details about my side Projects. Trying to extend the site has proved harder that I thought it might, so I’m going to switch over to another platform for publishing. This is likely going to be based on Spring Boot which I had previously considered writing after trying &lt;a href=&quot;http://jbake.org/&quot;&gt;JBake&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;What I liked about Hexo originally was that I could easily publish to &lt;a href=&quot;https://www.netlify.com/&quot;&gt;Netlify&lt;/a&gt; out of the box. It looked like I would only be able to publish the static output as part of a build step outside of Netlify. So I started to look around for an alternative and ended up on a site called &lt;a href=&quot;https://www.staticgen.com/&quot;&gt;StaticGen&lt;/a&gt; which I think is produced by Netlify and lists out all their known Static Site Generators. Turns out there were plenty of Java based generators. One of them, called &lt;a href=&quot;https://javaeden.github.io/Orchid/latest/OrchidCore/&quot;&gt;Orchid&lt;/a&gt;, had a &lt;strong&gt;Deploy to Netlify&lt;/strong&gt; badge indicating that a Java project might be supported by Netlify, if not offically documented or easily found.&lt;/p&gt;
 
@@ -846,7 +846,7 @@ Alice -&amp;gt; Bob: Another authentication RequestAlice &amp;lt;-- Bob: another
 
 &lt;p&gt;and is able to generate a UML diagram.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/sequence-diagram.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/sequence-diagram.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The PlantUML site does have a link to an &lt;a href=&quot;http://www.plantuml.com/plantuml/uml/&quot;&gt;online demo tool&lt;/a&gt; where you can try on the various supported UML diagram types.&lt;/p&gt;
 
@@ -957,7 +957,7 @@ Once the CLI has been successfully configured you can start the application remo
 
 &lt;p&gt;This makes my application available at http://robintegg-online-editor.sloppy.zone&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/robintegg-online-editor-1024x402.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/robintegg-online-editor-1024x402.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;summary&quot;&gt;&lt;strong&gt;Summary&lt;/strong&gt;&lt;/h2&gt;
 
@@ -969,7 +969,7 @@ Once the CLI has been successfully configured you can start the application remo
 
 &lt;p&gt;As for the &lt;a href=&quot;https://github.com/teggr/online-editor&quot;&gt;Online Editor&lt;/a&gt;, next steps are to add some storage features and start using &lt;a href=&quot;https://travis-ci.org&quot;&gt;TravisCI&lt;/a&gt; to build and deploy the application.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/robintegg-online-editor-1024x402.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">I’m a big fan of including PlantUML diagrams for documentation using Asciidoc and Spring REST docs. Using PlantUML also saves time when visualising software designs as the cycle time of editing and seeing the new diagram can be much shorter that using drag and drop tools like Visio.</summary></entry><entry><title type="html">First look at Java support in Visual Studio Code</title><link href="https://teggr.github.io/robintegg/2018/01/07/first-look-at-java-support-in-visual-studio-code.html" rel="alternate" type="text/html" title="First look at Java support in Visual Studio Code" /><published>2018-01-07T00:00:00+00:00</published><updated>2018-01-07T00:00:00+00:00</updated><id>https://teggr.github.io/robintegg/2018/01/07/first-look-at-java-support-in-visual-studio-code</id><content type="html" xml:base="https://teggr.github.io/robintegg/2018/01/07/first-look-at-java-support-in-visual-studio-code.html">&lt;p&gt;Microsoft recently released a &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack&quot;&gt;Visual Studio Java extension pack&lt;/a&gt; and a &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test&quot;&gt;Java Test Runner&lt;/a&gt; to the Visual Studio Code market place. The &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack&quot;&gt;Visual Studio Java extension pack&lt;/a&gt; adds debugging support to the &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=redhat.java&quot;&gt;Red Hat language support for Java&lt;/a&gt;. The &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test&quot;&gt;Java Test Runner&lt;/a&gt; adds support for executing JUnit tests.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/robintegg-online-editor-1024x402.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">I’m a big fan of including PlantUML diagrams for documentation using Asciidoc and Spring REST docs. Using PlantUML also saves time when visualising software designs as the cycle time of editing and seeing the new diagram can be much shorter that using drag and drop tools like Visio.</summary></entry><entry><title type="html">First look at Java support in Visual Studio Code</title><link href="https://teggr.github.io/robintegg/2018/01/07/first-look-at-java-support-in-visual-studio-code.html" rel="alternate" type="text/html" title="First look at Java support in Visual Studio Code" /><published>2018-01-07T00:00:00+00:00</published><updated>2018-01-07T00:00:00+00:00</updated><id>https://teggr.github.io/robintegg/2018/01/07/first-look-at-java-support-in-visual-studio-code</id><content type="html" xml:base="https://teggr.github.io/robintegg/2018/01/07/first-look-at-java-support-in-visual-studio-code.html">&lt;p&gt;Microsoft recently released a &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack&quot;&gt;Visual Studio Java extension pack&lt;/a&gt; and a &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test&quot;&gt;Java Test Runner&lt;/a&gt; to the Visual Studio Code market place. The &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack&quot;&gt;Visual Studio Java extension pack&lt;/a&gt; adds debugging support to the &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=redhat.java&quot;&gt;Red Hat language support for Java&lt;/a&gt;. The &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test&quot;&gt;Java Test Runner&lt;/a&gt; adds support for executing JUnit tests.&lt;/p&gt;
 
 &lt;p&gt;I’ve recently started to use Visual Studio in my work environment for JavaScript development and have now had a chance to take a look at the extension pack and the supported features.&lt;br /&gt;
 The hope is that the Visual Studio code could be ready to be a full replacement for Eclipse/Spring Tool Suite in my development toolset for Java and JavaScript applications.&lt;/p&gt;
@@ -1008,7 +1008,7 @@ The hope is that the Visual Studio code could be ready to be a full replacement 
 
 &lt;p&gt;The &lt;strong&gt;&lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack&quot;&gt;Java Extension Pack&lt;/a&gt;&lt;/strong&gt; should be available through the Visual Studio Code” extension tab in the editor.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/extension-pack-list-item.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/extension-pack-list-item.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The &lt;strong&gt;Java Extension Pack&lt;/strong&gt; wraps two extensions togther.&lt;/p&gt;
 
@@ -1020,7 +1020,7 @@ The hope is that the Visual Studio code could be ready to be a full replacement 
 &lt;p&gt;Note: After installation make sure you read the individual extension installation instructions. You will need to set the `java.home` user setting as per language extension instructions. Don’t forget double backslashes in the path to the &lt;strong&gt;root&lt;/strong&gt; of your JDK.&lt;br /&gt;
 Install the &lt;strong&gt;&lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test&quot;&gt;Java Test Runner&lt;/a&gt;&lt;/strong&gt; extension&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/test-runner-extension.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/test-runner-extension.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;creating-a-maven-project&quot;&gt;&lt;strong&gt;Creating a maven project&lt;/strong&gt;&lt;/h2&gt;
 
@@ -1045,7 +1045,7 @@ Navigate to directory where you want to create your new maven project.&lt;/p&gt;
 
 &lt;p&gt;After the maven build has completed, then in the Visual Studio Code file explorer, open the newly created folder. You should then see the new maven project.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/initial-maven-project-1024x573.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/initial-maven-project-1024x573.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;java-extension-pack-features&quot;&gt;&lt;strong&gt;Java Extension Pack features&lt;/strong&gt;&lt;/h3&gt;
 
@@ -1054,15 +1054,15 @@ Open up the Java and XML files and you can try out the extension features.&lt;/p
 
 &lt;h4 id=&quot;autocomplete&quot;&gt;&lt;strong&gt;Autocomplete&lt;/strong&gt;&lt;/h4&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/autocomplete.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/autocomplete.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;code-actions&quot;&gt;&lt;strong&gt;Code actions&lt;/strong&gt;&lt;/h4&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/code-actions.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/code-actions.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;compilation-errors&quot;&gt;&lt;strong&gt;Compilation errors&lt;/strong&gt;&lt;/h4&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/compilation-errors.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/compilation-errors.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;debugger-for-java&quot;&gt;&lt;strong&gt;Debugger for Java&lt;/strong&gt;&lt;/h3&gt;
 
@@ -1070,17 +1070,17 @@ Open up the Java and XML files and you can try out the extension features.&lt;/p
 
 &lt;p&gt;Adding configuration can be done through the menu&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/add-configuration.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/add-configuration.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;If you have a maven project without any modules, then the tool appears to be able to find the ‘main’ method and prepopulate for you.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/initial-launch-configuration.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/initial-launch-configuration.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;To run the application, use &lt;strong&gt;Ctrl + F5&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;To use debugging, add breakpoints in your editor and run the application with debugging enabled, using &lt;strong&gt;F5&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/debugging-1024x573.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/debugging-1024x573.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;unit-testing&quot;&gt;&lt;strong&gt;Unit Testing&lt;/strong&gt;&lt;/h2&gt;
 
@@ -1089,7 +1089,7 @@ Each test and class declaration gets a “run test | debug test” option which 
 
 &lt;p&gt;There’s a test explorer window and a test report tool. Supports junit 4.8 upwards so some classes extending TestCase won’t work out the box with the extension, but these can call always be run with maven.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/spring-boot-application-launch-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/spring-boot-application-launch-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;multi-module-support&quot;&gt;&lt;strong&gt;Multi Module support&lt;/strong&gt;&lt;/h2&gt;
 
@@ -1099,20 +1099,20 @@ Each test and class declaration gets a “run test | debug test” option which 
 
 &lt;p&gt;Loading this project is fine, if you change the root pom.xml, you might see a message like below:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/multi-module-build-change-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/multi-module-build-change-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;I’m assuming this is Visual Studio Code making sure that it’s m2eclipse or internal build files are keeping in sync with the poms.&lt;br /&gt;
 One error I have not been able to solve yet, is managing the modules and the classpath. If you simply open the root project folder then you will be presented with a warning below complaining that the classes in the modules are not on the classpath.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/multi-module-classpath-warn-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/multi-module-classpath-warn-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Eclipse shows the same type of behaviour if you only import the root project, so I tried add the child modules folders to a workspace. I’ve not spent much time with workspaces in Visual Studio code.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/multi-module-add-folder-1024x721.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/multi-module-add-folder-1024x721.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This seems to resolve the classpath resolution. It does mean that you do need to open the workspace file through explorer (does this need to be checked into github?), not just the folder as you can with a single maven project. Not sure if there’s a way to recursively import each module into a workspace, like “Import…” in Eclipse.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/multi-module-classpath-resolution-1024x721.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/multi-module-classpath-resolution-1024x721.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Once the classpath resolution was working ok, I tried unsuccessfully to run the application and kept getting a host/port error come. More investigation required here I think.&lt;/p&gt;
 
@@ -1122,11 +1122,11 @@ One error I have not been able to solve yet, is managing the modules and the cla
 
 &lt;p&gt;I have a simple web application in development for testing Spring Boot support. If I clone &lt;a href=&quot;https://github.com/teggr/all-in-java&quot;&gt;teggr/all-in-java&lt;/a&gt; and open this folder in Visual Studio code then I should be able to start the web application.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/spring-boot-application-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/spring-boot-application-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Visual Studio code does create the launch configuration nicely for you&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/spring-boot-application-launch-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/robintegg/assets/images/spring-boot-application-launch-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The application can then be run and debugged as documented above.&lt;/p&gt;
 

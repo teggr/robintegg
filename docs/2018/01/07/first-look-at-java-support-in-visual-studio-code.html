@@ -84,7 +84,7 @@ The hope is that the Visual Studio code could be ready to be a full replacement 
 
 <p>The <strong><a href="https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack">Java Extension Pack</a></strong> should be available through the Visual Studio Code” extension tab in the editor.</p>
 
-<p><img src="/images/extension-pack-list-item.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/extension-pack-list-item.png" alt="" /></p>
 
 <p>The <strong>Java Extension Pack</strong> wraps two extensions togther.</p>
 
@@ -96,7 +96,7 @@ The hope is that the Visual Studio code could be ready to be a full replacement 
 <p>Note: After installation make sure you read the individual extension installation instructions. You will need to set the `java.home` user setting as per language extension instructions. Don’t forget double backslashes in the path to the <strong>root</strong> of your JDK.<br />
 Install the <strong><a href="https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test">Java Test Runner</a></strong> extension</p>
 
-<p><img src="/images/test-runner-extension.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/test-runner-extension.png" alt="" /></p>
 
 <h2 id="creating-a-maven-project"><strong>Creating a maven project</strong></h2>
 
@@ -121,7 +121,7 @@ Navigate to directory where you want to create your new maven project.</p>
 
 <p>After the maven build has completed, then in the Visual Studio Code file explorer, open the newly created folder. You should then see the new maven project.</p>
 
-<p><img src="/images/initial-maven-project-1024x573.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/initial-maven-project-1024x573.png" alt="" /></p>
 
 <h3 id="java-extension-pack-features"><strong>Java Extension Pack features</strong></h3>
 
@@ -130,15 +130,15 @@ Open up the Java and XML files and you can try out the extension features.</p>
 
 <h4 id="autocomplete"><strong>Autocomplete</strong></h4>
 
-<p><img src="/images/autocomplete.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/autocomplete.png" alt="" /></p>
 
 <h4 id="code-actions"><strong>Code actions</strong></h4>
 
-<p><img src="/images/code-actions.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/code-actions.png" alt="" /></p>
 
 <h4 id="compilation-errors"><strong>Compilation errors</strong></h4>
 
-<p><img src="/images/compilation-errors.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/compilation-errors.png" alt="" /></p>
 
 <h3 id="debugger-for-java"><strong>Debugger for Java</strong></h3>
 
@@ -146,17 +146,17 @@ Open up the Java and XML files and you can try out the extension features.</p>
 
 <p>Adding configuration can be done through the menu</p>
 
-<p><img src="/images/add-configuration.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/add-configuration.png" alt="" /></p>
 
 <p>If you have a maven project without any modules, then the tool appears to be able to find the ‘main’ method and prepopulate for you.</p>
 
-<p><img src="/images/initial-launch-configuration.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/initial-launch-configuration.png" alt="" /></p>
 
 <p>To run the application, use <strong>Ctrl + F5</strong></p>
 
 <p>To use debugging, add breakpoints in your editor and run the application with debugging enabled, using <strong>F5</strong></p>
 
-<p><img src="/images/debugging-1024x573.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/debugging-1024x573.png" alt="" /></p>
 
 <h2 id="unit-testing"><strong>Unit Testing</strong></h2>
 
@@ -165,7 +165,7 @@ Each test and class declaration gets a “run test | debug test” option which 
 
 <p>There’s a test explorer window and a test report tool. Supports junit 4.8 upwards so some classes extending TestCase won’t work out the box with the extension, but these can call always be run with maven.</p>
 
-<p><img src="/images/spring-boot-application-launch-1024x720.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/spring-boot-application-launch-1024x720.png" alt="" /></p>
 
 <h2 id="multi-module-support"><strong>Multi Module support</strong></h2>
 
@@ -175,20 +175,20 @@ Each test and class declaration gets a “run test | debug test” option which 
 
 <p>Loading this project is fine, if you change the root pom.xml, you might see a message like below:</p>
 
-<p><img src="/images/multi-module-build-change-1024x720.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/multi-module-build-change-1024x720.png" alt="" /></p>
 
 <p>I’m assuming this is Visual Studio Code making sure that it’s m2eclipse or internal build files are keeping in sync with the poms.<br />
 One error I have not been able to solve yet, is managing the modules and the classpath. If you simply open the root project folder then you will be presented with a warning below complaining that the classes in the modules are not on the classpath.</p>
 
-<p><img src="/images/multi-module-classpath-warn-1024x720.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/multi-module-classpath-warn-1024x720.png" alt="" /></p>
 
 <p>Eclipse shows the same type of behaviour if you only import the root project, so I tried add the child modules folders to a workspace. I’ve not spent much time with workspaces in Visual Studio code.</p>
 
-<p><img src="/images/multi-module-add-folder-1024x721.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/multi-module-add-folder-1024x721.png" alt="" /></p>
 
 <p>This seems to resolve the classpath resolution. It does mean that you do need to open the workspace file through explorer (does this need to be checked into github?), not just the folder as you can with a single maven project. Not sure if there’s a way to recursively import each module into a workspace, like “Import…” in Eclipse.</p>
 
-<p><img src="/images/multi-module-classpath-resolution-1024x721.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/multi-module-classpath-resolution-1024x721.png" alt="" /></p>
 
 <p>Once the classpath resolution was working ok, I tried unsuccessfully to run the application and kept getting a host/port error come. More investigation required here I think.</p>
 
@@ -198,11 +198,11 @@ One error I have not been able to solve yet, is managing the modules and the cla
 
 <p>I have a simple web application in development for testing Spring Boot support. If I clone <a href="https://github.com/teggr/all-in-java">teggr/all-in-java</a> and open this folder in Visual Studio code then I should be able to start the web application.</p>
 
-<p><img src="/images/spring-boot-application-1024x720.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/spring-boot-application-1024x720.png" alt="" /></p>
 
 <p>Visual Studio code does create the launch configuration nicely for you</p>
 
-<p><img src="/images/spring-boot-application-launch-1024x720.png" alt="" /></p>
+<p><img src="/robintegg/assets/images/spring-boot-application-launch-1024x720.png" alt="" /></p>
 
 <p>The application can then be run and debugged as documented above.</p>
 
