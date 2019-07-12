@@ -14,4 +14,4 @@ theme: minima
 plugins:
   - jekyll-feed
 
-posts_default_img: ENV_URL/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+posts_default_img: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
