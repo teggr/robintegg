@@ -1,0 +1,1141 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-07-12T17:01:37+01:00</updated><id>/feed.xml</id><title type="html">Robin Tegg</title><subtitle>A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design. </subtitle><entry><title type="html">Testing Spring Boot applications with TestContainers and Selenium WebDriver - Part Three</title><link href="/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three.html" rel="alternate" type="text/html" title="Testing Spring Boot applications with TestContainers and Selenium WebDriver - Part Three" /><published>2019-02-24T00:00:00+00:00</published><updated>2019-02-24T00:00:00+00:00</updated><id>/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three</id><content type="html" xml:base="/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three.html">&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/&quot;&gt;Part One - Data access layer integration tests&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.robintegg.com/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/&quot;&gt;Part Two - Application integration tests&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Part Three - UI tests&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This is the third of a short series of posts showing how the &lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; project can be leveraged to help test a &lt;a href=&quot;https://spring.io/projects/spring-boot&quot;&gt;Spring Boot&lt;/a&gt; application in a variety of ways.&lt;/p&gt;
+
+&lt;p&gt;In the &lt;a href=&quot;http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/&quot;&gt;first post&lt;/a&gt;, we concentrated on using the &lt;a href=&quot;https://www.testcontainers.org/modules/databases/&quot;&gt;TestContainers database support&lt;/a&gt; and the &lt;a href=&quot;https://www.robintegg.com/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/&quot;&gt;second post&lt;/a&gt;&lt;br /&gt;
+used &lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; to run a Spring Boot test that ran all our dependencies using Docker containers.&lt;/p&gt;
+
+&lt;p&gt;This third post looks at the final layer - UI. We will cover using the &lt;a href=&quot;https://www.testcontainers.org/modules/webdriver_containers/&quot;&gt;WebDriver Container&lt;/a&gt; support to spin up the UI, run our UI test and capture the whole session in a video.&lt;/p&gt;
+
+&lt;h2 id=&quot;testcontainers-demo&quot;&gt;testcontainers-demo&lt;/h2&gt;
+
+&lt;p&gt;We will continue to use the &lt;a href=&quot;https://github.com/teggr/testcontainers-demo&quot;&gt;testcontainers-demo&lt;/a&gt; application as the System under test (SUT). The application routes notification messages from a JMS Queue to a RabbitMQ exchange, storing each notification in a Postgres database. This application also provides a web interface to see a list of all the messages that are routed by the application.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/testcontainers-demo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;ui-tests&quot;&gt;UI tests&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; projects contains support for &lt;a href=&quot;https://www.testcontainers.org/modules/webdriver_containers/&quot;&gt;WebDriver Containers&lt;/a&gt; that are pre-packaged Docker images based on the selenium docker images. A JUnit test case can spin up one of these containers, grab the RemoteWebDriver and start testing.&lt;/p&gt;
+
+&lt;p&gt;For our test example we are going to spin up a Chrome browser, navigate to the homepage and assert that the correct page is being shown.&lt;/p&gt;
+
+&lt;p&gt;In order for a WebDriver Container to connect to our UI, we need to ensure that the code is exposed via a local port. Spring Boot testing supports us here with the @SpringBootTest annotation webEnvironment value. We are going run this test on a random port.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+public class UITest {
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We continue by adding a JUnit rule to load a WebDriver Container.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Rule
+public BrowserWebDriverContainer chrome = 
+                              new BrowserWebDriverContainer()
+	    .withRecordingMode(VncRecordingMode.RECORD_FAILING, new File(&quot;./target/&quot;))
+            .withCapabilities(new ChromeOptions());
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This container is configured with a default set of Chrome options and sets the container to save the recordings of any failed tests to our “target” directory.&lt;/p&gt;
+
+&lt;p&gt;Each test can now grab a RemoteWebDriver instance to drive the Chrome browser.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Test
+	public void shouldSuccessfullyPassThisTestUsingTheRemoteDriver() throws InterruptedException {
+
+		RemoteWebDriver driver = chrome.getWebDriver();
+
+		System.out.println(&quot;Selenium remote URL is: &quot; + chrome.getSeleniumAddress());
+		System.out.println(&quot;VNC URL is: &quot; + chrome.getVncAddress());
+
+String url = &quot;http://host.docker.internal:&quot; + port + &quot;/&quot;;
+		System.out.println(&quot;Spring Boot URL is: &quot; + url);
+		driver.get(url);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If this test was to fail, then the target directory would have a &lt;em&gt;*.flv&lt;/em&gt; file created for playback. This is a great feature which provides a valuable feedback mechanism for debugging broken tests. I’ve downloaded VLC to playback the captured format.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/failed-capture-video-1024x638.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Because the @SpringBootTest annotation requires that the entire application is loaded, this means that our JMS and RabbitMQ auto configuration is also enabled, so for this test we also need to ensure that our other containers are running.&lt;/p&gt;
+
+&lt;p&gt;The full JUnit test is below:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;robintegg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainersdemo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hamcrest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CoreMatchers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containsString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hamcrest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CoreMatchers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;util&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassRule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;runner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RunWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;openqa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;selenium&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;By&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;openqa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;selenium&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WebElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;openqa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;selenium&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chrome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ChromeOptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;openqa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;selenium&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RemoteWebDriver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;openqa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;selenium&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;support&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ui&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ExpectedConditions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;openqa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;selenium&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;support&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ui&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WebDriverWait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autoconfigure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jdbc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AutoConfigureTestDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autoconfigure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jdbc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AutoConfigureTestDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringBootTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringBootTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WebEnvironment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;web&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LocalServerPort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ApplicationContextInitializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContextConfiguration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringRunner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BrowserWebDriverContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BrowserWebDriverContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;VncRecordingMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GenericContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PostgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RunWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringRunner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringBootTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;webEnvironment&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WebEnvironment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RANDOM_PORT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AutoConfigureTestDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;replace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NONE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContextConfiguration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;initializers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UITest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Initializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;classes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RabbitMqTestConfiguration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UITest&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LocalServerPort&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;formatter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;off&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rule&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BrowserWebDriverContainer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chrome&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BrowserWebDriverContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;withRecordingMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;VncRecordingMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RECORD_FAILING&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;./target/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;withCapabilities&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ChromeOptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;formatter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;on&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassRule&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PostgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postgreSQLContainer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PostgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;postgres:latest&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassRule&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenericContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activeMQContainer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenericContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rmohr/activemq:latest&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;withExposedPorts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;61616&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassRule&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenericContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rabbitMQContainer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenericContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rabbitmq:management&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;withExposedPorts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;5672&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shouldSuccessfullyPassThisTestUsingTheRemoteDriver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InterruptedException&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+		&lt;span class=&quot;n&quot;&gt;RemoteWebDriver&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chrome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getWebDriver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+		&lt;span class=&quot;nf&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Selenium remote URL is: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chrome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getSeleniumAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+		&lt;span class=&quot;nf&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;VNC URL is: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chrome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getVncAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+		&lt;span class=&quot;k&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://host.docker.internal:&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;nf&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Spring Boot URL is: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+		&lt;span class=&quot;k&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WebElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WebDriverWait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+				&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;until&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ExpectedConditions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;visibilityOfAllElementsLocatedBy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;By&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tagName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;h1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)));&lt;/span&gt;
+
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;containsString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Notifications&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shouldFailThisTestUsingTheRemoteDriverAndGenerateAVideoRecording&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InterruptedException&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+		&lt;span class=&quot;n&quot;&gt;RemoteWebDriver&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chrome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getWebDriver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+		&lt;span class=&quot;nf&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Selenium remote URL is: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chrome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getSeleniumAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+		&lt;span class=&quot;nf&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;VNC URL is: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chrome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getVncAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+		&lt;span class=&quot;k&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://host.docker.internal:&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;nf&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Spring Boot URL is: &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;added&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;effect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;viewing&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;video&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;currentThread&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+		&lt;span class=&quot;k&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WebElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WebDriverWait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+				&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;until&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ExpectedConditions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;visibilityOfAllElementsLocatedBy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;By&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tagName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;h1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)));&lt;/span&gt;
+
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Initializer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ApplicationContextInitializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Override&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableApplicationContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;configurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+			&lt;span class=&quot;n&quot;&gt;DemoApplicationTestPropertyValues&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;using&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;postgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activeMQContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rabbitMQContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;applyTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;configurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getEnvironment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;why-wait-try-testcontainers-today-&quot;&gt;Why wait? Try TestContainers today :)&lt;/h2&gt;
+
+&lt;p&gt;So we’ve seen in this mini-series a set of configurations and uses for the TestContainers project.&lt;/p&gt;
+
+&lt;p&gt;There’s plenty of other uses for the TestContainers project which we will have a look at in the future including getting TestContainers up and running with one of my favorite tools - &lt;a href=&quot;https://serenity-bdd.github.io/theserenitybook/latest/getting-started.html&quot;&gt;Serenity BDD&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">Part One - Data access layer integration tests Part Two - Application integration tests Part Three - UI tests</summary></entry><entry><title type="html">Testing Spring Boot applications with TestContainers - Part Two</title><link href="/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two.html" rel="alternate" type="text/html" title="Testing Spring Boot applications with TestContainers - Part Two" /><published>2019-02-12T00:00:00+00:00</published><updated>2019-02-12T00:00:00+00:00</updated><id>/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two</id><content type="html" xml:base="/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two.html">&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/&quot;&gt;Part One - Data access layer integration tests&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Part Two - Application integration tests&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.robintegg.com/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three/&quot;&gt;Part Three - UI tests&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This is the second of a short series of posts showing how the &lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; project can be leveraged to help test a &lt;a href=&quot;https://spring.io/projects/spring-boot&quot;&gt;Spring Boot&lt;/a&gt; application in a variety of ways.&lt;/p&gt;
+
+&lt;p&gt;In the &lt;a href=&quot;http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/&quot;&gt;first post&lt;/a&gt;, we concentrated on using the &lt;a href=&quot;https://www.testcontainers.org/modules/databases/&quot;&gt;TestContainers database support&lt;/a&gt; to ensure that our &lt;a href=&quot;https://flywaydb.org/&quot;&gt;Flyway&lt;/a&gt; scripts and &lt;a href=&quot;https://spring.io/projects/spring-data-jpa&quot;&gt;Spring Data JPA&lt;/a&gt; configuration were integrated correctly.&lt;/p&gt;
+
+&lt;p&gt;For this second part, we will move up a gear and look to use &lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; to run a Spring Boot test that will run all our dependencies using Docker containers.&lt;/p&gt;
+
+&lt;h2 id=&quot;testcontainers-demo&quot;&gt;testcontainers-demo&lt;/h2&gt;
+
+&lt;p&gt;We will continue to use the &lt;a href=&quot;https://github.com/teggr/testcontainers-demo&quot;&gt;testcontainers-demo&lt;/a&gt; application as the System under test (SUT). The application routes notification messages from a JMS Queue to a RabbitMQ exchange, storing each notification in a Postgres database. This application also provides a web interface to see a list of all the messages that are routed by the application.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/testcontainers-demo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;application-integration-tests&quot;&gt;Application integration tests&lt;/h2&gt;
+
+&lt;p&gt;In order to run a test that reads from the JMS Queue and publishes to the RabbitMQ Exchange we will need JMS and RabbitMQ brokers. Using &lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; we can spin up these brokers using docker and configure our tests to use the transient brokers.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; does not have any advanced support for these services so we will need to use the &lt;a href=&quot;https://www.testcontainers.org/features/creating_container/&quot;&gt;GenericContainer&lt;/a&gt; support. To do this we specify an image we want to run.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@ClassRule
+public static GenericContainer&amp;lt;?&amp;gt; activeMQContainer = new GenericContainer&amp;lt;&amp;gt;(&quot;rmohr/activemq:latest&quot;)
+			.withExposedPorts(61616);
+
+@ClassRule
+public static GenericContainer&amp;lt;?&amp;gt; rabbitMQContainer = new GenericContainer&amp;lt;&amp;gt;(&quot;rabbitmq:management&quot;)
+			.withExposedPorts(5672);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In the above code, using the available fluent methods, we also declare what ports we want TestContainers to make available to our unit test.&lt;/p&gt;
+
+&lt;p&gt;In the first post we configured the JUnit test to override our application’s Spring Boot properties with the TestContainer configuration values. Now we have three containers, we can look to move those items into a single static method for convenience. Also note that for the ActiveMQ and RabbitMQ port properties we have to specify what port mapping we want to retrieve.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public class DemoApplicationTestPropertyValues {
+
+	public static TestPropertyValues using(PostgreSQLContainer&amp;lt;?&amp;gt; postgreSQLContainer,
+			GenericContainer&amp;lt;?&amp;gt; activeMQContainer, GenericContainer&amp;lt;?&amp;gt; rabbitMQContainer) {
+		List&amp;lt;String&amp;gt; pairs = new ArrayList&amp;lt;&amp;gt;();
+
+		// postgres
+		pairs.add(&quot;spring.datasource.url=&quot; + postgreSQLContainer.getJdbcUrl());
+		pairs.add(&quot;spring.datasource.username=&quot; + postgreSQLContainer.getUsername());
+		pairs.add(&quot;spring.datasource.password=&quot; + postgreSQLContainer.getPassword());
+		// activemq
+		pairs.add(&quot;spring.activemq.broker-url=tcp://localhost:&quot; + activeMQContainer.getMappedPort(61616));
+		// rabbitmq
+		pairs.add(&quot;spring.rabbitmq.port=&quot; + rabbitMQContainer.getMappedPort(5672));
+
+		return TestPropertyValues.of(pairs);
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This code will now be called from the ApplicationContextInitializer in our test&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;static class Initializer implements ApplicationContextInitializer&amp;lt;ConfigurableApplicationContext&amp;gt; {
+
+		@Override
+		public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+
+			DemoApplicationTestPropertyValues.using(postgreSQLContainer, activeMQContainer, rabbitMQContainer)
+					.applyTo(configurableApplicationContext.getEnvironment());
+
+		}
+
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that we have all three containers configured we are ready to write a test that can invoke the application through actual services rather than in memory versions.&lt;/p&gt;
+
+&lt;p&gt;The full JUnit test is below:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;robintegg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainersdemo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;routing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hamcrest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CoreMatchers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hamcrest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CoreMatchers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;notNullValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassRule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;runner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RunWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amqp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rabbit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RabbitTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beans&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;factory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;annotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Autowired&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autoconfigure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jdbc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AutoConfigureTestDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autoconfigure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jdbc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AutoConfigureTestDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringBootTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ApplicationContextInitializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ParameterizedTypeReference&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jms&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;JmsTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContextConfiguration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringRunner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GenericContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PostgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fasterxml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jackson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;databind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ObjectMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;robintegg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainersdemo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inbound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;JMSNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RunWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringRunner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringBootTest&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AutoConfigureTestDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;replace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NONE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContextConfiguration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;initializers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RoutingTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Initializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;classes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RabbitMqTestConfiguration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RoutingTest&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassRule&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PostgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postgreSQLContainer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PostgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;postgres:latest&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassRule&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenericContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activeMQContainer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenericContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rmohr/activemq:latest&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;withExposedPorts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;61616&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassRule&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenericContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rabbitMQContainer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenericContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rabbitmq:management&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;withExposedPorts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;5672&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Autowired&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;JmsTemplate&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jmsTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Autowired&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RabbitTemplate&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rabbitTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Autowired&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ObjectMapper&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;objectMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Autowired&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NotificationRepository&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notificationRepository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shouldStoreANotifcationFromTheJmsQueueAndForwardToTheRabbitMQExchange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;given&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;TestContainers are great&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;JMSNotification&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jmsNotification&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;JMSNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;sendNotificationToJmsQueue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jmsNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThatNotificationIsForwardedToRabbitMq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThatNotificationIsStoredInTheDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;assertThatNotificationIsStoredInTheDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notificationRepository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;findAll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getMessage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;JMS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notNullValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;assertThatNotificationIsForwardedToRabbitMq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;readNotificationFromRabbitMqQueue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getMessage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;JMS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notNullValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sendNotificationToJmsQueue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;JMSNotification&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jmsNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;jmsTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convertAndSend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jms.events&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;objectMapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;writeValueAsString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jmsNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;readNotificationFromRabbitMqQueue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;ParameterizedTypeReference&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notificationTypeRef&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ParameterizedTypeReference&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+		&lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rabbitTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;receiveAndConvert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;testcontainers.test.queue&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;notificationTypeRef&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Initializer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ApplicationContextInitializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Override&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableApplicationContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;configurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+			&lt;span class=&quot;n&quot;&gt;DemoApplicationTestPropertyValues&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;using&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;postgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activeMQContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rabbitMQContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;applyTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;configurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getEnvironment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we’ve got a template &lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; JUnit test you can start to explore further scenarios that might be more relevant to your own projects.&lt;/p&gt;
+
+&lt;p&gt;One extension might be to use databases loaded with production levels of data to test performance of your application. This can be managed by attaching &lt;a href=&quot;https://www.testcontainers.org/features/files/&quot;&gt;volumes&lt;/a&gt; to your database containers.&lt;/p&gt;
+
+&lt;p&gt;Furthermore, externally managed HTTP services could be replaced with &lt;a href=&quot;http://wiremock.org/&quot;&gt;WireMock&lt;/a&gt; stubs running in containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; also contains some pretty useful support for &lt;a href=&quot;https://www.testcontainers.org/modules/webdriver_containers/&quot;&gt;containers running WebDriver&lt;/a&gt;. This gives you excellent support for further UI test automation and regression testing. This is something we will elaborate on in the next post.&lt;/p&gt;</content><author><name></name></author><summary type="html">Part One - Data access layer integration tests Part Two - Application integration tests Part Three - UI tests</summary></entry><entry><title type="html">Testing Spring Boot applications with TestContainers</title><link href="/2019/02/09/testing-spring-boot-applications-with-testcontainers.html" rel="alternate" type="text/html" title="Testing Spring Boot applications with TestContainers" /><published>2019-02-09T00:00:00+00:00</published><updated>2019-02-09T00:00:00+00:00</updated><id>/2019/02/09/testing-spring-boot-applications-with-testcontainers</id><content type="html" xml:base="/2019/02/09/testing-spring-boot-applications-with-testcontainers.html">&lt;p&gt;This is the first of a short series of posts showing how the &lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; project can be leveraged to help test a &lt;a href=&quot;https://spring.io/projects/spring-boot&quot;&gt;Spring Boot&lt;/a&gt; application in a variety of ways.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Part One - Data access layer integration tests&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://robintegg.com/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/&quot;&gt;Part Two - Application integration tests&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.robintegg.com/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three/&quot;&gt;Part Three - UI Tests&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In this first part, we are going to concentrate on using the &lt;a href=&quot;https://www.testcontainers.org/modules/databases/&quot;&gt;TestContainers database support&lt;/a&gt; to ensure that our &lt;a href=&quot;https://flywaydb.org/&quot;&gt;Flyway&lt;/a&gt; scripts and &lt;a href=&quot;https://spring.io/projects/spring-data-jpa&quot;&gt;Spring Data JPA&lt;/a&gt; configuration are integrated correctly.&lt;/p&gt;
+
+&lt;h2 id=&quot;testcontainers-demo&quot;&gt;testcontainers-demo&lt;/h2&gt;
+
+&lt;p&gt;We will be using the &lt;a href=&quot;https://github.com/teggr/testcontainers-demo&quot;&gt;testcontainers-demo&lt;/a&gt; application as the System under test (SUT). The application routes notification messages from a JMS Queue to a RabbitMQ exchange, storing each notification in a Postgres database. This application also provides a web interface to see a list of all the messages that are routed by the application.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/testcontainers-demo.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-testcontainers&quot;&gt;What is TestContainers?&lt;/h2&gt;
+
+&lt;p&gt;The TestContainers site perfectly describes it’s goals:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Testcontainers is a Java library that supports JUnit tests, providing lightweight, throwaway instances of common databases, Selenium web browsers, or anything else that can run in a Docker container.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;And the areas of testing that it can help with:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Testcontainers make the following kinds of tests easier&lt;/p&gt;
+
+  &lt;p&gt;&lt;strong&gt;Data access layer integration tests&lt;/strong&gt;: use a containerized instance of a MySQL, PostgreSQL or Oracle database to test your data access layer code for complete compatibility, but without requiring complex setup on developers’ machines and safe in the knowledge that your tests will always start with a known DB state. Any other database type that can be containerized can also be used.&lt;br /&gt;
+&lt;strong&gt;Application integration tests&lt;/strong&gt;: for running your application in a short-lived test mode with dependencies, such as databases, message queues or web servers.&lt;br /&gt;
+&lt;strong&gt;UI/Acceptance tests&lt;/strong&gt;: use containerized web browsers, compatible with Selenium, for conducting automated UI tests. Each test can get a fresh instance of the browser, with no browser state, plugin variations or automated browser upgrades to worry about. And you get a video recording of each test session, or just each session where tests failed.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;data-access-layer-integration-tests&quot;&gt;Data access layer integration tests&lt;/h2&gt;
+
+&lt;p&gt;As we are only looking at the data layer in this post, we can make use of the &lt;a href=&quot;https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html#boot-features-testing-spring-boot-applications-testing-autoconfigured-tests&quot;&gt;Spring Boot Auto-configured tests&lt;/a&gt; feature. Our application uses the Spring Data JPA framework to store and retrieve Notifications to a Postgres database. Testing this approach is supported by the &lt;a href=&quot;https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html#boot-features-testing-spring-boot-applications-testing-autoconfigured-jpa-test&quot;&gt;Auto-configured Data JPA tests&lt;/a&gt;. By default the support will wire up a inmemory database and use the JPA “create-drop” functionality to apply a schema to the db for testing purposes.&lt;/p&gt;
+
+&lt;p&gt;Our application uses Flyway to manage it’s database schema. This is normally applied when the application starts up as part of the &lt;a href=&quot;https://docs.spring.io/spring-boot/docs/current/reference/html/howto-database-initialization.html&quot;&gt;Spring Boot support for Flyway&lt;/a&gt; scripts. By using only an inmemory database we are not validating the Flyway script or that the Flyway script and JPA annotated entities are being kept in sync.&lt;/p&gt;
+
+&lt;p&gt;The Flyway script for our project is shown below:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CREATE TABLE notification (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY,
+    message varchar(255) not null,
+    source varchar(255) not null
+);
+
+create sequence notification_id_sequence start with 1 increment by 1;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We have a corresponding Repository interface and Entity in the code as shown below:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public interface NotificationRepository extends JpaRepository&amp;lt;Notification,Long&amp;gt;  {}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/**
+ * Notification representing an event in the ecosystem
+ */
+@Entity
+@Table(name = &quot;notification&quot;)
+public class Notification {
+    @Id
+    @SequenceGenerator(name = &quot;notification_id_generator&quot;, sequenceName = &quot;notification_id_sequence&quot;, allocationSize = 1)
+    @GeneratedValue(generator = &quot;notification_id_generator&quot;)
+    private Long id;
+    private String message;
+    private String source;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We want to use TestContainers to start up a Postgres database, allow Spring Boot to apply the Flyway script, then test our NotificationRepository is configured correctly and can talk to a running instance of Postgres using JUnit tests.&lt;/p&gt;
+
+&lt;p&gt;We start with a plain &lt;a href=&quot;https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-testing-spring-boot-applications-testing-autoconfigured-jpa-test&quot;&gt;Auto-configured Data JPA&lt;/a&gt; unit test.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@RunWith(SpringRunner.class)
+@DataJpaTest
+public class NotificationRepositoryTest {
+    @Autowired
+    private NotificationRepository repository;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;At this point the test will fail because an embedded database cannot be found on the classpath. The next step is to use the @AutoConfigureTestDatabase annotation to configure the JUnit test to not replace the application database configuration.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@RunWith(SpringRunner.class)
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+public class NotificationRepositoryTest {
+    @Autowired
+    private NotificationRepository repository;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The tests will now be picking up your application database configuration which will likely be pointing to your local development environment. So next steps are to introduce the PostgresContainer from the TestContainers project.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@RunWith(SpringRunner.class)
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+public class NotificationRepositoryTest {
+    @ClassRule
+    public static PostgreSQLContainer&amp;lt;?&amp;gt; postgreSQLContainer = new PostgreSQLContainer&amp;lt;&amp;gt;(&quot;postgres:latest&quot;);
+    @Autowired
+    private NotificationRepository repository;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This configuration now loads up a Postgres container in Docker at the start of the test. This can be configured per test if required.&lt;/p&gt;
+
+&lt;p&gt;However, Spring Boot has not been configured to point to this running database yet. This requires a little more configuration of the JUnit test.&lt;/p&gt;
+
+&lt;p&gt;Adding a &lt;a href=&quot;https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html#boot-features-configfileapplicationcontextinitializer-test-utility&quot;&gt;ConfigFileApplicationContextInitializer&lt;/a&gt; to the test will allow us to inject some new environment variables into the test context that will point the application code at the running docker environment.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@RunWith(SpringRunner.class)
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+@ContextConfiguration(initializers = { NotificationRepositoryTest.Initializer.class })
+public class NotificationRepositoryTest {
+    @ClassRule
+    public static PostgreSQLContainer&amp;lt;?&amp;gt; postgreSQLContainer = new PostgreSQLContainer&amp;lt;&amp;gt;(&quot;postgres:latest&quot;);
+    @Autowired
+    private NotificationRepository repository;
+...
+    static class Initializer implements ApplicationContextInitializer&amp;lt;ConfigurableApplicationContext&amp;gt; {
+        @Override
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+        TestPropertyValues.of(
+            &quot;spring.datasource.url=&quot; + postgreSQLContainer.getJdbcUrl(),
+            &quot;spring.datasource.username=&quot; + postgreSQLContainer.getUsername(),
+            &quot;spring.datasource.password=&quot; + postgreSQLContainer.getPassword())
+                .applyTo(configurableApplicationContext.getEnvironment());
+            }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This code allows us to get a handle on the container configuration and override the spring boot properties, in doing so that test will now apply the flyway script to our containerised database and the jpa code is connected.&lt;/p&gt;
+
+&lt;p&gt;The console will show all the logs from the TestContainers code starting up the database container before executing the tests.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
+2019-02-09 16:35:08.796  INFO 8016 --- [           main] o.f.c.internal.database.DatabaseFactory  : Database: jdbc:postgresql://localhost:32815/test (PostgreSQL 11.1)
+...
+2019-02-09 16:35:09.263  INFO 8016 --- [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema &quot;public&quot; (execution time 00:00.303s)
+...
+2019-02-09 16:35:13.806  INFO 8016 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-02-09 16:35:15.394  INFO 8016 --- [           main] c.r.t.r.NotificationRepositoryTest       : Started NotificationRepositoryTest in 11.925 seconds (JVM running for 27.482)
+2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The full JUnit test is below:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;robintegg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainersdemo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;routing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hamcrest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CoreMatchers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hamcrest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IsEqual&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;equalTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassRule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;runner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RunWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;beans&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;factory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;annotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Autowired&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autoconfigure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jdbc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AutoConfigureTestDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autoconfigure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jdbc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AutoConfigureTestDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autoconfigure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jpa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DataJpaTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;boot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;util&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TestPropertyValues&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ApplicationContextInitializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContextConfiguration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;springframework&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;junit4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringRunner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testcontainers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PostgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RunWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SpringRunner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DataJpaTest&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AutoConfigureTestDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;replace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NONE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContextConfiguration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;initializers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NotificationRepositoryTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Initializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NotificationRepositoryTest&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassRule&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PostgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postgreSQLContainer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PostgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;postgres:latest&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Autowired&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NotificationRepository&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;repository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shouldStoreEachNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;given&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;repository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;message1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;repository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;message2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;repository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2L&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shouldStoreEachNotificationWithAUniqueIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;given&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;repository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;message3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;repository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;message4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;persistedNotification1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;repository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getOne&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;Notification&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;persistedNotification2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;repository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getOne&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;persistedNotification1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;equalTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;assertThat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;persistedNotification2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;equalTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Initializer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ApplicationContextInitializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Override&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableApplicationContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;configurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+			&lt;span class=&quot;n&quot;&gt;TestPropertyValues&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;spring.datasource.url=&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getJdbcUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+							&lt;span class=&quot;s2&quot;&gt;&quot;spring.datasource.username=&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getUsername&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+							&lt;span class=&quot;s2&quot;&gt;&quot;spring.datasource.password=&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;postgreSQLContainer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getPassword&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;applyTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;configurableApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getEnvironment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So at the end of this post we have successfully created a JUnit test that executes the data access layer of the application against a Postgres database running in a Docker container&lt;/p&gt;
+
+&lt;p&gt;In the &lt;a href=&quot;https://robintegg.com/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/&quot;&gt;second part&lt;/a&gt;, we will move up a gear and look to use &lt;a href=&quot;https://www.testcontainers.org/&quot;&gt;TestContainers&lt;/a&gt; to run a Spring Boot test that will run all our dependencies using Docker containers.&lt;/p&gt;</content><author><name></name></author><summary type="html">This is the first of a short series of posts showing how the TestContainers project can be leveraged to help test a Spring Boot application in a variety of ways.</summary></entry><entry><title type="html">Documenting your database with SchemaSpy</title><link href="/2019/01/29/documenting-your-database-with-schemaspy.html" rel="alternate" type="text/html" title="Documenting your database with SchemaSpy" /><published>2019-01-29T00:00:00+00:00</published><updated>2019-01-29T00:00:00+00:00</updated><id>/2019/01/29/documenting-your-database-with-schemaspy</id><content type="html" xml:base="/2019/01/29/documenting-your-database-with-schemaspy.html">&lt;h2 id=&quot;why&quot;&gt;Why?&lt;/h2&gt;
+
+&lt;p&gt;I’m a big fan of auto generating documentation to help visualise and understand complex artefacts such as codebases. In my new workplace, we also have a large complex database and not much in the way of support for understanding it or it’s history.&lt;/p&gt;
+
+&lt;p&gt;This complexity effects productivity in a number of ways:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It takes longer than it should to parse and understand a database, especially through tools such as Postgres Admin and the command line&lt;/li&gt;
+  &lt;li&gt;It takes longer to support other colleagues to understand and use the database&lt;/li&gt;
+  &lt;li&gt;Poor understanding leads to poor coding and bugs&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A good piece of documentation supports collaboration and learning.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-can-schemaspy-help&quot;&gt;How can SchemaSpy help?&lt;/h2&gt;
+
+&lt;p&gt;SchemaSpy (&lt;a href=&quot;http://schemaspy.org/&quot;&gt;http://schemaspy.org/&lt;/a&gt;) is a database documenting utility written in Java that analyses your schema and generates an HTML report of your database schema, including some very useful Entity Relationship diagrams.&lt;/p&gt;
+
+&lt;p&gt;There are a couple of ways to run SchemaSpy. Here we’ll look at running the utility using docker. See the image page @ &lt;a href=&quot;https://hub.docker.com/r/schemaspy/schemaspy/&quot;&gt;https://hub.docker.com/r/schemaspy/schemaspy/&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The image contains drivers for:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt; mysql&lt;/li&gt;
+  &lt;li&gt;mariadb&lt;/li&gt;
+  &lt;li&gt;postgresql&lt;/li&gt;
+  &lt;li&gt;jtds&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The images has 3 volumes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;/drivers (if you want to override the included drivers, or add another driver)&lt;/li&gt;
+  &lt;li&gt;/output need to host-mount this to get any output (must be writable by other (safes bet))&lt;/li&gt;
+  &lt;li&gt;/config if you want to add schemaspy.properties file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Configuration properties and command line options are documented on the readthedocs site @ &lt;a href=&quot;https://schemaspy.readthedocs.io/en/latest/&quot;&gt;https://schemaspy.readthedocs.io/en/latest/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;To run SchemaSpy using the image you can use the command below.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run -v &quot;$PWD:/output&quot; schemaspy/schemaspy:latest [options]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;example&quot;&gt;Example&lt;/h3&gt;
+
+&lt;p&gt;So in our example, i’ll be connecting to a local database called world-db (see &lt;a href=&quot;https://github.com/ghusta/docker-postgres-world-db&quot;&gt;https://github.com/ghusta/docker-postgres-world-db&lt;/a&gt;) and providing a config file&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;config/schemaspy.properties
+
+schemaspy.t=pgsql 
+schemaspy.host=host.docker.internal 
+schemaspy.port=5432 
+schemaspy.db=world-db 
+schemaspy.u=world
+schemaspy.p=world123
+schemaspy.schemas=public 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that we have a configuration file we can run SchemaSpy via Docker&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run -v &quot;${PWD}\target:/output&quot; -v &quot;${PWD}\config:/config&quot;  schemaspy/schemaspy:latest -configFile /config/schemaspy.properties  -noimplied -nopages -l
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The docker command will output to the console whilst executing…&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/Capture-1024x773.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Once complete, the HTML documentation will be available in the output directory. The HTML can be explored to see all the table information and relationships.&lt;/p&gt;
+
+&lt;p&gt;Screenshot of the output&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/Screenshot_2019-01-29-world-db-Database-1024x834.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/Screenshot_2019-01-29-country-world-db-Database-631x1024.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;further-thoughts&quot;&gt;Further thoughts&lt;/h2&gt;
+
+&lt;p&gt;Running from the command line gives you an excellent opportunity to integrate this into your CI pipelines so that it can be regularly updated.&lt;/p&gt;
+
+&lt;p&gt;One thing the documentation will certainly highlight is a lack of comments on your tables, views and functions. Yes, you can probably derive meaning from column names but often a simple comment is nicer ;)&lt;/p&gt;
+
+&lt;p&gt;Got suggestions for any alternatives or power user tips, why not comment below?&lt;/p&gt;</content><author><name></name></author><summary type="html">Why?</summary></entry><entry><title type="html">Why does Spring Initializr set the parent pom relativePath to empty?</title><link href="/2019/01/20/why-does-spring-initializr-set-the-parent-pom-relativepath-to-empty.html" rel="alternate" type="text/html" title="Why does Spring Initializr set the parent pom relativePath to empty?" /><published>2019-01-20T00:00:00+00:00</published><updated>2019-01-20T00:00:00+00:00</updated><id>/2019/01/20/why-does-spring-initializr-set-the-parent-pom-relativepath-to-empty</id><content type="html" xml:base="/2019/01/20/why-does-spring-initializr-set-the-parent-pom-relativepath-to-empty.html">&lt;p&gt;If, like me, you use the &lt;a href=&quot;https://start.spring.io/&quot;&gt;https://start.spring.io/&lt;/a&gt; web service to create your new Spring Boot projects, then you may have noticed that the pom file defined an empty relativePath element with accompanying comment.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;parent
+  &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
+  &amp;lt;artifactId&amp;gt;spring-boot-starter-parent&amp;lt;/artifactId&amp;gt;
+  &amp;lt;version&amp;gt;2.0.5.RELEASE&amp;lt;/version&amp;gt;
+  &amp;lt;relativePath/&amp;gt; &amp;lt;!-- lookup parent from repository --&amp;gt;
+&amp;lt;/parent&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now I’ve not really had much concern to question this setting. It’s certainly never given me any issues on my local development environment or or any CI server, but I recently received criticism on its usage when submitting a technical code exercise for a new job. This prompted me to dig deeper as I couldn’t explain the reason why or why not to include it.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;tl;dr - it’s an optimisation. in fact it says so in the comment :)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;As you can see, the pom file already has a comment, presumably because this is perhaps a slightly irregular usage.&lt;/p&gt;
+
+&lt;p&gt;Diving into the maven documentation, the relativePath field is documented:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://maven.apache.org/ref/3.0/maven-model/maven.html#class_parent&quot;&gt;http://maven.apache.org/ref/3.0/maven-model/maven.html#class_parent&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The relative path of the parent pom.xml file within the check out. If not specified, it defaults to ../pom.xml. Maven looks for the parent POM first in this location on the filesystem, then the local repository, and lastly in the remote repo. relativePath allows you to select a different location, for example when your structure is flat, or deeper without an intermediate parent POM. However, the group ID, artifact ID and version are still required, and must match the file in the location given or it will revert to the repository for the POM. This feature is only for enhancing the development in a local checkout of that project. Set the value to an empty string in case you want to disable the feature and always resolve the parent POM from the repositories.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Great, so what does that mean? It means that if you leave it out, which may be the more common approach, similar to the &lt;a href=&quot;https://spring.io/guides&quot;&gt;Spring Boot guides&lt;/a&gt;, then maven will firstly look at parent directory, fail to find the pom and then fallback to looking up in your local repo and then remote repository. Spring Initializr, by using the empty relativePath, forces maven to move straight to your local/remote repositories, so missing a step that would obviously fail.&lt;/p&gt;
+
+&lt;p&gt;So, if nothing else, I’ve learnt a little bit about maven here and perhaps helped somebody else explain why things are what they are :)&lt;/p&gt;</content><author><name></name></author><summary type="html">If, like me, you use the https://start.spring.io/ web service to create your new Spring Boot projects, then you may have noticed that the pom file defined an empty relativePath element with accompanying comment.</summary></entry><entry><title type="html">Good Read: Web Form Design by Luke Wroblewski</title><link href="/2018/03/03/good-read-web-form-design-by-luke-wroblewski.html" rel="alternate" type="text/html" title="Good Read: Web Form Design by Luke Wroblewski" /><published>2018-03-03T00:00:00+00:00</published><updated>2018-03-03T00:00:00+00:00</updated><id>/2018/03/03/good-read-web-form-design-by-luke-wroblewski</id><content type="html" xml:base="/2018/03/03/good-read-web-form-design-by-luke-wroblewski.html">&lt;p&gt;&lt;img src=&quot;/images/web-form-design-luke-wroblewski.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;tldr&quot;&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Broad overview of all the considerations that constitute good form design&lt;/li&gt;
+  &lt;li&gt;Not technical and easily digestible&lt;/li&gt;
+  &lt;li&gt;Includes the why, what and when of best practices based on experience and research&lt;/li&gt;
+  &lt;li&gt;226 pages - 14 Short focussed chapters&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;why-read-this-book&quot;&gt;&lt;strong&gt;Why read this book?&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Given much of my current day to day work is presenting web forms for gathering data from users and putting that data in one system or another, I decided that it would be worth revisiting some of the web form design classics in order to generate some new inspiration around our current designs and usability. I have a copy of ‘Don’t make me think’ by Steve Krug and ‘Web Form Design’ comes highly recommended by other reviewers of that book.&lt;/p&gt;
+
+&lt;p&gt;The book is a collection of insights and best practices for Web form design. Chapters cover form structure and organisation as well as the individual form elements and interactions.&lt;/p&gt;
+
+&lt;p&gt;Even though it is almost 10 years old, the fundamentals are still sound and relevant to today’s design challenges such as mobile. In fact, as I read through the book it was interesting to me just how many of the book’s practices are evident in many of the current crop of website frameworks such as &lt;a href=&quot;https://getbootstrap.com/docs/4.0/getting-started/introduction/&quot;&gt;Bootstrap&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;inspirations&quot;&gt;&lt;strong&gt;Inspirations&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;My original aim was to generate some inspiration and I feel that I’ve gained some from reading this book.&lt;/p&gt;
+
+&lt;h2 id=&quot;consistency&quot;&gt;&lt;strong&gt;Consistency&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;I certainly don’t claim to be a designer but educating myself on the fundamentals has given me a toolkit of ideas and patterns that can be applied, much like software architecture principles.&lt;/p&gt;
+
+&lt;p&gt;In my current position, I am responsible for maintaining some projects that have been written and owned by a number of teams and developers over time. This has invariably led to a number of inconsistencies with the form designs. The book advocates consistency across a system to avoid overloading the user, so I’m hoping to use the book as a reference for applying a consistent approach to areas such as error handling, form fields, headings, text and actions. Incrementally updating those areas should improve the user experience.&lt;/p&gt;
+
+&lt;h2 id=&quot;gradual-engagement&quot;&gt;&lt;strong&gt;Gradual engagement&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;In the penultimate chapter, the author writes about killing the sign-up form and moving to “Gradual engagement”. A process whereby a user does not need to explicitly sign up and get a username and password but is silently “adopted” by the system they are using.&lt;/p&gt;
+
+&lt;p&gt;One of the systems that I work on is for Personal Loan applications. This uses a typical wizard approach of gathering a customer’s data over a number of steps in order to apply for a Personal Loan. In this wizard, we currently have a step exclusively for putting in an email, password and security question to create an account that is attached to the loan application. The account gives the user access to their details and application decision.&lt;/p&gt;
+
+&lt;p&gt;I had been exploring the possibility of a &lt;a href=&quot;https://github.com/creactiviti/spring-security-passwordless/blob/master/README.md&quot;&gt;passwordless&lt;/a&gt; mechanism to remove the need to create an account purely for the application process, thus reducing the number of steps in the wizard and putting more burden on the user to remember another username and password combination. The suggested email approach is probably a little too much burden in terms of having to wait for emails to sign in but helps in getting out of the user’s way.&lt;/p&gt;
+
+&lt;p&gt;The “adoption” approach could also remove the create account page altogether. In this scenario, a user account is created once the user has entered an email address as part of their contact details. In order to access the account later, the user would need to validate against some data that we have captured such as date of birth.&lt;/p&gt;
+
+&lt;h2 id=&quot;add-to-basket&quot;&gt;&lt;strong&gt;Add to basket&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.co.uk/Web-Form-Design-Filling-Blanks/dp/1933820241&quot;&gt;Web Form Design by Luke Wroblekski&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.co.uk/Dont-Make-Me-Think-Usability/dp/0321344758&quot;&gt;Don’t make me think by Steve Krug&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">Polacode + PlantUML - Visual Studio Code extensions for coders</title><link href="/2018/03/01/polacode-plantuml-visual-studio-code-extensions-for-coders.html" rel="alternate" type="text/html" title="Polacode + PlantUML - Visual Studio Code extensions for coders" /><published>2018-03-01T00:00:00+00:00</published><updated>2018-03-01T00:00:00+00:00</updated><id>/2018/03/01/polacode-plantuml-visual-studio-code-extensions-for-coders</id><content type="html" xml:base="/2018/03/01/polacode-plantuml-visual-studio-code-extensions-for-coders.html">&lt;h2 id=&quot;polacode&quot;&gt;&lt;strong&gt;Polacode&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=pnp.polacode&quot;&gt;Polacode&lt;/a&gt; extension can generate screenshots of your code in Visual Studio Code.&lt;/p&gt;
+
+&lt;p&gt;It’s a great extension to get example code into a well formatted and nicely displayed image. Good for code snippets where you don’t see a need for any copy or pasting. Also useful for putting screenshots into chat windows like skype or slack.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/code.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;plantuml&quot;&gt;&lt;strong&gt;PlantUML&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;I’m a big fan of using PlantUML to generate technical diagrams on the fly using a text based dsl. I’ve previously written about deploying a &lt;a href=&quot;https://www.robintegg.com/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io/&quot;&gt;PlantUML editor in a docker container&lt;/a&gt; and having a solution in Visual Studio Code gives me a neat offline ability to edit files too.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml#overview&quot;&gt;PlantUML &lt;/a&gt; is one of a number of PlantUML extensions wrappers. This one by the author &lt;a href=&quot;https://marketplace.visualstudio.com/search?term=publisher%3A%22jebbs%22&amp;amp;target=VSCode&amp;amp;category=All%20categories&amp;amp;sortBy=Relevance&quot;&gt;jebbs&lt;/a&gt; seemed to be the most downloaded which can be an indicator of a good extension. It certainly has a number of supported features including image generation and document formatting.&lt;/p&gt;
+
+&lt;p&gt;PlantUML documents can be recognised and edited if they have a supporting file extension such as *.puml&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/plantuml-code-1024x387.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Those documents can then be exported as diagrams of various formats.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/example.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;installation-notes&quot;&gt;&lt;strong&gt;Installation notes&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Install GraphViz by going to https://graphviz.gitlab.io/, download the *.msi and install&lt;/li&gt;
+  &lt;li&gt;To install PlantUML go to http://plantuml.com/, download the JAR file and put in an easily accessible folder, such as C:\tools\plantuml\plantuml.1.2018.1.jar&lt;/li&gt;
+  &lt;li&gt;Install the PlantUML extension through the Extension tab in Visual Studio Code and update your user settings to point at your latest PlantUML jar&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/plantuml-settings-1024x267.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">Polacode</summary></entry><entry><title type="html">Publish Maven Site to Netlify</title><link href="/2018/01/21/publish-maven-site-to-netlify.html" rel="alternate" type="text/html" title="Publish Maven Site to Netlify" /><published>2018-01-21T00:00:00+00:00</published><updated>2018-01-21T00:00:00+00:00</updated><id>/2018/01/21/publish-maven-site-to-netlify</id><content type="html" xml:base="/2018/01/21/publish-maven-site-to-netlify.html">&lt;p&gt;Having written a couple of posts with the &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt; static site generator I wanted to start building out my site with extras such as &lt;a href=&quot;https://getpocket.com/&quot;&gt;Pocket&lt;/a&gt; links and details about my side Projects. Trying to extend the site has proved harder that I thought it might, so I’m going to switch over to another platform for publishing. This is likely going to be based on Spring Boot which I had previously considered writing after trying &lt;a href=&quot;http://jbake.org/&quot;&gt;JBake&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;What I liked about Hexo originally was that I could easily publish to &lt;a href=&quot;https://www.netlify.com/&quot;&gt;Netlify&lt;/a&gt; out of the box. It looked like I would only be able to publish the static output as part of a build step outside of Netlify. So I started to look around for an alternative and ended up on a site called &lt;a href=&quot;https://www.staticgen.com/&quot;&gt;StaticGen&lt;/a&gt; which I think is produced by Netlify and lists out all their known Static Site Generators. Turns out there were plenty of Java based generators. One of them, called &lt;a href=&quot;https://javaeden.github.io/Orchid/latest/OrchidCore/&quot;&gt;Orchid&lt;/a&gt;, had a &lt;strong&gt;Deploy to Netlify&lt;/strong&gt; badge indicating that a Java project might be supported by Netlify, if not offically documented or easily found.&lt;/p&gt;
+
+&lt;p&gt;The starter project that you can deploy to Netlify is available through the github repo &lt;a href=&quot;https://github.com/JavaEden/OrchidStarter&quot;&gt;JavaEden/OrchidStarter&lt;/a&gt;. The process of deploying to Netlify was simple and the deployment uses the gradle wrapper to download and execute the build step for Orchid.&lt;/p&gt;
+
+&lt;p&gt;My preference is to use Maven over Gradle so I investigated the possibility of using maven to generate the site and have that deployed on Netlify.&lt;/p&gt;
+
+&lt;p&gt;Starting with a standard maven project&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn -B archetype:generate \
+  -DarchetypeGroupId=org.apache.maven.archetypes \
+  -DgroupId=com.robintegg.blog \
+  -DartifactId=netlify-upload
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Influenced by the Gradle Wrapper, there is a [Maven Wrapper](mvn -N io.takari:maven:wrapper) available. The wrapper can be added using the maven task&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn -N io.takari:maven:wrapper
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Windows Users &lt;/strong&gt;Be aware that the `./mvnw` command needs to retain it’s executable state when being deployed to GitHub so that it can be executed by Netlify. The &lt;a href=&quot;http://blog.lesc.se/2011/11/how-to-change-file-premissions-in-git.html&quot;&gt;Lennart Schedin blog&lt;/a&gt; provides details and explanations on how to do this. The commands for changing the permissions are summarized below:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;git ls-tree HEAD100644 blob 55c0287d4ef21f15b97eb1f107451b88b479bffe mvnw
+&amp;gt;git update-index --chmod=+x .mvnw
+&amp;gt;git status&amp;gt;git commit -m &quot;Changing file permissions&quot;
+&amp;gt;git ls-tree HEAD100755 blob 55c0287d4ef21f15b97eb1f107451b88b479bffe   mvnw
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For supporting the Netlify deployment, you can add the optional &lt;strong&gt;netlify.toml&lt;/strong&gt; which will override any deploy settings you might have set in the UI.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[build]  base    = &quot;&quot;  publish = &quot;target/site&quot;  command = &quot;./mvnw clean site&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, you can publish to Github and deploy the project through Netlify.&lt;/p&gt;
+
+&lt;p&gt;My finished Github repo &lt;a href=&quot;https://github.com/teggr/netlify-upload&quot;&gt;teggr/netlify-upload&lt;/a&gt; and is was automatically deployed to &lt;a href=&quot;https://compassionate-easley-929b6f.netlify.com&quot;&gt;https://compassionate-easley-929b6f.netlify.com&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">Having written a couple of posts with the Hexo static site generator I wanted to start building out my site with extras such as Pocket links and details about my side Projects. Trying to extend the site has proved harder that I thought it might, so I’m going to switch over to another platform for publishing. This is likely going to be based on Spring Boot which I had previously considered writing after trying JBake.</summary></entry><entry><title type="html">Deploying a PlantUML Spring Boot application in a docker container to sloppy.io</title><link href="/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io.html" rel="alternate" type="text/html" title="Deploying a PlantUML Spring Boot application in a docker container to sloppy.io" /><published>2018-01-14T00:00:00+00:00</published><updated>2018-01-14T00:00:00+00:00</updated><id>/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io</id><content type="html" xml:base="/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io.html">&lt;p&gt;I’m a big fan of including &lt;a href=&quot;http://plantuml.com/&quot;&gt;PlantUML diagrams&lt;/a&gt; for documentation using &lt;a href=&quot;http://asciidoctor.org/&quot;&gt;Asciidoc&lt;/a&gt; and &lt;a href=&quot;https://projects.spring.io/spring-restdocs/&quot;&gt;Spring REST docs&lt;/a&gt;. Using PlantUML also saves time when visualising software designs as the cycle time of editing and seeing the new diagram can be much shorter that using drag and drop tools like Visio.&lt;/p&gt;
+
+&lt;p&gt;PlantUML works by taking in textual notation for a sequence diagram like below:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@startuml
+Alice -&amp;gt; Bob: Authentication RequestBob --&amp;gt; Alice: Authentication Response
+Alice -&amp;gt; Bob: Another authentication RequestAlice &amp;lt;-- Bob: another authentication Response
+@enduml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and is able to generate a UML diagram.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/sequence-diagram.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The PlantUML site does have a link to an &lt;a href=&quot;http://www.plantuml.com/plantuml/uml/&quot;&gt;online demo tool&lt;/a&gt; where you can try on the various supported UML diagram types.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Sequence diagram&lt;/li&gt;
+  &lt;li&gt;Usecase diagram&lt;/li&gt;
+  &lt;li&gt;Class diagram&lt;/li&gt;
+  &lt;li&gt;Activity diagram&lt;/li&gt;
+  &lt;li&gt;Component diagram&lt;/li&gt;
+  &lt;li&gt;State diagram&lt;/li&gt;
+  &lt;li&gt;Object diagram&lt;/li&gt;
+  &lt;li&gt;Deployment diagram&lt;/li&gt;
+  &lt;li&gt;Timing diagram&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The online demo tool has limited capabilities and I wanted to build my own version that would both cater for online editing and also storage of those diagrams so that I could use it as a notebook of software diagrams.&lt;/p&gt;
+
+&lt;p&gt;I started to build an &lt;a href=&quot;https://github.com/teggr/online-editor&quot;&gt;Online Editor&lt;/a&gt; for myself last year. The application was initially deployed to &lt;a href=&quot;https://www.heroku.com/&quot;&gt;Heroku&lt;/a&gt; with basic editing functionality. However, &lt;a href=&quot;http://plantuml.com/api&quot;&gt;PlantUML java library&lt;/a&gt; has a dependency on the &lt;a href=&quot;https://www.graphviz.org/&quot;&gt;Graphviz&lt;/a&gt; library for all other diagram types but sequence. So to add the ability to add further diagram types to the Online Editor it makes sense to package both the application and its dependency in a docker container. The docker container then also needs to be hosted somewhere. For the hosting I’m going to trial &lt;a href=&quot;https://sloppy.io/&quot;&gt;sloppy.io&lt;/a&gt; where they have a nice simple interface for deploying and running Docker containers.&lt;/p&gt;
+
+&lt;h2 id=&quot;tldr&quot;&gt;&lt;strong&gt;tl;dr&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Build a Docker container for Spring Boot application with PlantUML and Graphviz dependencies&lt;/li&gt;
+  &lt;li&gt;Push to Docker Hub&lt;/li&gt;
+  &lt;li&gt;Build and run on sloppy.io&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;online-editor-github-project&quot;&gt;&lt;strong&gt;Online Editor GitHub Project&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;To get a copy of the project you can clone the github repository.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/teggr/online-editor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The project is currently a simple &lt;a href=&quot;https://spring.io/guides&quot;&gt;Spring Boot&lt;/a&gt; web application, built using maven and has a dependency on PlantUML available through &lt;a href=&quot;https://mvnrepository.com/artifact/net.sourceforge.plantuml/plantuml&quot;&gt;maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pom.xml
+&amp;lt;!-- plant uml --&amp;gt;
+&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;net.sourceforge.plantuml&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;plantuml&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;8059&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Run the Spring Boot application and open http://localhost:8383 to see the working application in your browser. To build, run a `mvn install` from the command line.&lt;/p&gt;
+
+&lt;h2 id=&quot;adding-docker&quot;&gt;&lt;strong&gt;Adding Docker&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Assuming that you have Docker installed and available from the command line then, you have all you need to build and run the container locally.&lt;/p&gt;
+
+&lt;p&gt;To get the application up and running I’ve started with a small &lt;strong&gt;Dockerfile&lt;/strong&gt; that builds on the OpenJDK container and installs both GraphViz and locally built application. Upon being run, the container will lauch the Spring Boot application.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Dockerfile
+FROM openjdk:8-jdk
+RUN apt-get update &amp;amp;&amp;amp; apt-get install -y \  graphviz
+ENV GRAPHVIZ_DOT /usr/bin/dot
+COPY target/online-editor-0.0.1-SNAPSHOT.jar /usr/share/online-editor-0.0.1-SNAPSHOT.jar
+EXPOSE 8383
+CMD [&quot;java&quot;, &quot;-XX:+UnlockExperimentalVMOptions&quot;, &quot;-XX:+UseCGroupMemoryLimitForHeap&quot;, &quot;-jar&quot;, &quot;/usr/share/online-editor-0.0.1-SNAPSHOT.jar&quot;]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To build the image and run the container, we can use the following commands. The Online Editor should then again be available on http://localhost:8383&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker build -t online-editordocker run --publish 8383:8383 online-editor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;storing-image-to-docker-hub&quot;&gt;&lt;strong&gt;Storing Image to Docker Hub&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Next step for the Docker Image is to host it somewhere that can be accessed by sloppy.io. They have built in support for &lt;a href=&quot;https://hub.docker.com&quot;&gt;Docker Hub&lt;/a&gt; and &lt;a href=&quot;https://quay.io/&quot;&gt;Quay.io&lt;/a&gt;.&lt;br /&gt;
+For this project I’m pushing to my own &lt;a href=&quot;https://hub.docker.com/r/teggr/&quot;&gt;Docker Hub account&lt;/a&gt; and repository:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker build -t teggr/online-editor:0.0.1docker push teggr/online-editor:0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The docker image is available at https://hub.docker.com/r/teggr/online-editor/&lt;/p&gt;
+
+&lt;h2 id=&quot;deploying&quot;&gt;&lt;strong&gt;Deploying&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Now that we have a publicly hosted docker image we can run the application on &lt;a href=&quot;https://sloppy.io/&quot;&gt;sloppy.io&lt;/a&gt;. When I started this post there was a 14 day free trial and paid plans from £5 a month.&lt;br /&gt;
+sloppy.io has some useful guides to deploying your first docker container.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://kb.sloppy.io/getting-started&quot;&gt;https://kb.sloppy.io/getting-started&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Download the CLI and add the exe to PATH&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;c:&amp;gt; sloppyusage: sloppy [--version] &amp;lt;command&amp;gt; [&amp;lt;args&amp;gt;] [--help]
+Available commands are:
+    change           Change the configuration of an application on the fly
+    delete           Delete a project, a service or an application
+    docker-login     Uploads docker credentials to sloppy.io
+    docker-logout    Removes docker credentials from sloppy.io
+    logs             Fetch the logs of a project, service or app
+    restart          Restart an app
+    rollback         Rollback an application
+    scale            Scale the number of instances in an application
+    show             Show settings of a project, a service or an application
+    start            Start a new project on the sloppy service
+    stats            Display metrics of a running app
+    version          Prints the sloppy version
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Next step is to add your API token as an environment variable. In windows I did this through the system environment variables gui.&lt;br /&gt;
+Once the CLI has been successfully configured you can start the application remotely on the command line. You can also do this through the admin console.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sloppy start --var=domain:robintegg-online-editor.sloppy.zone sloppy-online-editor.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This makes my application available at http://robintegg-online-editor.sloppy.zone&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/robintegg-online-editor-1024x402.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;summary&quot;&gt;&lt;strong&gt;Summary&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Getting a Spring Boot application into a Docker container is relatively simple now. I’ve taken a fairly simple approach for the moment in constructing my docker image. There are many &lt;a href=&quot;https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/&quot;&gt;best practices&lt;/a&gt; to follow when creating Dockerfiles. The offical &lt;a href=&quot;https://hub.docker.com/_/openjdk/&quot;&gt;OpenJDK image&lt;/a&gt; also documents some best practices.&lt;/p&gt;
+
+&lt;p&gt;Getting your application into a Docker image is only half the job done. The other half is wading through all the Docker hosting options. From do it yourself to fully managed, minute-by-minute to monthly billing there are so many options. I’ve plumped for sloppy.io as it seemed to be a nicely thought out offering to help me get my container up and running with minimal fuss. To that end I was not disappointed, I signed up for the free account, followed the get started guide to understand my next steps, then deployed!&lt;/p&gt;
+
+&lt;p&gt;Sloppy.io gives a nice PAAS level of abstraction for deploying containers and doesn’t seem overly priced. I can deploy up to 50 containers, though I need more time to understand how I can run multiple containers within my allocated resoures. I’m sure I will extend my trial period into a paid one. Well done sloppy :)&lt;/p&gt;
+
+&lt;p&gt;As for the &lt;a href=&quot;https://github.com/teggr/online-editor&quot;&gt;Online Editor&lt;/a&gt;, next steps are to add some storage features and start using &lt;a href=&quot;https://travis-ci.org&quot;&gt;TravisCI&lt;/a&gt; to build and deploy the application.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/robintegg-online-editor-1024x402.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">I’m a big fan of including PlantUML diagrams for documentation using Asciidoc and Spring REST docs. Using PlantUML also saves time when visualising software designs as the cycle time of editing and seeing the new diagram can be much shorter that using drag and drop tools like Visio.</summary></entry><entry><title type="html">First look at Java support in Visual Studio Code</title><link href="/2018/01/07/first-look-at-java-support-in-visual-studio-code.html" rel="alternate" type="text/html" title="First look at Java support in Visual Studio Code" /><published>2018-01-07T00:00:00+00:00</published><updated>2018-01-07T00:00:00+00:00</updated><id>/2018/01/07/first-look-at-java-support-in-visual-studio-code</id><content type="html" xml:base="/2018/01/07/first-look-at-java-support-in-visual-studio-code.html">&lt;p&gt;Microsoft recently released a &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack&quot;&gt;Visual Studio Java extension pack&lt;/a&gt; and a &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test&quot;&gt;Java Test Runner&lt;/a&gt; to the Visual Studio Code market place. The &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack&quot;&gt;Visual Studio Java extension pack&lt;/a&gt; adds debugging support to the &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=redhat.java&quot;&gt;Red Hat language support for Java&lt;/a&gt;. The &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test&quot;&gt;Java Test Runner&lt;/a&gt; adds support for executing JUnit tests.&lt;/p&gt;
+
+&lt;p&gt;I’ve recently started to use Visual Studio in my work environment for JavaScript development and have now had a chance to take a look at the extension pack and the supported features.&lt;br /&gt;
+The hope is that the Visual Studio code could be ready to be a full replacement for Eclipse/Spring Tool Suite in my development toolset for Java and JavaScript applications.&lt;/p&gt;
+
+&lt;h2 id=&quot;tldr&quot;&gt;&lt;strong&gt;tl;dr&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Quick and easy installation (2-3 extensions)&lt;/li&gt;
+  &lt;li&gt;Good support for autocompletion, code actions and compilation errors in maven projects&lt;/li&gt;
+  &lt;li&gt;Out of the box support for maven projects without modules&lt;/li&gt;
+  &lt;li&gt;Supports Spring Boot application launching and debugging&lt;/li&gt;
+  &lt;li&gt;Older legacy or multi-module projects don’t seem to be completely supported and documentation could be more thorough&lt;/li&gt;
+  &lt;li&gt;Lacking some workflow elements from Spring Tool Suite / Eclipse&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Would I use Visual Studio code for a small new project or demo completely: &lt;strong&gt;YES&lt;/strong&gt;, would I use Visual Studio code for every day development at work: &lt;strong&gt;NOT YET&lt;/strong&gt;, perhaps on some smaller components as more time needed to determine support for those individual applications.&lt;/p&gt;
+
+&lt;h2 id=&quot;assessing-java-application-development-in-visual-studio-code&quot;&gt;&lt;strong&gt;Assessing Java application development in Visual Studio code&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;See what features are available&lt;/li&gt;
+  &lt;li&gt;See if features cover my common use cases&lt;/li&gt;
+  &lt;li&gt;Summary&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There is a comprehensive tutorial available with azure integrations on the Visual Studio code web site https://code.visualstudio.com/docs/java/java-tutorial.&lt;/p&gt;
+
+&lt;h3 id=&quot;installation-pre-requisites&quot;&gt;&lt;strong&gt;Installation Pre-requisites&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;JDK&lt;/li&gt;
+  &lt;li&gt;VSCode&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;installation&quot;&gt;&lt;strong&gt;Installation&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;The &lt;strong&gt;&lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack&quot;&gt;Java Extension Pack&lt;/a&gt;&lt;/strong&gt; should be available through the Visual Studio Code” extension tab in the editor.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/extension-pack-list-item.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The &lt;strong&gt;Java Extension Pack&lt;/strong&gt; wraps two extensions togther.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Language Support for Java by RedHat&lt;/li&gt;
+  &lt;li&gt;Debugger for Java by Microsoft&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note: After installation make sure you read the individual extension installation instructions. You will need to set the `java.home` user setting as per language extension instructions. Don’t forget double backslashes in the path to the &lt;strong&gt;root&lt;/strong&gt; of your JDK.&lt;br /&gt;
+Install the &lt;strong&gt;&lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test&quot;&gt;Java Test Runner&lt;/a&gt;&lt;/strong&gt; extension&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/test-runner-extension.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;creating-a-maven-project&quot;&gt;&lt;strong&gt;Creating a maven project&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Start by opening a new Visual Studio Code window (Ctrl + Shift + N) and opening a new console (Ctrl + ‘).&lt;br /&gt;
+Navigate to directory where you want to create your new maven project.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cd {to-you-project-dir}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then create a new empty maven project using the maven command line. Alternatively the created project can be cloned from the github project &lt;a href=&quot;https://github.com/teggr/vs-code-first-look/&quot;&gt;teggr/vs-code-first-look&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn -B archetype:generate \
+      -DarchetypeGroupId=org.apache.maven.archetypes \
+      -DgroupId=com.robintegg.blog \
+      -DartifactId=vs-code-first-look
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Maven will then create a new folder called &lt;strong&gt;vs-code-first-look&lt;/strong&gt; with a prepopulated `pom.xml`, `App` class and `AppTest` unit test.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;log[INFO] ----------------------------------------------------------------------------[INFO] Using following parameters for creating project from Old (1.x) Archetype: maven-archetype-quickstart:1.0[INFO] ----------------------------------------------------------------------------[INFO] Parameter: basedir, Value: C:\projects[INFO] Parameter: package, Value: com.robintegg.blog[INFO] Parameter: groupId, Value: com.robintegg.blog[INFO] Parameter: artifactId, Value: vs-code-first-look[INFO] Parameter: packageName, Value: com.robintegg.blog[INFO] Parameter: version, Value: 1.0-SNAPSHOT[INFO] project created from Old (1.x) Archetype in dir: C:\projects\vs-code-first-look[INFO] ------------------------------------------------------------------------[INFO] BUILD SUCCESS[INFO] ------------------------------------------------------------------------[INFO] Total time: 30.087 s[INFO] Finished at: 2018-01-05T12:35:11+00:00[INFO] Final Memory: 14M/190M[INFO] ------------------------------------------------------------------------
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After the maven build has completed, then in the Visual Studio Code file explorer, open the newly created folder. You should then see the new maven project.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/initial-maven-project-1024x573.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;java-extension-pack-features&quot;&gt;&lt;strong&gt;Java Extension Pack features&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;The language extension should recognise both maven and gradle projects. I’m not sure what maven version is being picked up by the extension. An embedded version or the one availble from my path.&lt;br /&gt;
+Open up the Java and XML files and you can try out the extension features.&lt;/p&gt;
+
+&lt;h4 id=&quot;autocomplete&quot;&gt;&lt;strong&gt;Autocomplete&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/autocomplete.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;code-actions&quot;&gt;&lt;strong&gt;Code actions&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/code-actions.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;compilation-errors&quot;&gt;&lt;strong&gt;Compilation errors&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/compilation-errors.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;debugger-for-java&quot;&gt;&lt;strong&gt;Debugger for Java&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;Visual Studio Code requires a launch configuration to be created that will support running and debugging a Java application.&lt;/p&gt;
+
+&lt;p&gt;Adding configuration can be done through the menu&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/add-configuration.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you have a maven project without any modules, then the tool appears to be able to find the ‘main’ method and prepopulate for you.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/initial-launch-configuration.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;To run the application, use &lt;strong&gt;Ctrl + F5&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;To use debugging, add breakpoints in your editor and run the application with debugging enabled, using &lt;strong&gt;F5&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/debugging-1024x573.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;unit-testing&quot;&gt;&lt;strong&gt;Unit Testing&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Using the maven project above, if you open a Junit test you are then able to interact with the &lt;strong&gt;Java Test Runner&lt;/strong&gt; features.&lt;br /&gt;
+Each test and class declaration gets a “run test | debug test” option which will run the test(s) in the background.&lt;/p&gt;
+
+&lt;p&gt;There’s a test explorer window and a test report tool. Supports junit 4.8 upwards so some classes extending TestCase won’t work out the box with the extension, but these can call always be run with maven.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/spring-boot-application-launch-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;multi-module-support&quot;&gt;&lt;strong&gt;Multi Module support&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Many of the maven projects that I deal with on a daily basis will be &lt;a href=&quot;https://maven.apache.org/guides/mini/guide-multiple-modules.html&quot;&gt;multi-module maven projects&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I’ve create a project on github called &lt;a href=&quot;https://github.com/teggr/vs-code-multimodule/&quot;&gt;teggr/vs-code-multimodule&lt;/a&gt;] that contains an example multi-module maven project. This projects contains a class in the `vs-code-core` module which will be added as a dependency to the `vs-code-web` module.&lt;/p&gt;
+
+&lt;p&gt;Loading this project is fine, if you change the root pom.xml, you might see a message like below:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/multi-module-build-change-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I’m assuming this is Visual Studio Code making sure that it’s m2eclipse or internal build files are keeping in sync with the poms.&lt;br /&gt;
+One error I have not been able to solve yet, is managing the modules and the classpath. If you simply open the root project folder then you will be presented with a warning below complaining that the classes in the modules are not on the classpath.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/multi-module-classpath-warn-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Eclipse shows the same type of behaviour if you only import the root project, so I tried add the child modules folders to a workspace. I’ve not spent much time with workspaces in Visual Studio code.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/multi-module-add-folder-1024x721.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This seems to resolve the classpath resolution. It does mean that you do need to open the workspace file through explorer (does this need to be checked into github?), not just the folder as you can with a single maven project. Not sure if there’s a way to recursively import each module into a workspace, like “Import…” in Eclipse.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/multi-module-classpath-resolution-1024x721.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Once the classpath resolution was working ok, I tried unsuccessfully to run the application and kept getting a host/port error come. More investigation required here I think.&lt;/p&gt;
+
+&lt;h2 id=&quot;spring-boot-support&quot;&gt;&lt;strong&gt;Spring Boot support&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Quite often I like to try out and demo applications using &lt;a href=&quot;https://projects.spring.io/spring-boot/&quot;&gt;Spring Boot&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I have a simple web application in development for testing Spring Boot support. If I clone &lt;a href=&quot;https://github.com/teggr/all-in-java&quot;&gt;teggr/all-in-java&lt;/a&gt; and open this folder in Visual Studio code then I should be able to start the web application.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/spring-boot-application-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Visual Studio code does create the launch configuration nicely for you&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/spring-boot-application-launch-1024x720.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The application can then be run and debugged as documented above.&lt;/p&gt;
+
+&lt;h2 id=&quot;summary&quot;&gt;&lt;strong&gt;Summary&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Having already familiarised myself with Visual Studio Code with JavaScript, the process of installing the extensions was quick and easy, though I would say the documenation could do with a few tweaks. I also had to stumble across the test runner in the tutorial, perhaps more cross referencing of the tools would help.&lt;br /&gt;
+For the small projects that I imported, the Java compiler (based on m2eclipse) was quick and accurate so I can’t fault it there. Compared to Eclipse there are a number of refactoring code actions missing which I make much use of on a daily basis.&lt;/p&gt;
+
+&lt;p&gt;I will need to spend more time researching the multi-module support and how to launch an application from a child module. This is key for Visual Studio Code to be my main development tool.&lt;br /&gt;
+As the extensions worked well with Spring Boot, this is good for demos and some of my side projects. At work I still have some projects that require WAR deployments into containers and I’m not sure how to manage this development cycle outside of an Eclipse environment without lots of manual steps.&lt;/p&gt;
+
+&lt;p&gt;Given Spring Tool Suite is my main development tool, it will always be difficult to transition to a new tool easily and maintain a productive workflow. I’ve tried IntelliJ a number of times but always go back to Eclipse. Visual Studio Code already seems to have slipped into my development workflow and will become an even more useful tool once I’ve got to grips with a few more features.&lt;/p&gt;</content><author><name></name></author><summary type="html">Microsoft recently released a Visual Studio Java extension pack and a Java Test Runner to the Visual Studio Code market place. The Visual Studio Java extension pack adds debugging support to the Red Hat language support for Java. The Java Test Runner adds support for executing JUnit tests.</summary></entry></feed>

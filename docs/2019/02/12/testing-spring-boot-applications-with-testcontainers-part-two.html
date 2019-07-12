@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Testing Spring Boot applications with TestContainers - Part Two | Robin Tegg</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Testing Spring Boot applications with TestContainers - Part Two" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Part One - Data access layer integration tests Part Two - Application integration tests Part Three - UI tests" />
+<meta property="og:description" content="Part One - Data access layer integration tests Part Two - Application integration tests Part Three - UI tests" />
+<link rel="canonical" href="/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two.html" />
+<meta property="og:url" content="/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two.html" />
+<meta property="og:site_name" content="Robin Tegg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-02-12T00:00:00+00:00" />
+<script type="application/ld+json">
+{"url":"/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two.html","headline":"Testing Spring Boot applications with TestContainers - Part Two","dateModified":"2019-02-12T00:00:00+00:00","datePublished":"2019-02-12T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two.html"},"description":"Part One - Data access layer integration tests Part Two - Application integration tests Part Three - UI tests","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Robin Tegg" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Robin Tegg</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Testing Spring Boot applications with TestContainers - Part Two</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-02-12T00:00:00+00:00" itemprop="datePublished">Feb 12, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul>
+  <li><a href="http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/">Part One - Data access layer integration tests</a></li>
+  <li>Part Two - Application integration tests</li>
+  <li><a href="https://www.robintegg.com/2019/02/24/testing-spring-boot-applications-with-testcontainers-and-selenium-webdriver-part-three/">Part Three - UI tests</a></li>
+</ul>
+
+<p>This is the second of a short series of posts showing how the <a href="https://www.testcontainers.org/">TestContainers</a> project can be leveraged to help test a <a href="https://spring.io/projects/spring-boot">Spring Boot</a> application in a variety of ways.</p>
+
+<p>In the <a href="http://robintegg.com/2019/02/09/testing-spring-boot-applications-with-testcontainers/">first post</a>, we concentrated on using the <a href="https://www.testcontainers.org/modules/databases/">TestContainers database support</a> to ensure that our <a href="https://flywaydb.org/">Flyway</a> scripts and <a href="https://spring.io/projects/spring-data-jpa">Spring Data JPA</a> configuration were integrated correctly.</p>
+
+<p>For this second part, we will move up a gear and look to use <a href="https://www.testcontainers.org/">TestContainers</a> to run a Spring Boot test that will run all our dependencies using Docker containers.</p>
+
+<h2 id="testcontainers-demo">testcontainers-demo</h2>
+
+<p>We will continue to use the <a href="https://github.com/teggr/testcontainers-demo">testcontainers-demo</a> application as the System under test (SUT). The application routes notification messages from a JMS Queue to a RabbitMQ exchange, storing each notification in a Postgres database. This application also provides a web interface to see a list of all the messages that are routed by the application.</p>
+
+<p><img src="/images/testcontainers-demo.png" alt="" /></p>
+
+<h2 id="application-integration-tests">Application integration tests</h2>
+
+<p>In order to run a test that reads from the JMS Queue and publishes to the RabbitMQ Exchange we will need JMS and RabbitMQ brokers. Using <a href="https://www.testcontainers.org/">TestContainers</a> we can spin up these brokers using docker and configure our tests to use the transient brokers.</p>
+
+<p><a href="https://www.testcontainers.org/">TestContainers</a> does not have any advanced support for these services so we will need to use the <a href="https://www.testcontainers.org/features/creating_container/">GenericContainer</a> support. To do this we specify an image we want to run.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@ClassRule
+public static GenericContainer&lt;?&gt; activeMQContainer = new GenericContainer&lt;&gt;("rmohr/activemq:latest")
+			.withExposedPorts(61616);
+
+@ClassRule
+public static GenericContainer&lt;?&gt; rabbitMQContainer = new GenericContainer&lt;&gt;("rabbitmq:management")
+			.withExposedPorts(5672);
+</code></pre></div></div>
+
+<p>In the above code, using the available fluent methods, we also declare what ports we want TestContainers to make available to our unit test.</p>
+
+<p>In the first post we configured the JUnit test to override our application’s Spring Boot properties with the TestContainer configuration values. Now we have three containers, we can look to move those items into a single static method for convenience. Also note that for the ActiveMQ and RabbitMQ port properties we have to specify what port mapping we want to retrieve.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class DemoApplicationTestPropertyValues {
+
+	public static TestPropertyValues using(PostgreSQLContainer&lt;?&gt; postgreSQLContainer,
+			GenericContainer&lt;?&gt; activeMQContainer, GenericContainer&lt;?&gt; rabbitMQContainer) {
+		List&lt;String&gt; pairs = new ArrayList&lt;&gt;();
+
+		// postgres
+		pairs.add("spring.datasource.url=" + postgreSQLContainer.getJdbcUrl());
+		pairs.add("spring.datasource.username=" + postgreSQLContainer.getUsername());
+		pairs.add("spring.datasource.password=" + postgreSQLContainer.getPassword());
+		// activemq
+		pairs.add("spring.activemq.broker-url=tcp://localhost:" + activeMQContainer.getMappedPort(61616));
+		// rabbitmq
+		pairs.add("spring.rabbitmq.port=" + rabbitMQContainer.getMappedPort(5672));
+
+		return TestPropertyValues.of(pairs);
+	}
+}
+</code></pre></div></div>
+
+<p>This code will now be called from the ApplicationContextInitializer in our test</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static class Initializer implements ApplicationContextInitializer&lt;ConfigurableApplicationContext&gt; {
+
+		@Override
+		public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+
+			DemoApplicationTestPropertyValues.using(postgreSQLContainer, activeMQContainer, rabbitMQContainer)
+					.applyTo(configurableApplicationContext.getEnvironment());
+
+		}
+
+	}
+</code></pre></div></div>
+
+<p>Now that we have all three containers configured we are ready to write a test that can invoke the application through actual services rather than in memory versions.</p>
+
+<p>The full JUnit test is below:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">robintegg</span><span class="p">.</span><span class="n">testcontainersdemo</span><span class="p">.</span><span class="n">routing</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">static</span> <span class="n">org</span><span class="p">.</span><span class="n">hamcrest</span><span class="p">.</span><span class="n">CoreMatchers</span><span class="p">.</span><span class="n">is</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">static</span> <span class="n">org</span><span class="p">.</span><span class="n">hamcrest</span><span class="p">.</span><span class="n">CoreMatchers</span><span class="p">.</span><span class="n">notNullValue</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">static</span> <span class="n">org</span><span class="p">.</span><span class="n">junit</span><span class="p">.</span><span class="n">Assert</span><span class="p">.</span><span class="n">assertThat</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">junit</span><span class="p">.</span><span class="n">ClassRule</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">junit</span><span class="p">.</span><span class="n">Test</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">junit</span><span class="p">.</span><span class="n">runner</span><span class="p">.</span><span class="n">RunWith</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">amqp</span><span class="p">.</span><span class="n">rabbit</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">RabbitTemplate</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">beans</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Autowired</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">boot</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">autoconfigure</span><span class="p">.</span><span class="n">jdbc</span><span class="p">.</span><span class="n">AutoConfigureTestDatabase</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">boot</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">autoconfigure</span><span class="p">.</span><span class="n">jdbc</span><span class="p">.</span><span class="n">AutoConfigureTestDatabase</span><span class="p">.</span><span class="n">Replace</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">boot</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">SpringBootTest</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">ApplicationContextInitializer</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">ConfigurableApplicationContext</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">ParameterizedTypeReference</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">jms</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">JmsTemplate</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">ContextConfiguration</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">junit4</span><span class="p">.</span><span class="n">SpringRunner</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">testcontainers</span><span class="p">.</span><span class="n">containers</span><span class="p">.</span><span class="n">GenericContainer</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">testcontainers</span><span class="p">.</span><span class="n">containers</span><span class="p">.</span><span class="n">PostgreSQLContainer</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">fasterxml</span><span class="p">.</span><span class="n">jackson</span><span class="p">.</span><span class="n">databind</span><span class="p">.</span><span class="n">ObjectMapper</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">robintegg</span><span class="p">.</span><span class="n">testcontainersdemo</span><span class="p">.</span><span class="n">inbound</span><span class="p">.</span><span class="n">JMSNotification</span><span class="p">;</span>
+
+<span class="p">@</span><span class="n">RunWith</span><span class="p">(</span><span class="n">SpringRunner</span><span class="p">.</span><span class="n">class</span><span class="p">)</span>
+<span class="p">@</span><span class="n">SpringBootTest</span>
+<span class="p">@</span><span class="n">AutoConfigureTestDatabase</span><span class="p">(</span><span class="n">replace</span> <span class="p">=</span> <span class="n">Replace</span><span class="p">.</span><span class="n">NONE</span><span class="p">)</span>
+<span class="p">@</span><span class="n">ContextConfiguration</span><span class="p">(</span><span class="n">initializers</span> <span class="p">=</span> <span class="p">{</span> <span class="n">RoutingTest</span><span class="p">.</span><span class="n">Initializer</span><span class="p">.</span><span class="n">class</span> <span class="p">},</span> <span class="n">classes</span> <span class="p">=</span> <span class="n">RabbitMqTestConfiguration</span><span class="p">.</span><span class="n">class</span><span class="p">)</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">RoutingTest</span> <span class="p">{</span>
+
+	<span class="p">@</span><span class="n">ClassRule</span>
+	<span class="k">public</span> <span class="n">static</span> <span class="n">PostgreSQLContainer</span><span class="p">&lt;?&gt;</span> <span class="n">postgreSQLContainer</span> <span class="p">=</span> <span class="n">new</span> <span class="n">PostgreSQLContainer</span><span class="p">&lt;&gt;(</span><span class="s2">"postgres:latest"</span><span class="p">);</span>
+
+	<span class="p">@</span><span class="n">ClassRule</span>
+	<span class="k">public</span> <span class="n">static</span> <span class="n">GenericContainer</span><span class="p">&lt;?&gt;</span> <span class="n">activeMQContainer</span> <span class="p">=</span> <span class="n">new</span> <span class="n">GenericContainer</span><span class="p">&lt;&gt;(</span><span class="s2">"rmohr/activemq:latest"</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">withExposedPorts</span><span class="p">(</span><span class="m">61616</span><span class="p">);</span>
+
+	<span class="p">@</span><span class="n">ClassRule</span>
+	<span class="k">public</span> <span class="n">static</span> <span class="n">GenericContainer</span><span class="p">&lt;?&gt;</span> <span class="n">rabbitMQContainer</span> <span class="p">=</span> <span class="n">new</span> <span class="n">GenericContainer</span><span class="p">&lt;&gt;(</span><span class="s2">"rabbitmq:management"</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">withExposedPorts</span><span class="p">(</span><span class="m">5672</span><span class="p">);</span>
+
+	<span class="p">@</span><span class="n">Autowired</span>
+	<span class="n">private</span> <span class="n">JmsTemplate</span> <span class="n">jmsTemplate</span><span class="p">;</span>
+
+	<span class="p">@</span><span class="n">Autowired</span>
+	<span class="n">private</span> <span class="n">RabbitTemplate</span> <span class="n">rabbitTemplate</span><span class="p">;</span>
+
+	<span class="p">@</span><span class="n">Autowired</span>
+	<span class="n">private</span> <span class="n">ObjectMapper</span> <span class="n">objectMapper</span><span class="p">;</span>
+
+	<span class="p">@</span><span class="n">Autowired</span>
+	<span class="n">private</span> <span class="n">NotificationRepository</span> <span class="n">notificationRepository</span><span class="p">;</span>
+
+	<span class="p">@</span><span class="n">Test</span>
+	<span class="k">public</span> <span class="n">void</span> <span class="n">shouldStoreANotifcationFromTheJmsQueueAndForwardToTheRabbitMQExchange</span><span class="p">()</span> <span class="n">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+
+		<span class="p">//</span> <span class="n">given</span>
+		<span class="k">String</span> <span class="n">message</span> <span class="p">=</span> <span class="s2">"TestContainers are great"</span><span class="p">;</span>
+		<span class="n">JMSNotification</span> <span class="n">jmsNotification</span> <span class="p">=</span> <span class="n">new</span> <span class="n">JMSNotification</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+
+		<span class="p">//</span> <span class="n">when</span>
+		<span class="n">sendNotificationToJmsQueue</span><span class="p">(</span><span class="n">jmsNotification</span><span class="p">);</span>
+
+		<span class="p">//</span> <span class="k">then</span>
+		<span class="n">assertThatNotificationIsForwardedToRabbitMq</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+		<span class="n">assertThatNotificationIsStoredInTheDatabase</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+
+	<span class="p">}</span>
+
+	<span class="n">private</span> <span class="n">void</span> <span class="n">assertThatNotificationIsStoredInTheDatabase</span><span class="p">(</span><span class="k">String</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">Notification</span> <span class="n">notification</span> <span class="p">=</span> <span class="n">notificationRepository</span><span class="p">.</span><span class="n">findAll</span><span class="p">().</span><span class="n">get</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+		<span class="n">assertThat</span><span class="p">(</span><span class="n">notification</span><span class="p">.</span><span class="n">getMessage</span><span class="p">(),</span> <span class="n">is</span><span class="p">(</span><span class="n">message</span><span class="p">));</span>
+		<span class="n">assertThat</span><span class="p">(</span><span class="n">notification</span><span class="p">.</span><span class="n">getSource</span><span class="p">(),</span> <span class="n">is</span><span class="p">(</span><span class="s2">"JMS"</span><span class="p">));</span>
+		<span class="n">assertThat</span><span class="p">(</span><span class="n">notification</span><span class="p">.</span><span class="nf">getId</span><span class="p">(),</span> <span class="n">notNullValue</span><span class="p">());</span>
+	<span class="p">}</span>
+
+	<span class="n">private</span> <span class="n">void</span> <span class="n">assertThatNotificationIsForwardedToRabbitMq</span><span class="p">(</span><span class="k">String</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">Notification</span> <span class="n">notification</span> <span class="p">=</span> <span class="n">readNotificationFromRabbitMqQueue</span><span class="p">();</span>
+		<span class="n">assertThat</span><span class="p">(</span><span class="n">notification</span><span class="p">.</span><span class="n">getMessage</span><span class="p">(),</span> <span class="n">is</span><span class="p">(</span><span class="n">message</span><span class="p">));</span>
+		<span class="n">assertThat</span><span class="p">(</span><span class="n">notification</span><span class="p">.</span><span class="n">getSource</span><span class="p">(),</span> <span class="n">is</span><span class="p">(</span><span class="s2">"JMS"</span><span class="p">));</span>
+		<span class="n">assertThat</span><span class="p">(</span><span class="n">notification</span><span class="p">.</span><span class="nf">getId</span><span class="p">(),</span> <span class="n">notNullValue</span><span class="p">());</span>
+	<span class="p">}</span>
+
+	<span class="n">private</span> <span class="n">void</span> <span class="n">sendNotificationToJmsQueue</span><span class="p">(</span><span class="n">JMSNotification</span> <span class="n">jmsNotification</span><span class="p">)</span> <span class="n">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+		<span class="n">jmsTemplate</span><span class="p">.</span><span class="n">convertAndSend</span><span class="p">(</span><span class="s2">"jms.events"</span><span class="p">,</span> <span class="n">objectMapper</span><span class="p">.</span><span class="n">writeValueAsString</span><span class="p">(</span><span class="n">jmsNotification</span><span class="p">));</span>
+	<span class="p">}</span>
+
+	<span class="n">private</span> <span class="n">Notification</span> <span class="n">readNotificationFromRabbitMqQueue</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">ParameterizedTypeReference</span><span class="p">&lt;</span><span class="n">Notification</span><span class="p">&gt;</span> <span class="n">notificationTypeRef</span> <span class="p">=</span> <span class="n">new</span> <span class="n">ParameterizedTypeReference</span><span class="p">&lt;</span><span class="n">Notification</span><span class="p">&gt;()</span> <span class="p">{</span>
+		<span class="p">};</span>
+
+		<span class="n">Notification</span> <span class="n">notification</span> <span class="p">=</span> <span class="n">rabbitTemplate</span><span class="p">.</span><span class="n">receiveAndConvert</span><span class="p">(</span><span class="s2">"testcontainers.test.queue"</span><span class="p">,</span> <span class="m">1000</span><span class="p">,</span>
+				<span class="n">notificationTypeRef</span><span class="p">);</span>
+		<span class="n">return</span> <span class="n">notification</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">static</span> <span class="n">class</span> <span class="n">Initializer</span> <span class="n">implements</span> <span class="n">ApplicationContextInitializer</span><span class="p">&lt;</span><span class="n">ConfigurableApplicationContext</span><span class="p">&gt;</span> <span class="p">{</span>
+
+		<span class="p">@</span><span class="n">Override</span>
+		<span class="k">public</span> <span class="n">void</span> <span class="n">initialize</span><span class="p">(</span><span class="n">ConfigurableApplicationContext</span> <span class="n">configurableApplicationContext</span><span class="p">)</span> <span class="p">{</span>
+
+			<span class="n">DemoApplicationTestPropertyValues</span><span class="p">.</span><span class="n">using</span><span class="p">(</span><span class="n">postgreSQLContainer</span><span class="p">,</span> <span class="n">activeMQContainer</span><span class="p">,</span> <span class="n">rabbitMQContainer</span><span class="p">)</span>
+					<span class="p">.</span><span class="n">applyTo</span><span class="p">(</span><span class="n">configurableApplicationContext</span><span class="p">.</span><span class="n">getEnvironment</span><span class="p">());</span>
+
+		<span class="p">}</span>
+
+	<span class="p">}</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Now we’ve got a template <a href="https://www.testcontainers.org/">TestContainers</a> JUnit test you can start to explore further scenarios that might be more relevant to your own projects.</p>
+
+<p>One extension might be to use databases loaded with production levels of data to test performance of your application. This can be managed by attaching <a href="https://www.testcontainers.org/features/files/">volumes</a> to your database containers.</p>
+
+<p>Furthermore, externally managed HTTP services could be replaced with <a href="http://wiremock.org/">WireMock</a> stubs running in containers.</p>
+
+<p><a href="https://www.testcontainers.org/">TestContainers</a> also contains some pretty useful support for <a href="https://www.testcontainers.org/modules/webdriver_containers/">containers running WebDriver</a>. This gives you excellent support for further UI test automation and regression testing. This is something we will elaborate on in the next post.</p>
+
+  </div><a class="u-url" href="/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Robin Tegg</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Robin Tegg</li><li><a class="u-email" href="mailto:robin@tegg.me.uk">robin@tegg.me.uk</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/teggr"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">teggr</span></a></li><li><a href="https://www.twitter.com/robintegg"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">robintegg</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design. </p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

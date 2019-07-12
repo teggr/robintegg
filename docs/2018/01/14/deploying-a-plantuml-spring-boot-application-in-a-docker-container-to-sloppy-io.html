@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Deploying a PlantUML Spring Boot application in a docker container to sloppy.io | Robin Tegg</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Deploying a PlantUML Spring Boot application in a docker container to sloppy.io" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I’m a big fan of including PlantUML diagrams for documentation using Asciidoc and Spring REST docs. Using PlantUML also saves time when visualising software designs as the cycle time of editing and seeing the new diagram can be much shorter that using drag and drop tools like Visio." />
+<meta property="og:description" content="I’m a big fan of including PlantUML diagrams for documentation using Asciidoc and Spring REST docs. Using PlantUML also saves time when visualising software designs as the cycle time of editing and seeing the new diagram can be much shorter that using drag and drop tools like Visio." />
+<link rel="canonical" href="/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io.html" />
+<meta property="og:url" content="/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io.html" />
+<meta property="og:site_name" content="Robin Tegg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-01-14T00:00:00+00:00" />
+<script type="application/ld+json">
+{"url":"/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io.html","headline":"Deploying a PlantUML Spring Boot application in a docker container to sloppy.io","dateModified":"2018-01-14T00:00:00+00:00","datePublished":"2018-01-14T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io.html"},"description":"I’m a big fan of including PlantUML diagrams for documentation using Asciidoc and Spring REST docs. Using PlantUML also saves time when visualising software designs as the cycle time of editing and seeing the new diagram can be much shorter that using drag and drop tools like Visio.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Robin Tegg" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Robin Tegg</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Deploying a PlantUML Spring Boot application in a docker container to sloppy.io</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-01-14T00:00:00+00:00" itemprop="datePublished">Jan 14, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>I’m a big fan of including <a href="http://plantuml.com/">PlantUML diagrams</a> for documentation using <a href="http://asciidoctor.org/">Asciidoc</a> and <a href="https://projects.spring.io/spring-restdocs/">Spring REST docs</a>. Using PlantUML also saves time when visualising software designs as the cycle time of editing and seeing the new diagram can be much shorter that using drag and drop tools like Visio.</p>
+
+<p>PlantUML works by taking in textual notation for a sequence diagram like below:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@startuml
+Alice -&gt; Bob: Authentication RequestBob --&gt; Alice: Authentication Response
+Alice -&gt; Bob: Another authentication RequestAlice &lt;-- Bob: another authentication Response
+@enduml
+</code></pre></div></div>
+
+<p>and is able to generate a UML diagram.</p>
+
+<p><img src="/images/sequence-diagram.png" alt="" /></p>
+
+<p>The PlantUML site does have a link to an <a href="http://www.plantuml.com/plantuml/uml/">online demo tool</a> where you can try on the various supported UML diagram types.</p>
+
+<ul>
+  <li>Sequence diagram</li>
+  <li>Usecase diagram</li>
+  <li>Class diagram</li>
+  <li>Activity diagram</li>
+  <li>Component diagram</li>
+  <li>State diagram</li>
+  <li>Object diagram</li>
+  <li>Deployment diagram</li>
+  <li>Timing diagram</li>
+</ul>
+
+<p>The online demo tool has limited capabilities and I wanted to build my own version that would both cater for online editing and also storage of those diagrams so that I could use it as a notebook of software diagrams.</p>
+
+<p>I started to build an <a href="https://github.com/teggr/online-editor">Online Editor</a> for myself last year. The application was initially deployed to <a href="https://www.heroku.com/">Heroku</a> with basic editing functionality. However, <a href="http://plantuml.com/api">PlantUML java library</a> has a dependency on the <a href="https://www.graphviz.org/">Graphviz</a> library for all other diagram types but sequence. So to add the ability to add further diagram types to the Online Editor it makes sense to package both the application and its dependency in a docker container. The docker container then also needs to be hosted somewhere. For the hosting I’m going to trial <a href="https://sloppy.io/">sloppy.io</a> where they have a nice simple interface for deploying and running Docker containers.</p>
+
+<h2 id="tldr"><strong>tl;dr</strong></h2>
+
+<ul>
+  <li>Build a Docker container for Spring Boot application with PlantUML and Graphviz dependencies</li>
+  <li>Push to Docker Hub</li>
+  <li>Build and run on sloppy.io</li>
+</ul>
+
+<h2 id="online-editor-github-project"><strong>Online Editor GitHub Project</strong></h2>
+
+<p>To get a copy of the project you can clone the github repository.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/teggr/online-editor
+</code></pre></div></div>
+
+<p>The project is currently a simple <a href="https://spring.io/guides">Spring Boot</a> web application, built using maven and has a dependency on PlantUML available through <a href="https://mvnrepository.com/artifact/net.sourceforge.plantuml/plantuml">maven central</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pom.xml
+&lt;!-- plant uml --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;net.sourceforge.plantuml&lt;/groupId&gt;
+    &lt;artifactId&gt;plantuml&lt;/artifactId&gt;
+    &lt;version&gt;8059&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre></div></div>
+
+<p>Run the Spring Boot application and open http://localhost:8383 to see the working application in your browser. To build, run a `mvn install` from the command line.</p>
+
+<h2 id="adding-docker"><strong>Adding Docker</strong></h2>
+
+<p>Assuming that you have Docker installed and available from the command line then, you have all you need to build and run the container locally.</p>
+
+<p>To get the application up and running I’ve started with a small <strong>Dockerfile</strong> that builds on the OpenJDK container and installs both GraphViz and locally built application. Upon being run, the container will lauch the Spring Boot application.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Dockerfile
+FROM openjdk:8-jdk
+RUN apt-get update &amp;&amp; apt-get install -y \  graphviz
+ENV GRAPHVIZ_DOT /usr/bin/dot
+COPY target/online-editor-0.0.1-SNAPSHOT.jar /usr/share/online-editor-0.0.1-SNAPSHOT.jar
+EXPOSE 8383
+CMD ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-jar", "/usr/share/online-editor-0.0.1-SNAPSHOT.jar"]
+</code></pre></div></div>
+
+<p>To build the image and run the container, we can use the following commands. The Online Editor should then again be available on http://localhost:8383</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build -t online-editordocker run --publish 8383:8383 online-editor
+</code></pre></div></div>
+
+<h2 id="storing-image-to-docker-hub"><strong>Storing Image to Docker Hub</strong></h2>
+
+<p>Next step for the Docker Image is to host it somewhere that can be accessed by sloppy.io. They have built in support for <a href="https://hub.docker.com">Docker Hub</a> and <a href="https://quay.io/">Quay.io</a>.<br />
+For this project I’m pushing to my own <a href="https://hub.docker.com/r/teggr/">Docker Hub account</a> and repository:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build -t teggr/online-editor:0.0.1docker push teggr/online-editor:0.0.1
+</code></pre></div></div>
+
+<p>The docker image is available at https://hub.docker.com/r/teggr/online-editor/</p>
+
+<h2 id="deploying"><strong>Deploying</strong></h2>
+
+<p>Now that we have a publicly hosted docker image we can run the application on <a href="https://sloppy.io/">sloppy.io</a>. When I started this post there was a 14 day free trial and paid plans from £5 a month.<br />
+sloppy.io has some useful guides to deploying your first docker container.</p>
+
+<p><a href="https://kb.sloppy.io/getting-started">https://kb.sloppy.io/getting-started</a></p>
+
+<p>Download the CLI and add the exe to PATH</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c:&gt; sloppyusage: sloppy [--version] &lt;command&gt; [&lt;args&gt;] [--help]
+Available commands are:
+    change           Change the configuration of an application on the fly
+    delete           Delete a project, a service or an application
+    docker-login     Uploads docker credentials to sloppy.io
+    docker-logout    Removes docker credentials from sloppy.io
+    logs             Fetch the logs of a project, service or app
+    restart          Restart an app
+    rollback         Rollback an application
+    scale            Scale the number of instances in an application
+    show             Show settings of a project, a service or an application
+    start            Start a new project on the sloppy service
+    stats            Display metrics of a running app
+    version          Prints the sloppy version
+</code></pre></div></div>
+
+<p>Next step is to add your API token as an environment variable. In windows I did this through the system environment variables gui.<br />
+Once the CLI has been successfully configured you can start the application remotely on the command line. You can also do this through the admin console.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sloppy start --var=domain:robintegg-online-editor.sloppy.zone sloppy-online-editor.json
+</code></pre></div></div>
+
+<p>This makes my application available at http://robintegg-online-editor.sloppy.zone</p>
+
+<p><img src="/images/robintegg-online-editor-1024x402.png" alt="" /></p>
+
+<h2 id="summary"><strong>Summary</strong></h2>
+
+<p>Getting a Spring Boot application into a Docker container is relatively simple now. I’ve taken a fairly simple approach for the moment in constructing my docker image. There are many <a href="https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/">best practices</a> to follow when creating Dockerfiles. The offical <a href="https://hub.docker.com/_/openjdk/">OpenJDK image</a> also documents some best practices.</p>
+
+<p>Getting your application into a Docker image is only half the job done. The other half is wading through all the Docker hosting options. From do it yourself to fully managed, minute-by-minute to monthly billing there are so many options. I’ve plumped for sloppy.io as it seemed to be a nicely thought out offering to help me get my container up and running with minimal fuss. To that end I was not disappointed, I signed up for the free account, followed the get started guide to understand my next steps, then deployed!</p>
+
+<p>Sloppy.io gives a nice PAAS level of abstraction for deploying containers and doesn’t seem overly priced. I can deploy up to 50 containers, though I need more time to understand how I can run multiple containers within my allocated resoures. I’m sure I will extend my trial period into a paid one. Well done sloppy :)</p>
+
+<p>As for the <a href="https://github.com/teggr/online-editor">Online Editor</a>, next steps are to add some storage features and start using <a href="https://travis-ci.org">TravisCI</a> to build and deploy the application.</p>
+
+<p><img src="/images/robintegg-online-editor-1024x402.png" alt="" /></p>
+
+  </div><a class="u-url" href="/2018/01/14/deploying-a-plantuml-spring-boot-application-in-a-docker-container-to-sloppy-io.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Robin Tegg</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Robin Tegg</li><li><a class="u-email" href="mailto:robin@tegg.me.uk">robin@tegg.me.uk</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/teggr"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">teggr</span></a></li><li><a href="https://www.twitter.com/robintegg"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">robintegg</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design. </p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
