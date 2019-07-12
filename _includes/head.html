@@ -11,9 +11,9 @@
     <meta name="twitter:description" content="{{ page.content | strip_html | xml_escape | truncate: 200 }}">
     {% endif %}
     {% if page.image.thumb %}
-    <meta name="twitter:image" content="{{ site.url }}{{ site.baseurl }}{{ page.image.thumb }}">
+    <meta name="twitter:image" content="{{ page.image.thumb | absolute_url }}">
     {% else %}
-    <meta name="twitter:image" content="{{ site.url }}{{ site.baseurl }}{{ site.posts_default_img }}">
+    <meta name="twitter:image" content="{{ site.posts_default_img | absolute_url }}">
     {% endif %}
     {%- seo -%}
     <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
