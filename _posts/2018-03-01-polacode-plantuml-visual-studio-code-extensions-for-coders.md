@@ -3,6 +3,12 @@ layout: post
 title: "Polacode + PlantUML - Visual Studio Code extensions for coders"
 date: "2018-03-01"
 image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+tags:
+  - visual studio code
+  - java
+  - tools
+  - visual studio code plugins
+  - web
 ---
 ## **Polacode**
 

@@ -3,6 +3,12 @@ layout: post
 title: "Testing Spring Boot applications with TestContainers"
 date: "2019-02-09"
 image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+tags:
+  - spring boot
+  - testcontainers
+  - tools
+  - testing
+  - docker
 ---
 This is the first of a short series of posts showing how the [TestContainers](https://www.testcontainers.org/) project can be leveraged to help test a [Spring Boot](https://spring.io/projects/spring-boot) application in a variety of ways.
 

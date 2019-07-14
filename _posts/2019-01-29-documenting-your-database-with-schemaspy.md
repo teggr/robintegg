@@ -3,6 +3,12 @@ layout: post
 title: "Documenting your database with SchemaSpy"
 date: "2019-01-29"
 image: /assets/images/Screenshot_2019-01-29-SchemaSpy-•-Database-Documentation-Built-Easy-1.jpg
+tags:
+  - database
+  - postgres
+  - tools
+  - docker
+  - schemaspy
 ---
 ## Why?
 
