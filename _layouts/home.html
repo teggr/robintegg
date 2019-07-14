@@ -4,16 +4,15 @@ layout: default
 
 <div class="home">
   {%- if page.title -%}
-    <h1 class="page-heading">{{ page.title | default: "Tags" }}</h1>
+    <h1 class="page-heading">{{ page.title }}</h1>
   {%- endif -%}
 
   {{ content }}
 
-  {%- if site.tags.size > 0 -%}
-    {% for tag in site.tags %}
-    <h2 class="post-list-heading" id="{{ tag[0] }}">{{ tag[0] | capitalize }}</h2>
+  {%- if site.posts.size > 0 -%}
+    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
     <ul class="post-list">
-      {% for post in tag[1] %}
+      {%- for post in site.posts -%}
       <li>
         {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
         <span class="post-meta">{{ post.date | date: date_format }}</span>
@@ -25,10 +24,16 @@ layout: default
         {%- if site.show_excerpts -%}
           {{ post.excerpt }}
         {%- endif -%}
+        {%- if post.tags.size > 0 -%}
+        <ul class="post-tags">
+        {% for tag in post.tags %}
+              <li><a href="{{ '/tags#' | append: tag | relative_url }}">{{tag}}</a></li>
+        {% endfor %}
+        </ul>
+        {%- endif -%}
       </li>
       {%- endfor -%}
     </ul>
-    {% endfor %}
 
     <p class="feed-subscribe">
       <a href="{{ 'feed.xml' | relative_url }}">
