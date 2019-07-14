@@ -2,6 +2,7 @@
 layout: post
 title: "Testing Spring Boot applications with TestContainers - Part Two"
 date: "2019-02-12"
+image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 ---
 - [Part One - Data access layer integration tests](/2019/02/09/testing-spring-boot-applications-with-testcontainers/)
 - Part Two - Application integration tests

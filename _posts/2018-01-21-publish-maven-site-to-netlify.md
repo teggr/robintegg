@@ -2,6 +2,7 @@
 layout: post
 title: "Publish Maven Site to Netlify"
 date: "2018-01-21"
+image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 ---
 Having written a couple of posts with the [Hexo](https://hexo.io/) static site generator I wanted to start building out my site with extras such as [Pocket](https://getpocket.com/) links and details about my side Projects. Trying to extend the site has proved harder that I thought it might, so I'm going to switch over to another platform for publishing. This is likely going to be based on Spring Boot which I had previously considered writing after trying [JBake](http://jbake.org/).
 

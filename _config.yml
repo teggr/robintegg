@@ -1,4 +1,5 @@
 title: Robin Tegg
+author: Robin Tegg
 email: robin@tegg.me.uk
 description: >- # this means to ignore newlines until "baseurl:"
   A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design. 
@@ -7,6 +8,7 @@ url: "https://www.robintegg.com" # the base hostname & protocol for your site, e
 twitter_username: robintegg
 github_username:  teggr
 google_analytics: UA-112481105-1
+linkedin_username: robintegg
 
 # Build settings
 markdown: kramdown
@@ -14,4 +16,6 @@ theme: minima
 plugins:
   - jekyll-feed
 
-posts_default_img: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+# seo-plugin
+twitter:
+  username: robintegg

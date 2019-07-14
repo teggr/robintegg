@@ -2,7 +2,7 @@
 layout: post
 title: "Documenting your database with SchemaSpy"
 date: "2019-01-29"
-coverImage: "Screenshot_2019-01-29-SchemaSpy-•-Database-Documentation-Built-Easy-1.jpg"
+image: /assets/images/Screenshot_2019-01-29-SchemaSpy-•-Database-Documentation-Built-Easy-1.jpg
 ---
 ## Why?
 

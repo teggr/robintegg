@@ -2,6 +2,7 @@
 layout: post
 title: "Deploying a PlantUML Spring Boot application in a docker container to sloppy.io"
 date: "2018-01-14"
+image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 ---
 I'm a big fan of including [PlantUML diagrams](http://plantuml.com/) for documentation using [Asciidoc](http://asciidoctor.org/) and [Spring REST docs](https://projects.spring.io/spring-restdocs/). Using PlantUML also saves time when visualising software designs as the cycle time of editing and seeing the new diagram can be much shorter that using drag and drop tools like Visio.
 

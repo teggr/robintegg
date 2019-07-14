@@ -2,6 +2,7 @@
 layout: post
 title: "Good Read: Web Form Design by Luke Wroblewski"
 date: "2018-03-03"
+image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 ---
 ![]({{site.baseurl}}/assets/images/web-form-design-luke-wroblewski.jpg)
 
