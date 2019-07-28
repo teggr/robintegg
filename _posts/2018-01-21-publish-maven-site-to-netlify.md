@@ -27,19 +27,21 @@ mvn -B archetype:generate \
   -DartifactId=netlify-upload
 ```
 
-Influenced by the Gradle Wrapper, there is a \[Maven Wrapper\](mvn -N io.takari:maven:wrapper) available. The wrapper can be added using the maven task
+Influenced by the Gradle Wrapper, there is a [Maven Wrapper](https://github.com/takari/maven-wrapper) available. The wrapper can be added using the maven task
 
 ```
 mvn -N io.takari:maven:wrapper
 ```
 
-**Windows Users **Be aware that the \`./mvnw\` command needs to retain it's executable state when being deployed to GitHub so that it can be executed by Netlify. The [Lennart Schedin blog](http://blog.lesc.se/2011/11/how-to-change-file-premissions-in-git.html) provides details and explanations on how to do this. The commands for changing the permissions are summarized below:
+**Windows Users **Be aware that the `./mvnw` command needs to retain it's executable state when being deployed to GitHub so that it can be executed by Netlify. The [Lennart Schedin blog](http://blog.lesc.se/2011/11/how-to-change-file-premissions-in-git.html) provides details and explanations on how to do this. The commands for changing the permissions are summarized below:
 
 ```
->git ls-tree HEAD100644 blob 55c0287d4ef21f15b97eb1f107451b88b479bffe mvnw
+>git ls-tree HEAD
+    100644 blob 55c0287d4ef21f15b97eb1f107451b88b479bffe mvnw
 >git update-index --chmod=+x .mvnw
 >git status>git commit -m "Changing file permissions"
->git ls-tree HEAD100755 blob 55c0287d4ef21f15b97eb1f107451b88b479bffe   mvnw
+>git ls-tree HEAD
+    100755 blob 55c0287d4ef21f15b97eb1f107451b88b479bffe   mvnw
 ```
 
 For supporting the Netlify deployment, you can add the optional **netlify.toml** which will override any deploy settings you might have set in the UI.
