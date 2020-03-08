@@ -10,6 +10,8 @@ tags:
   - testing
   - docker
 ---
+Note: Some time has passed since writing this post, once read it maybe worth visiting the [Testing Spring Boot applications with TestContainers revisted 2020](/2020/03/08/testing-spring-boot-applications-with-testcontainers-revisited-2020) post that details some revisions for later versions of Spring Boot and JUnit 5. The source for this post is now on the [spring_boot_2_1_x_junit_4 branch](https://github.com/teggr/testcontainers-demo/tree/spring_boot_2_1_x_junit_4).
+***
 - [Part One - Data access layer integration tests](/2019/02/09/testing-spring-boot-applications-with-testcontainers/)
 - [Part Two - Application integration tests](/2019/02/12/testing-spring-boot-applications-with-testcontainers-part-two/)
 - Part Three - UI tests
