@@ -19,3 +19,17 @@ plugins:
 # seo-plugin
 twitter:
   username: robintegg
+
+# menu
+header_pages:
+  - podcasts/index.html
+  - categories.md
+  - tags.md
+
+# collections
+collections:
+  #books:
+  #  output: true
+  podcasts:
+    output: true
+    sort_by: title

@@ -1,0 +1,10 @@
+---
+layout: podcast
+title: Software Engineering Radio
+subtitle: The Podcast for Professional Software Developers
+authors: se-radio team
+tags:
+    - Programming
+    - Technology
+podnews_url: https://podnews.net/podcast/i9wxq
+---
