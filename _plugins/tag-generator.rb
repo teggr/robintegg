@@ -1,4 +1,9 @@
+#
+# Documentation for page generation:
+#
 # https://talk.jekyllrb.com/t/is-a-generator-for-creating-tag-pages-from-collections-possible/3820/5
+# https://jekyllrb.com/docs/plugins/generators/
+#
 module TagGeneratorPlugin
     class TagPageGenerator < Jekyll::Generator
       safe true
