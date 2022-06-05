@@ -15,11 +15,11 @@ layout: default
       {%- endif -%}</p>
   </header>
 
-  <a class="u-url" href="{{ page.podnews_url }}">Listen on Google Podcast</a>
-
   <div class="post-content e-content" itemprop="articleBody">
-    {{ content }}
+    {{ page.subtitle }}
   </div>
+
+  <a class="u-url" href="{{ page.podnews_url }}">Find out more and subscribe to the Podcast on Podnews</a>
 
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 </article>
