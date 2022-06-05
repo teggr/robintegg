@@ -1,5 +1,6 @@
 ---
 layout: podcast
+short_name: se_daily
 title: Software Engineering Daily
 subtitle: Technical interviews about software topics.
 authors: Software Engineering Daily

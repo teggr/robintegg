@@ -1,5 +1,6 @@
 ---
 layout: podcast
+short_name: shoptalk
 title: ShopTalk
 subtitle: A culture, society podcast from ShopTalk
 authors: Chris Coyier, Dave Rupert

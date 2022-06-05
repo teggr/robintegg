@@ -1,5 +1,6 @@
 ---
 layout: podcast
+short_name: legacy_code_rocks
 title: Legacy Code Rocks
 subtitle: Legacy Code Rocks explores the world of modernizing existing software applications. Hosts Andrea Goulet and M. Scott Ford of Corgibytes are out to change the way you think about legacy code.
 authors: Andrea Goulet and M. Scott Ford
