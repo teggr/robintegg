@@ -1,0 +1,58 @@
+---
+title: Tags
+layout: default
+---
+<div class="home">
+    {%- if page.title -%}
+      <h1 class="page-heading">{{ page.title | default: "Tags" }}</h1>
+    {%- endif -%}
+  
+    {% assign all_tags = "" | split: "" %}
+
+    {% assign docTags = site.documents | map: 'tags' %}
+
+    {% for tags in docTags %}
+        {% assign all_tags = all_tags | concat: tags %}
+    {% endfor %}
+
+    {% assign all_tags = all_tags | uniq | sort_natural %}
+
+    {%- if all_tags.size > 0 -%}
+
+      {% for tag in all_tags %}
+      <h2 class="post-list-heading" id="{{ tag }}">{{ tag | capitalize }}</h2>
+
+      {% assign tagged_content = "" | split: "" %}
+
+      {% for doc in site.documents %}
+        {% assign doc_tags = doc.tags %}
+        {% if doc_tags contains tag %}
+          {% assign tagged_content = tagged_content | push: doc %}
+        {% endif %}
+      {% endfor %}
+      
+      <ul class="post-list">
+        {% for post in tagged_content %}
+        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+        <span class="post-meta">{{ post.date | date: date_format }}</span>
+        <h3>
+          <a class="post-link" href="{{ post.url | relative_url }}">
+            {{ post.title | escape }}
+          </a>
+        </h3>
+        {%- if site.show_excerpts -%}
+          {{ post.excerpt }}
+        {%- endif -%}
+        {% endfor %}
+      </ul>
+
+      {% endfor %}
+  
+      <p class="feed-subscribe">
+        <a href="{{ 'feed.xml' | relative_url }}">
+          <svg class="svg-icon orange"><use xlink:href="{{ 'assets/minima-social-icons.svg#rss' | relative_url }}"></use></svg><span>Subscribe</span>
+        </a>
+      </p>
+    {%- endif -%}
+  
+  </div>

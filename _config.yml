@@ -22,14 +22,15 @@ twitter:
 
 # menu
 header_pages:
+  - books/index.html
   - podcasts/index.html
-  - categories.md
-  - tags.md
+  - tags/index.html
 
 # collections
 collections:
-  #books:
-  #  output: true
+  books:
+    output: true
+    sort_by: title
   podcasts:
     output: true
     sort_by: title
