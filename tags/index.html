@@ -19,34 +19,18 @@ layout: default
 
     {%- if all_tags.size > 0 -%}
 
-      {% for tag in all_tags %}
-      <h2 class="post-list-heading" id="{{ tag }}">{{ tag | capitalize }}</h2>
-
-      {% assign tagged_content = "" | split: "" %}
-
-      {% for doc in site.documents %}
-        {% assign doc_tags = doc.tags %}
-        {% if doc_tags contains tag %}
-          {% assign tagged_content = tagged_content | push: doc %}
-        {% endif %}
-      {% endfor %}
+    <ul class="post-list">
       
-      <ul class="post-list">
-        {% for post in tagged_content %}
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <span class="post-meta">{{ post.date | date: date_format }}</span>
+      {% for tag in all_tags %}
         <h3>
-          <a class="post-link" href="{{ post.url | relative_url }}">
-            {{ post.title | escape }}
+          <a class="post-link" href="{{ '/tags/' | append: tag | relative_url }}">
+            {{ tag | capitalize }}
           </a>
         </h3>
-        {%- if site.show_excerpts -%}
-          {{ post.excerpt }}
-        {%- endif -%}
         {% endfor %}
+        
       </ul>
 
-      {% endfor %}
   
       <p class="feed-subscribe">
         <a href="{{ 'feed.xml' | relative_url }}">
