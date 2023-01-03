@@ -7,3 +7,11 @@ https://www.robintegg.com
 # Finding Podcast Links
 
 https://podnews.net/search?q=
+
+# Running Jekyll on GitHub Workspaces
+
+```
+gem install bundler jekyll
+bundle update
+bundle exec jekyll serve --incremental
+```
