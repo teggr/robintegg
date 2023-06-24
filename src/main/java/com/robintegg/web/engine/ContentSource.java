@@ -1,5 +1,7 @@
-package com.robintegg.web;
+package com.robintegg.web.engine;
 
+import com.robintegg.web.pages.Index;
+import com.robintegg.web.pages._404;
 import lombok.extern.slf4j.Slf4j;
 import org.commonmark.Extension;
 import org.commonmark.ext.front.matter.YamlFrontMatterExtension;
@@ -80,7 +82,8 @@ public class ContentSource {
                                         && !path.contains("target")
                                         && !path.contains("pom.xml")
                                         && !path.contains("README.md")
-                                        && !path.contains("Gemfile");
+                                        && !path.contains("Gemfile")
+                                        && !path.contains("html");
                             }
                     )
                     .peek(f -> log.info("{}", f))
@@ -89,6 +92,13 @@ public class ContentSource {
         }
 
         contentModel.addCollection(filesCollection);
+
+        // TODO: static pages
+        ContentCollection staticCollection = new ContentCollection("static");
+        staticCollection.addItem(new PageContentItem("404.html", _404::create));
+        staticCollection.addItem(new PageContentItem("index.html", Index::create));
+
+        contentModel.addCollection(staticCollection);
 
 
     }
