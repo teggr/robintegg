@@ -10,6 +10,7 @@ import org.commonmark.parser.Parser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -36,7 +37,7 @@ public class ContentSource {
             // TODO: type the podcast data
             paths
                     .filter(Files::isRegularFile)
-                    .peek(System.out::println)
+                    .peek(f -> log.info("{}", f))
                     .map(ContentSource::readFile)
                     .forEach(podcastCollection::addItem);
         }
@@ -53,36 +54,79 @@ public class ContentSource {
             // TODO: type the post data
             paths
                     .filter(Files::isRegularFile)
-                    .peek(System.out::println)
+                    .peek(f -> log.info("{}", f))
                     .map(ContentSource::readFile)
                     .forEach(postCollection::addItem);
         }
 
         contentModel.addCollection(postCollection);
 
+        // TODO: raw files
+        ContentCollection filesCollection = new ContentCollection("files");
+        // load filers from all none special folders
+        log.info("files directory: " + sourceDirectory.toAbsolutePath());
+
+        try (Stream<Path> paths = Files.walk(sourceDirectory)) {
+            // TODO: type the file data
+            paths
+                    .filter(Files::isRegularFile)
+                    .filter(f ->
+                            {
+                                String path = f.toAbsolutePath().toString();
+                                return !path.contains("_")
+                                        && !path.contains(".git")
+                                        && !path.contains(".idea")
+                                        && !path.contains("src")
+                                        && !path.contains("target")
+                                        && !path.contains("pom.xml")
+                                        && !path.contains("README.md")
+                                        && !path.contains("Gemfile");
+                            }
+                    )
+                    .peek(f -> log.info("{}", f))
+                    .map(ContentSource::readFile)
+                    .forEach(filesCollection::addItem);
+        }
+
+        contentModel.addCollection(filesCollection);
+
+
     }
 
     private static ContentItem readFile(Path path) {
 
         try {
-
-            Extension extension = YamlFrontMatterExtension.create();
-            Parser parser = Parser.builder()
-                    .extensions(List.of(extension))
-                    .build();
-
-            Node document = parser.parseReader(Files.newBufferedReader(path));
-
-            YamlFrontMatterVisitor yamlFrontMatterVisitor = new YamlFrontMatterVisitor();
-            document.accept(yamlFrontMatterVisitor);
-
             // Extract filename, filename without extension, and extension using Path methods
             String filename = path.getFileName().toString();
             int dotIndex = filename.lastIndexOf('.');
             String filenameWithoutExtension = (dotIndex == -1) ? filename : filename.substring(0, dotIndex);
             String fileExtension = (dotIndex == -1) ? "" : filename.substring(dotIndex + 1);
 
-            return new ContentItem( filenameWithoutExtension, yamlFrontMatterVisitor.getData(), document);
+            if (fileExtension.equals("md")) {
+
+
+                Extension extension = YamlFrontMatterExtension.create();
+                Parser parser = Parser.builder()
+                        .extensions(List.of(extension))
+                        .build();
+
+                Node document = parser.parseReader(Files.newBufferedReader(path));
+
+                YamlFrontMatterVisitor yamlFrontMatterVisitor = new YamlFrontMatterVisitor();
+                document.accept(yamlFrontMatterVisitor);
+
+                return new MarkdownContentItem(filenameWithoutExtension, yamlFrontMatterVisitor.getData(), document);
+
+
+            } else if (fileExtension.equals("html")) {
+
+                return new TextContentItem(filename, Collections.emptyMap(), Files.readString(path));
+
+            } else {
+
+                return new RawContentItem(filename, Collections.emptyMap(), Files.readAllBytes(path));
+
+            }
 
         } catch (Exception e) {
             throw new RuntimeException(e);
