@@ -5,7 +5,6 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @ToString
 public class ContentModel {
@@ -26,6 +25,18 @@ public class ContentModel {
     }
 
     public Site getSite() {
+        return null;
+    }
+
+    public List<PageModel> getPagePaths() {
+        return null;
+    }
+
+    public List<String> getTitles() {
+        return null;
+    }
+
+    public List<SocialLink> getSocialLinks() {
         return null;
     }
 }
