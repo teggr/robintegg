@@ -19,4 +19,8 @@ public class PageModel {
   public List<Author> getAuthor() {
     return null;
   }
+
+  public String getSubtitle() {
+    return null;
+  }
 }

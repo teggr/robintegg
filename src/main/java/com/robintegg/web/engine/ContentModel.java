@@ -8,6 +8,7 @@ import javax.sql.rowset.CachedRowSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 @ToString
 public class ContentModel {
@@ -60,4 +61,19 @@ public class ContentModel {
     }
 
 
+    public List<TagModel> getTags() {
+        return null;
+    }
+
+    public List<PostModel> getTaggedContent() {
+        return null;
+    }
+
+    public List< CategoryModel> getCategories() {
+        return null;
+    }
+
+    public List<PostModel> getPostsInCategory(CategoryModel category) {
+        return null;
+    }
 }
