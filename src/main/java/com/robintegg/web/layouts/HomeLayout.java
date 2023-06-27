@@ -49,6 +49,24 @@ public class HomeLayout {
                                   iff(
                                       contentModel.getSite().showExcerpts(),
                                       post.getExcerpt()
+                                  ),
+                                  iff(
+                                      post.getCategory().equals("reading-list"),
+                                      contentModel.getContent()
+                                  ),
+                                  iff(
+                                      post.getTags().size() > 0,
+                                      ul()
+                                          .withClass("post-tags")
+                                          .with(
+                                              each( post.getTags(), tag -> {
+                                                return li()
+                                                    .with(
+                                                        a()
+                                                            .withHref("{{ '/tags#' | append: tag | relative_url }}")
+                                                    );
+                                              } )
+                                          )
                                   )
                               );
                         })
@@ -103,7 +121,15 @@ public class HomeLayout {
                                 )
                         )
                 )
-            )
+            ),
+            p()
+                .withClass("rss-subscribe")
+                .with(
+                    a()
+                        .withHref("{{ \"/feed.xml\" | relative_url }}")
+                    //  <svg class="svg-icon orange"><use xlink:href="{{ 'assets/minima-social-icons.svg#rss' | relative_url }}"></use></svg><span>Subscribe</span>
+
+                )
         );
 
   }

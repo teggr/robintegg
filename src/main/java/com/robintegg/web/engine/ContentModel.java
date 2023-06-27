@@ -3,6 +3,7 @@ package com.robintegg.web.engine;
 import j2html.tags.DomContent;
 import lombok.ToString;
 
+import javax.print.attribute.Attribute;
 import javax.sql.rowset.CachedRowSet;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,4 +58,6 @@ public class ContentModel {
     public Paginator getPaginator() {
         return null;
     }
+
+
 }
