@@ -3,7 +3,9 @@ package com.robintegg.web.engine;
 import j2html.tags.DomContent;
 import lombok.ToString;
 
+import javax.sql.rowset.CachedRowSet;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @ToString
@@ -37,6 +39,22 @@ public class ContentModel {
     }
 
     public List<SocialLink> getSocialLinks() {
+        return null;
+    }
+
+    public String getPageTitle() {
+        return null;
+    }
+
+    public List<PostModel> getPosts() {
+        return null;
+    }
+
+    public PageModel getPage() {
+        return null;
+    }
+
+    public Paginator getPaginator() {
         return null;
     }
 }

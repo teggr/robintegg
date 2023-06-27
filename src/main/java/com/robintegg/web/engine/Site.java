@@ -8,4 +8,12 @@ public class Site {
     public Author getAuthor() {
         return null;
     }
+
+    public boolean paginate() {
+        return false;
+    }
+
+    public boolean showExcerpts() {
+        return false;
+    }
 }
