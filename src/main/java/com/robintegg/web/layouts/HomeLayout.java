@@ -1,12 +1,11 @@
 package com.robintegg.web.layouts;
 
 import com.robintegg.web.engine.ContentModel;
-import j2html.TagCreator;
 import j2html.tags.DomContent;
 
 import static j2html.TagCreator.*;
 
-public class Home {
+public class HomeLayout {
 
   public static DomContent create(ContentModel contentModel) {
 

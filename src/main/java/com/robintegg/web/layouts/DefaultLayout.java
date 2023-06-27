@@ -8,7 +8,7 @@ import j2html.tags.DomContent;
 
 import static j2html.TagCreator.*;
 
-public class Default {
+public class DefaultLayout {
 
   public DomContent create(ContentModel contentModel) {
 
