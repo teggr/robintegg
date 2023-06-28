@@ -1,11 +1,11 @@
 package com.robintegg.web.engine;
 
-public class Author {
-    public String getName() {
-        return null;
-    }
+import lombok.Data;
 
-    public String getEmail() {
-        return null;
-    }
+@Data
+public class Author {
+
+    private String name;
+    private String email;
+
 }

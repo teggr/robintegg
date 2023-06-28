@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 @ToString
-public class TextContentItem implements ContentItem {
+public class TextContentItem {
     private final String key;
     private final Map<String, List<String>> data;
     @ToString.Exclude

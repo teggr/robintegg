@@ -5,12 +5,12 @@ import com.robintegg.web.engine.Page;
 import j2html.TagCreator;
 import org.junit.jupiter.api.Test;
 
-class _404Test {
+class _404PageTest {
 
     @Test
     void shouldRender() {
 
-        Page page = _404.create();
+        Page page = _404Page.create();
 
         System.out.println(
                 TagCreator.html(

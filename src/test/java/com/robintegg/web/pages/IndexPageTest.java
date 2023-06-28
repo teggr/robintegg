@@ -5,12 +5,12 @@ import com.robintegg.web.engine.Page;
 import j2html.TagCreator;
 import org.junit.jupiter.api.Test;
 
-class IndexTest {
+class IndexPageTest {
 
     @Test
     void shouldRender() {
 
-        Page page = Index.create();
+        Page page = IndexPage.create();
 
         System.out.println(
                 TagCreator.html(

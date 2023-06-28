@@ -1,15 +1,25 @@
 package com.robintegg.web.layouts;
 
 import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.Layout;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
+
+import java.util.List;
+import java.util.Map;
 
 import static j2html.TagCreator.*;
 
 public class PostLayout {
 
-  // layout: default
-  public static DomContent create(ContentModel contentModel) {
+  public static Layout create() {
+    return Layout.builder()
+        .data(Map.of("layout", List.of("default")))
+        .renderFunction(PostLayout::render)
+        .build();
+  }
+
+  public static DomContent render(ContentModel contentModel) {
 
     return article()
         .withClass("post h-entry")

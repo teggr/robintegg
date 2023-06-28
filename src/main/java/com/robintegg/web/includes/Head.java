@@ -16,11 +16,18 @@ public class Head {
                 meta()
                         .attr("http-equiv","X-UA-Compatible")
                         .withContent("IE=edge"),
+                meta().
+                    withName("viewport")
+                        .withContent("width=device-width, initial-scale=1"),
                 //TODO: seo
                 link().
                         withRel("stylesheet")
                         // TODO: href="{{ "/assets/css/style.css" | relative_url }}"
-                        .withHref("/assets/css/style.css")
+                        .withHref("https://robintegg.com/assets/main.css"),
+            link().
+                withRel("stylesheet")
+                // TODO: href="{{ "/assets/css/style.css" | relative_url }}"
+                .withHref("https://robintegg.com/assets/css/style.css")
 //        {%- feed_meta -%}
 //        {%- if jekyll.environment == 'production' and site.google_analytics -%}
 //        {%- include google-analytics.html -%}

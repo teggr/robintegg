@@ -1,16 +1,26 @@
 package com.robintegg.web.layouts;
 
 import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.Layout;
 import com.robintegg.web.includes.Footer;
 import com.robintegg.web.includes.Head;
 import com.robintegg.web.includes.Header;
 import j2html.tags.DomContent;
 
+import java.util.List;
+import java.util.Map;
+
 import static j2html.TagCreator.*;
 
 public class DefaultLayout {
 
-  public DomContent create(ContentModel contentModel) {
+  public static Layout create() {
+    return Layout.builder()
+        .renderFunction(DefaultLayout::render)
+        .build();
+  }
+
+  public static DomContent render(ContentModel contentModel) {
 
     return html()
         .withLang(contentModel.getLang())
