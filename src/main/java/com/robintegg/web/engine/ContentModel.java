@@ -9,6 +9,7 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @ToString
 public class ContentModel {
@@ -46,8 +47,6 @@ public class ContentModel {
     this.socialLinks.add(socialLink);
   }
 
-
-
   public Page getPage() {
     return page;
   }
@@ -59,12 +58,12 @@ public class ContentModel {
     return Collections.emptyList();
   }
 
-  public List<CategoryModel> getCategories() {
-    return Collections.emptyList();
+  public List<String> getCategories() {
+    return this.posts.stream().map(Post::getCategory).filter(Objects::nonNull).distinct().toList();
   }
 
-  public List<Post> getPostsInCategory(CategoryModel category) {
-    return Collections.emptyList();
+  public List<Post> getPostsInCategory(String category) {
+    return this.posts.stream().filter(p -> category.equals(p.getCategory())).toList();
   }
 
   public List<Podcast> getPodcasts() {
