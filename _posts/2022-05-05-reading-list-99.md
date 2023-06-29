@@ -2,6 +2,7 @@
 title: Reading list for May 2022
 layout: default
 category: reading-list
+date: "2022-05-05"
 ---
 * [ErrorProne](https://errorprone.info/docs/installation)
 * [JaCoCo - Maven Plug-in](https://www.jacoco.org/jacoco/trunk/doc/maven.html)

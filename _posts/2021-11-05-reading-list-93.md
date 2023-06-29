@@ -2,6 +2,7 @@
 title: Reading list for November 2021
 layout: default
 category: reading-list
+date: "2012-11-05"
 ---
 * [Examples - Apache ECharts](https://echarts.apache.org/examples/en/index.html)
 * [OpenAPI 3 Library for spring-boot](https://springdoc.org/)

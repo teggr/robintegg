@@ -4,6 +4,7 @@ import lombok.ToString;
 import org.commonmark.node.Node;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class Podcast {
     this.data = data;
     this.document = document;
   }
-  public List<TagModel> getTags() {
-    return null;
+  public List<String> getTags() {
+    return data.getOrDefault("tags", Collections.emptyList());
   }
 }

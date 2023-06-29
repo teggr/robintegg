@@ -2,6 +2,7 @@
 title: Reading list for January 2022
 layout: default
 category: reading-list
+date: "2022-01-05"
 ---
 * [Confessions of a Low-Code Convert](https://thenewstack.io/confessions-of-a-low-code-convert/)
 * [Transitional Architecture](https://martinfowler.com/articles/patterns-legacy-displacement/transitional-architecture.html)

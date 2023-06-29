@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,14 +17,13 @@ public class ContentModel {
   @Getter
   @Setter
   private Site site = new Site();
-  private PageModel pageModel = new PageModel();
-  private Paginator paginator = new Paginator();
   private List<Podcast> podcasts = new ArrayList<>();
   private List<Post> posts = new ArrayList<>();
   private List<RawContentItem> files = new ArrayList<>();
   private List<Page> pages = new ArrayList<>();
   private Feed feed = new Feed();
   private List<SocialLink> socialLinks = new ArrayList<>();
+  private Page page;
 
   public void visit(ContentModelVisitor visitor) {
 
@@ -48,29 +46,13 @@ public class ContentModel {
     this.socialLinks.add(socialLink);
   }
 
-  public List<SocialLink> getSocialLinks() {
-    return socialLinks;
+
+
+  public Page getPage() {
+    return page;
   }
-
-  public String getPageTitle() {
-    return "My Title";
-  }
-
-  public List<Post> getPosts() {
-    return Collections.emptyList();
-  }
-
-  public PageModel getPage() {
-    return pageModel;
-  }
-
-  public Paginator getPaginator() {
-    return paginator;
-  }
-
-
-  public List<TagModel> getTags() {
-    return Collections.emptyList();
+  public void setPage(Page page) {
+    this.page = page;
   }
 
   public List<Post> getTaggedContent() {
@@ -100,6 +82,9 @@ public class ContentModel {
   public void addPost(Post post) {
     this.posts.add(post);
   }
+  public List<Post> getPosts() {
+    return this.posts;
+  }
 
   public void addFile(RawContentItem rawContentItem) {
     this.files.add(rawContentItem);
@@ -115,5 +100,11 @@ public class ContentModel {
 
   public Feed getFeed() {
     return feed;
+  }
+
+
+  public void reset() {
+    this.content = TagCreator.text("");
+    this.page = null;
   }
 }

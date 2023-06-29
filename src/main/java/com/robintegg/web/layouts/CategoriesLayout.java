@@ -2,6 +2,7 @@ package com.robintegg.web.layouts;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
+import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
 import java.util.List;
@@ -26,10 +27,10 @@ public class CategoriesLayout {
         .withClass("home")
         .with(
             iff(
-                contentModel.getPageTitle() != null,
+                contentModel.getPage().getTitle() != null,
                 h1()
                     .withClass("page-heading")
-                    .withText(contentModel.getPageTitle())
+                    .withText(contentModel.getPage().getTitle())
             ),
             contentModel.getContent(),
             iff(
@@ -50,7 +51,7 @@ public class CategoriesLayout {
                                         .with(
                                             span()
                                                 .withClass("post-meta")
-                                                .withText(post.getDate()),
+                                                .withText(Utils.format(post.getDate())),
                                             h3()
                                                 .with(
                                                     a()

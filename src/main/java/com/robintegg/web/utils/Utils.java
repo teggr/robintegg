@@ -1,5 +1,9 @@
 package com.robintegg.web.utils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
 public class Utils {
   public static String relativeUrl(String url) {
     return url;
@@ -11,5 +15,9 @@ public class Utils {
 
   public static String absoluteUrl(String path) {
     return path;
+  }
+
+  public static String format(LocalDate date) {
+    return date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
   }
 }
