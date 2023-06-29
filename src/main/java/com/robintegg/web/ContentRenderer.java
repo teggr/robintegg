@@ -4,6 +4,9 @@ import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.ContentModelVisitor;
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.engine.Page;
+import j2html.Config;
+import j2html.TagCreator;
+import j2html.rendering.FlatHtml;
 import j2html.rendering.IndentedHtml;
 import j2html.tags.DomContent;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +47,7 @@ public class ContentRenderer {
         // this is what we want to render
         StringBuilder render = null;
         try {
-          render = layoutContent.render(IndentedHtml.inMemory());
+          render = layoutContent.render(FlatHtml.inMemory());
           System.out.println(render);
         } catch (IOException e) {
           throw new RuntimeException(e);
@@ -59,7 +62,7 @@ public class ContentRenderer {
         // write to file
         try {
           Files.createDirectories(outputFile.getParent().toAbsolutePath());
-          Files.writeString(outputFile.toAbsolutePath(), render, StandardCharsets.UTF_8,  StandardOpenOption.CREATE);
+          Files.writeString(outputFile.toAbsolutePath(), TagCreator.document() + render.toString(), StandardCharsets.UTF_8,  StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
           throw new RuntimeException(e);
         }

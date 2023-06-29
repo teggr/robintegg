@@ -2,20 +2,13 @@ package com.robintegg.web;
 
 import com.robintegg.web.engine.*;
 import com.robintegg.web.layouts.*;
-import com.robintegg.web.pages.CategoriesPage;
-import com.robintegg.web.pages.IndexPage;
-import com.robintegg.web.pages.PodcastsPage;
-import com.robintegg.web.pages._404Page;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 @Slf4j
 public class Build {
@@ -36,8 +29,17 @@ public class Build {
         author.setEmail("robin@tegg.me.uk");
         site.setAuthor(author);
         site.setDescription("A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design.");
+        site.setEmail("robin@tegg.me.uk");
+        site.setTwitterUsername("robintegg");
+        site.setGithubUsername("teggr");
+        site.setGoogleAnalytics("UA-112481105-1");
+        site.setLinkedinUsername("robintegg");
 
         contentModel.setSite(site);
+
+        contentModel.addSocialLink(new SocialLink("github", "teggr", "https://github.com/teggr"));
+        contentModel.addSocialLink(new SocialLink("linkedin", "robintegg", "https://www.linkedin.com/in/robintegg"));
+        contentModel.addSocialLink(new SocialLink("robintegg", "twitter", "https://www.twitter.com/robintegg"));
 
         // generate content
         var contentSource = new ContentSource(workingDirectory);

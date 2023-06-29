@@ -51,7 +51,7 @@ public class Header {
                                             .withText("Books on booqsi"),
                                         each(contentModel.getPages(), myPage -> {
                                           return iff(
-                                              myPage.isIncludeMenu() && myPage.getTitle() != null,
+                                              myPage.isIncludeMenu(),
                                               a()
                                                   .withClass("page-link")
                                                   .withHref(Utils.relativeUrl(myPage.getUrl()))

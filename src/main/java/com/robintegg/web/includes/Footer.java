@@ -1,75 +1,70 @@
 package com.robintegg.web.includes;
 
 import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
 import static j2html.TagCreator.*;
 
 public class Footer {
-  public static DomContent create(ContentModel contentModel) {
-    return footer()
-        .withClass("site-footer h-card")
-        .with(
-            data()
-                .withClass("u-url")
-                // TODO: href="{{ "/" | relative_url }}"
-                .attr("href", "/"),
-            div()
-                .withClass("wrapper")
+    public static DomContent create(ContentModel contentModel) {
+        return footer()
+                .withClass("site-footer h-card")
                 .with(
-                    div()
-                        .withClass("footer-col-wrapper")
-                        .with(
-                            div()
-                                .withClass("footer-col")
+                        data()
+                                .withClass("u-url")
+                                .attr("href", Utils.relativeUrl("/")),
+                        div()
+                                .withClass("wrapper")
                                 .with(
-                                    p()
-                                        .withClass("feed-subscribe")
-                                        .with(
-                                            a()
-                                                // TODO: "{{ site.feed.path | default: 'feed.xml' | absolute_url }}"
-                                                .withHref("feed.xml")
+                                        h2()
+                                                .withClass("footer-heading")
+                                                .withText(Utils.escape(contentModel.getSite().getTitle())),
+                                        div()
+                                                .withClass("footer-col-wrapper")
                                                 .with(
-//                                                                                                <svg class="svg-icon orange">
-//              <use xlink:href="{{ 'assets/minima-social-icons.svg#rss' | relative_url }}"></use>
-//            </svg><span>Subscribe</span>
-                                                )
-                                        ),
-                                    iff(
-                                        contentModel.getSite().getAuthor() != null,
-                                        ul()
-                                            .withClass("contact-list")
-                                            .with(
-                                                iff(
-                                                    contentModel.getSite().getAuthor().getName() != null,
-                                                    li()
-                                                        .withClass("p-name")
-                                                        .withText("{{ site.author.name | escape }}")
-                                                ),
-                                                iff(
-                                                    contentModel.getSite().getAuthor().getEmail() != null,
-                                                    li().with(
-                                                        a()
-                                                            .withClass("u-email")
-                                                            .withHref("mailto:{{ site.author.email }}")
-                                                            .withText("{{ site.author.email }}"))
-                                                )
-                                            )
-                                    )
-                                ),
-                            div()
-                                .withClass("footer-col")
-                                .with(
-                                    p()
-                                        .withText("{{ site.description | escape }}")
-                                )
+                                                        div()
+                                                                .withClass("footer-col footer-col-1")
+                                                                .with(
+                                                                        ul()
+                                                                                .withClass("contact-list")
+                                                                                .with(
+                                                                                        li()
+                                                                                                .withClass("p-name")
+                                                                                                        .with(
+                                                                                                                iffElse(
+                                                                                                                        contentModel.getSite().getAuthor().getName() != null,
+                                                                                                                        text(Utils.escape(contentModel.getSite().getAuthor().getName())),
+                                                                                                                        text(Utils.escape(contentModel.getSite().getTitle()))
+                                                                                                                )
+                                                                                                        ),
+                                                                                        iff(
+                                                                                                contentModel.getSite().getEmail() != null,
+                                                                                                li().with(
+                                                                                                        a()
+                                                                                                                .withClass("u-email")
+                                                                                                                .withHref("mailto:" + contentModel.getSite().getEmail())
+                                                                                                                .withText(contentModel.getSite().getEmail()))
+                                                                                        )
+                                                                                )
+                                                                ),
+                                                        div()
+                                                                .withClass("footer-col footer-col-2")
+                                                                .with(
+                                                                        div()
+                                                                                .withClass("social-links")
+                                                                                .with(
+                                                                                        Social.create(contentModel))
+                                                                ),
+                                                        div()
+                                                                .withClass("footer-col footer-col-3")
+                                                                .with(
+                                                                        p()
+                                                                                .withText(Utils.escape(contentModel.getSite().getDescription()))
+                                                                )
 
-                        ),
-                    div()
-                        .withClass("social-links")
-                        .with(
-                            Social.create(contentModel))
-                )
-        );
-  }
+                                                )
+                                )
+                );
+    }
 }

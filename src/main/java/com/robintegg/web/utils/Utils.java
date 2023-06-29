@@ -8,4 +8,8 @@ public class Utils {
   public static String escape(String title) {
     return title;
   }
+
+  public static String absoluteUrl(String path) {
+    return path;
+  }
 }

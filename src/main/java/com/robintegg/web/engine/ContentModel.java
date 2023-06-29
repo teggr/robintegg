@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +24,8 @@ public class ContentModel {
   private List<Post> posts = new ArrayList<>();
   private List<RawContentItem> files = new ArrayList<>();
   private List<Page> pages = new ArrayList<>();
+  private Feed feed = new Feed();
+  private List<SocialLink> socialLinks = new ArrayList<>();
 
   public void visit(ContentModelVisitor visitor) {
 
@@ -41,8 +44,12 @@ public class ContentModel {
     return content;
   }
 
+  public void addSocialLink(SocialLink socialLink) {
+    this.socialLinks.add(socialLink);
+  }
+
   public List<SocialLink> getSocialLinks() {
-    return Collections.emptyList();
+    return socialLinks;
   }
 
   public String getPageTitle() {
@@ -106,4 +113,7 @@ public class ContentModel {
     return pages;
   }
 
+  public Feed getFeed() {
+    return feed;
+  }
 }
