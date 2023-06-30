@@ -61,7 +61,7 @@ public class HomeLayout {
                                                                                     ),
                                                                             iff(
                                                                                     contentModel.getSite().showExcerpts(),
-                                                                                    post.getExcerpt()
+                                                                                    post.getExcerpt(contentModel)
                                                                             ),
                                                                             iff(
                                                                                     "reading-list".equals(post.getCategory()),

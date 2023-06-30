@@ -57,7 +57,7 @@ public class CategoriesLayout {
                                                                                                 ),
                                                                                         iff(
                                                                                                 contentModel.getSite().showExcerpts(),
-                                                                                                post.getExcerpt()
+                                                                                                post.getExcerpt(contentModel)
                                                                                         )
                                                                                 );
                                                                     })

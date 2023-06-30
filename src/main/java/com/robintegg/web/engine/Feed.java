@@ -9,113 +9,127 @@ import com.robintegg.web.feed.Author;
 import com.robintegg.web.feed.*;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Feed {
 
-    private static XmlMapper xmlMapper = null;
+  private static XmlMapper xmlMapper = null;
 
-    static {
+  static {
 
-        xmlMapper = XmlMapper.builder()
-                .addModule(new JavaTimeModule())
-                .enable(SerializationFeature.INDENT_OUTPUT)
-                .enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
-                .build();
+    xmlMapper = XmlMapper.builder()
+        .addModule(new JavaTimeModule())
+        .enable(SerializationFeature.INDENT_OUTPUT)
+        .enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
+        .build();
 
+  }
+
+  private List<FeedEntry> feedEntries = new ArrayList<>();
+
+  public String getPath() {
+    return "feed.xml";
+  }
+
+  public String getContent(ContentModel contentModel) {
+
+    AtomFeed feed = AtomFeed.builder()
+        .generator(Generator.builder()
+            .uri("https://github.com/tipsy/j2html")
+            .version("v1.6.0")
+            .value("j2html")
+            .build())
+        .link(List.of(
+            Link.builder()
+                .href(contentModel.getSite().resolveUrl(contentModel.getFeed().getPath()))
+                .rel("self")
+                .type("application/atom+xml")
+                .build(),
+            Link.builder()
+                .href(contentModel.getSite().getUrl())
+                .rel("alternative")
+                .type("text/html")
+                .build()
+        ))
+        .updated(OffsetDateTime.now())
+        .id(contentModel.getSite().resolveUrl(contentModel.getFeed().getPath()))
+        .title(Title.builder()
+            .type("html")
+            .value(contentModel.getSite().getTitle())
+            .build())
+        .subtitle(contentModel.getSite().getDescription())
+        .author(List.of(
+            Author.builder()
+                .name(contentModel.getSite().getAuthor().getName())
+                .build()
+        ))
+        .entry(feedEntries.stream()
+            .map(fe -> mapToAtomEntry(contentModel, fe))
+            .toList()
+        )
+        .build();
+
+    try {
+      return xmlMapper.writeValueAsString(feed);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
     }
 
-    public String getPath() {
-        return "feed.xml";
-    }
+  }
 
+  private Entry mapToAtomEntry(ContentModel contentModel, FeedEntry entry) {
+    return
+        Entry.builder()
+            .title(Title.builder()
+                .type("html")
+                .value(entry.getTitle())
+                .build())
+            .link(List.of(
+                    Link.builder()
+                        .href(entry.getUrl())
+                        .rel("alternate")
+                        .type("text/html")
+                        .title(entry.getTitle())
+                        .build()
+                )
+            )
+            .published(entry.getDate().atStartOfDay().atOffset(ZoneOffset.UTC))
+            .updated(entry.getModifiedDate().atStartOfDay().atOffset(ZoneOffset.UTC))
+            .id(entry.getUrl())
+            .content(Content.builder()
+                .type("html")
+                .xmlBase(entry.getUrl())
+                .value(entry.getContent().apply(contentModel).render())
+                .build())
+            .author(List.of(
+                Author.builder()
+                    .name(entry.getAuthor())
+                    .build()
+            ))
+            .category(entry.getTags().stream()
+                .map(tag -> Category.builder()
+                    .term(tag)
+                    .build()
+                )
+                .toList()
+            )
+            .summary(Summary.builder()
+                .type("html")
+                .value(entry.getExcerpt().apply(contentModel).render())
+                .build())
+            .mediaThumbnail(MediaThumbnail.builder()
+                .url(entry.getImageUrl())
+                .build())
+            .mediaContent(MediaContent.builder()
+                .medium("image")
+                .url(entry.getImageUrl())
+                .build())
+            .build();
+  }
 
-    public String getContent(ContentModel contentModel) {
-
-        AtomFeed feed = AtomFeed.builder()
-                .generator(Generator.builder()
-                        .uri("https://github.com/tipsy/j2html")
-                        .version("v1.6.0")
-                        .value("j2html")
-                        .build())
-                .link(List.of(
-                        Link.builder()
-                                .href(contentModel.getSite().resolveUrl(contentModel.getFeed().getPath()))
-                                .rel("self")
-                                .type("application/atom+xml")
-                                .build(),
-                        Link.builder()
-                                .href(contentModel.getSite().getUrl())
-                                .rel("alternative")
-                                .type("text/html")
-                                .build()
-                ))
-                .updated(OffsetDateTime.now())
-                .id(contentModel.getSite().resolveUrl(contentModel.getFeed().getPath()))
-                .title(Title.builder()
-                        .type("html")
-                        .value(contentModel.getSite().getTitle())
-                        .build())
-                .subtitle(contentModel.getSite().getDescription())
-                .author(List.of(
-                        Author.builder()
-                                .name(contentModel.getSite().getAuthor().getName())
-                                .build()
-                ))
-                .entry(List.of(
-                        Entry.builder()
-                                .title(Title.builder()
-                                        .type("html")
-                                        .value("j2html Static Site Generator")
-                                        .build())
-                                .link(List.of(
-                                        Link.builder()
-                                                .href("https://www.robintegg.com/2023/06/19/j2html-static-site-generator.html")
-                                                .rel("alternate")
-                                                .type("text/html")
-                                                .title("j2html Static Site Generator")
-                                                .build()
-                                        )
-                                )
-                                .published(OffsetDateTime.now())
-                                .updated(OffsetDateTime.now())
-                                .id("https://www.robintegg.com/2023/06/19/j2html-static-site-generator")
-                                .content(Content.builder()
-                                        .type("html")
-                                        .xmlBase("https://www.robintegg.com/2023/06/19/j2html-static-site-generator.html")
-                                        .value("""
-                                                <p><a href="https://j2html.com/">j2html</a></p>
-                                                """)
-                                        .build())
-                                .author(List.of(
-                                        Author.builder()
-                                                .name("Robin Tegg")
-                                                .build()
-                                ))
-                                .category(List.of(
-                                        Category.builder().term("java").build(),
-                                        Category.builder().term("j2html").build()
-                                ))
-                                .summary(Summary.builder()
-                                        .type("html")
-                                        .value("j2html is a fast")
-                                        .build())
-                                .mediaThumbnail(MediaThumbnail.builder()
-                                        .url("https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg")
-                                        .build())
-                                .mediaContent(MediaContent.builder()
-                                        .medium("image")
-                                        .url("https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg")
-                                        .build())
-                                .build()
-                ))
-                .build();
-
-        try {
-            return xmlMapper.writeValueAsString(feed);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
+  public void addEntry(FeedEntry entry) {
+    this.feedEntries.add(entry);
+  }
 }

@@ -12,7 +12,7 @@ public class Content {
 
     @JacksonXmlProperty(isAttribute = true)
     private String type;
-    @JacksonXmlProperty(localName = "xml:base:", isAttribute = true)
+    @JacksonXmlProperty(localName = "xml:base", isAttribute = true)
     private String xmlBase;
     @JacksonXmlText
     @JacksonXmlCData
