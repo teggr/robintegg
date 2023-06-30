@@ -13,7 +13,7 @@ public class GoogleAnalytics {
     return each(
       script()
           .withCondAsync(true)
-          .withSrc("https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"),
+          .withSrc("https://www.googletagmanager.com/gtag/js?id=" + contentModel.getSite().getGoogleAnalytics()),
         script()
             .withText("""
                 window['ga-disable-{{ site.google_analytics }}'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";

@@ -19,7 +19,7 @@ public class Head {
                 meta().
                     withName("viewport")
                         .withContent("width=device-width, initial-scale=1"),
-                //TODO: seo
+                SEO.render(contentModel),
                 link().
                         withRel("stylesheet")
                         // TODO: href="{{ "/assets/css/style.css" | relative_url }}"

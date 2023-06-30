@@ -1,13 +1,2 @@
 plugins:
   - jekyll-feed
-
-# seo-plugin
-twitter:
-  username: robintegg
-
-
-# collections
-collections:
-  podcasts:
-    output: true
-    sort_by: title

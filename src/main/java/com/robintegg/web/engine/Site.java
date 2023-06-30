@@ -26,4 +26,10 @@ public class Site {
         return false;
     }
 
+    public String resolveUrl(String resolveUrl) {
+        if(!resolveUrl.startsWith("/")) {
+            resolveUrl = "/" + resolveUrl;
+        }
+        return url + baseUrl + resolveUrl;
+    }
 }

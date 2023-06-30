@@ -79,5 +79,15 @@ public class Page {
         return stringList.get(0);
     }
 
+    public String getExcerpt() {
+        return null;
+    }
 
+    public String getImageUrl() {
+        List<String> stringList = data.get("image");
+        if (stringList == null) {
+            return null;
+        }
+        return stringList.get(0);
+    }
 }
