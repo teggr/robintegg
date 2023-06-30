@@ -13,7 +13,6 @@ public class Site {
     private String email;
     private String twitterUsername;
     private String githubUsername;
-    private String googleAnalytics;
     private String linkedinUsername;
     private String url;
     private String baseUrl;

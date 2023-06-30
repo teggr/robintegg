@@ -44,6 +44,10 @@ public class ContentModel {
         podcasts.stream()
                 .forEach(visitor::podcast);
 
+        // raw contents
+        files.stream()
+                .forEach(visitor::file);
+
     }
 
     public String getLang() {

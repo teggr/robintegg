@@ -10,4 +10,6 @@ public interface ContentModelVisitor {
 
     void podcast(Podcast podcast);
 
+    void file(RawContentItem file);
+
 }

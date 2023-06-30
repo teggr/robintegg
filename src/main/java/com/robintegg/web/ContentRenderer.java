@@ -26,6 +26,26 @@ public class ContentRenderer {
         contentModel.visit(new ContentModelVisitor() {
 
             @Override
+            public void file(RawContentItem file) {
+                log.info("file={}", file);
+
+                String path = file.getPath();
+                if (path.startsWith("/")) {
+                    path = path.substring(1);
+                }
+                var outputFile = outputDirectory.resolve(path);
+
+                // write to file
+                try {
+                    Files.createDirectories(outputFile.getParent().toAbsolutePath());
+                    Files.write(outputFile.toAbsolutePath(), file.getContent(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+
+            @Override
             public void post(Post post) {
                 log.info("post={}", post);
 

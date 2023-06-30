@@ -169,7 +169,7 @@ public class ContentSource {
       String filenameWithoutExtension = (dotIndex == -1) ? filename : filename.substring(0, dotIndex);
       String fileExtension = (dotIndex == -1) ? "" : filename.substring(dotIndex + 1);
 
-      return new RawContentItem(filename, Collections.emptyMap(), Files.readAllBytes(path));
+      return new RawContentItem(path.toString(), Collections.emptyMap(), Files.readAllBytes(path));
 
     } catch (Exception e) {
       throw new RuntimeException(e);

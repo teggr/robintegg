@@ -17,4 +17,13 @@ public class RawContentItem {
         this.data = data;
         this.content = content;
     }
+
+    public String getPath() {
+        return key;
+    }
+
+    public byte[] getContent() {
+        return content;
+    }
+
 }

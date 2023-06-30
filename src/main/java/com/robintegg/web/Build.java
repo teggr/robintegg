@@ -17,11 +17,14 @@ public class Build {
     public static void main(String[] args) throws IOException {
 
         var workingDirectory = Paths.get("");
-        log.info("working directory: " + workingDirectory.toAbsolutePath());
+        log.info("working directory: {}",  workingDirectory.toAbsolutePath());
 
         ContentModel contentModel = new ContentModel();
 
-        // contentModel.environment("local");
+        String environment = System.getProperty("env", "local");
+        log.info("environment: {}", environment);
+
+        contentModel.environment( environment );
 
         // could load some configuration here
         Site site = new Site();
@@ -34,7 +37,6 @@ public class Build {
         site.setEmail("robin@tegg.me.uk");
         site.setTwitterUsername("robintegg");
         site.setGithubUsername("teggr");
-        site.setGoogleAnalytics("UA-112481105-1");
         site.setLinkedinUsername("robintegg");
         site.setUrl("https://robintegg.com");
         site.setBaseUrl("");
@@ -61,7 +63,7 @@ public class Build {
 
         // create output directory
         var outputDirectory = workingDirectory.resolve("target/site");
-        log.info("output directory: " + outputDirectory.toAbsolutePath());
+        log.info("output directory: {}", outputDirectory.toAbsolutePath());
 
         Files.createDirectories(outputDirectory);
 
