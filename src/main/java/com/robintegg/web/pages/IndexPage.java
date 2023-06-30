@@ -15,7 +15,10 @@ public class IndexPage {
 
         return Page.builder()
                 .path("index.html")
-                .data(Map.of("layout", List.of("home")))
+                .data(Map.of(
+                        "layout", List.of("home"),
+                        "list_title", List.of("Posts")
+                ))
                 .renderFunction(IndexPage::render)
                 .build();
     }

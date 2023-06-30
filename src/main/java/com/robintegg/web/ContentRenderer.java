@@ -1,9 +1,7 @@
 package com.robintegg.web;
 
-import com.robintegg.web.engine.ContentModel;
-import com.robintegg.web.engine.ContentModelVisitor;
-import com.robintegg.web.engine.Layout;
-import com.robintegg.web.engine.Page;
+import com.robintegg.web.engine.*;
+import com.robintegg.web.layouts.PodcastLayout;
 import com.robintegg.web.layouts.TagLayout;
 import j2html.TagCreator;
 import j2html.rendering.FlatHtml;
@@ -26,6 +24,32 @@ public class ContentRenderer {
         log.info("render=start");
 
         contentModel.visit(new ContentModelVisitor() {
+
+            @Override
+            public void post(Post post) {
+                log.info("post={}", post);
+
+                Page page = Page.builder()
+                        .data(post.getData())
+                        .path(post.getUrl())
+                        .renderFunction(post::getContent)
+                        .build();
+
+                page(page);
+            }
+
+            @Override
+            public void podcast(Podcast podcast) {
+                log.info("podcast={}", podcast);
+
+                Page page = Page.builder()
+                        .data(podcast.getData())
+                        .path(podcast.getUrl())
+                        .renderFunction(PodcastLayout::render)
+                        .build();
+
+                page(page);
+            }
 
             @Override
             public void tag(String tag) {

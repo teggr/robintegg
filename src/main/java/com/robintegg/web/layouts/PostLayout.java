@@ -2,6 +2,7 @@ package com.robintegg.web.layouts;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
+import com.robintegg.web.utils.Utils;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 
@@ -32,15 +33,15 @@ public class PostLayout {
                     h1()
                         .withClass("post-title p-name")
                         .attr("itemprop", "name headline")
-                        .withText("{{ page.title | escape }}"),
+                        .withText(Utils.escape(contentModel.getPage().getTitle())),
                     p()
                         .withClass("post-meta")
                         .with(
                             time()
                                 .withClass("dt-published")
-                                .withDatetime("{{ page.date | date_to_xmlschema }}")
+                                .withDatetime(Utils.formatXmlSchema(contentModel.getPage().getDate()))
                                 .attr("itemprop", "datePublished")
-                                .withText("{{ page.date | date: date_format }}"),
+                                .withText( Utils.format(contentModel.getPage().getDate()) ),
                             iff(
                                 contentModel.getPage().getModifiedDate() != null,
                                 text("~")
@@ -49,9 +50,9 @@ public class PostLayout {
                                 contentModel.getPage().getModifiedDate() != null,
                                 time()
                                     .withClass("dt-modified")
-                                    .withDatetime("{{ mdate }}")
+                                    .withDatetime(Utils.formatXmlSchema(contentModel.getPage().getModifiedDate()))
                                     .attr("itemprop", "dateModified")
-                                    .withText(" {{ mdate | date: date_format }}")
+                                    .withText(Utils.format(contentModel.getPage().getDate()))
                             ),
                             iff(
                                 contentModel.getPage().getAuthor() != null,
@@ -64,7 +65,7 @@ public class PostLayout {
                                                 span()
                                                     .withClass("p-author h-card")
                                                     .attr("itemprop", "name")
-                                                    .withText("{{ author }}")
+                                                    .withText(author)
                                             );
                                       } )
                             )
@@ -79,7 +80,7 @@ public class PostLayout {
                 ),
             a()
                 .withClass("u-url")
-                .withHref("{{ page.url | relative_url }}")
+                .withHref(contentModel.getPage().getUrl())
                 .attr("hidden")
         );
 

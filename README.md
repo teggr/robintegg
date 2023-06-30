@@ -8,10 +8,15 @@ https://www.robintegg.com
 
 https://podnews.net/search?q=
 
-# Running Jekyll on GitHub Workspaces
+# Building website
 
 ```
-gem install bundler jekyll
-bundle update
-bundle exec jekyll serve --incremental
+com.robintegg.web.Build.main();
+```
+
+# Running JWebServer
+
+```
+cd target\site
+C:\Users\teggro01\.jdks\temurin-19.0.2\bin\jwebserver   
 ```

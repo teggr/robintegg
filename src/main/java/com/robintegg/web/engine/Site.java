@@ -15,6 +15,8 @@ public class Site {
     private String githubUsername;
     private String googleAnalytics;
     private String linkedinUsername;
+    private String url;
+    private String baseUrl;
 
     public boolean paginate() {
         return false;

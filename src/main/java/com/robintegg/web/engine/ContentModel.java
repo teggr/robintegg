@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,6 +34,14 @@ public class ContentModel {
         // tags
         getTags().stream()
                 .forEach(visitor::tag);
+
+        // posts
+        posts.stream()
+                .forEach(visitor::post);
+
+        // podcast
+        podcasts.stream()
+                .forEach(visitor::podcast);
 
     }
 
@@ -79,16 +86,16 @@ public class ContentModel {
         return this.posts.stream().filter(p -> category.equals(p.getCategory())).toList();
     }
 
-    public List<Podcast> getPodcasts() {
-        return Collections.emptyList();
-    }
-
     public void setContent(DomContent domContent) {
         this.content = domContent;
     }
 
     public void addPodcast(Podcast podcast) {
         this.podcasts.add(podcast);
+    }
+
+    public List<Podcast> getPodcasts() {
+        return this.podcasts;
     }
 
     public void addPost(Post post) {

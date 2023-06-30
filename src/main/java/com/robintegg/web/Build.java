@@ -34,6 +34,8 @@ public class Build {
         site.setGithubUsername("teggr");
         site.setGoogleAnalytics("UA-112481105-1");
         site.setLinkedinUsername("robintegg");
+        site.setUrl("https://robintegg.com");
+        site.setBaseUrl("");
 
         contentModel.setSite(site);
 

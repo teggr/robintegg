@@ -6,4 +6,8 @@ public interface ContentModelVisitor {
 
     void tag(String tag);
 
+    void post(Post post);
+
+    void podcast(Podcast podcast);
+
 }

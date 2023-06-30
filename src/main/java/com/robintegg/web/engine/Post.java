@@ -1,5 +1,6 @@
 package com.robintegg.web.engine;
 
+import com.robintegg.web.utils.Utils;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.ToString;
@@ -17,11 +18,13 @@ public class Post {
     private final Map<String, List<String>> data;
     @ToString.Exclude
     private final Node document;
+    private final String url;
 
     public Post(String key, Map<String, List<String>> data, Node document) {
         this.key = key;
         this.data = data;
         this.document = document;
+        this.url = Utils.urlFromKey(key);
     }
 
     public LocalDate getDate() {
@@ -49,14 +52,18 @@ public class Post {
     }
 
     public String getUrl() {
-        return key;
+        return url;
     }
 
     public String getTitle() {
         return this.data.get("title").get(0);
     }
 
-    public DomContent getContent() {
+    public Map<String, List<String>> getData() {
+        return data;
+    }
+
+    public DomContent getContent(ContentModel contentModel) {
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return TagCreator.rawHtml(
                 renderer.render(document)

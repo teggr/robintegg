@@ -9,5 +9,6 @@ tags:
     - API
     - DDD
 podnews_url: https://podnews.net/podcast/ia0py
+date: 2023-06-30
 ---
 

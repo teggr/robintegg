@@ -2,6 +2,7 @@ package com.robintegg.web.pages;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Page;
+import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
 import java.util.List;
@@ -14,12 +15,13 @@ public class PodcastsPage {
   public static Page create() {
 
     return Page.builder()
-        .path("podcasts.html")
+        .path("/podcasts/index.html")
         .includeMenu(true)
         .data(Map.of(
             "layout", List.of("default"),
             "title", List.of("Podcasts"),
-            "permalink", List.of("/podcasts")
+            "permalink", List.of("/podcasts"),
+                "list_title", List.of("Podcasts")
             ))
         .renderFunction(PodcastsPage::render)
         .build();
@@ -36,7 +38,7 @@ public class PodcastsPage {
                         each(
                             h2()
                                 .withClass("post-list-heading")
-                                .withText("{{ page.list_title | default: \"Podcasts\" }}"),
+                                .withText( contentModel.getPage().getListTitle()),
                             ul()
                                 .withClass("post-list")
                                 .with(
@@ -47,10 +49,10 @@ public class PodcastsPage {
                                                   .with(
                                                       a()
                                                           .withClass("post-link")
-                                                          .withHref("{{ podcast.url | relative_url }}")
-                                                          .withText("{{ podcast.title | escape }}")
+                                                          .withHref(Utils.relativeUrl(podcast.getUrl()))
+                                                          .withText(Utils.relativeUrl(podcast.getTitle()))
                                                   ),
-                                              text("{{ podcast.subtitle }}"),
+                                              text(podcast.getSubtitle()),
                                               iff(
                                                   podcast.getTags().size() > 0,
                                                   ul()
@@ -60,8 +62,8 @@ public class PodcastsPage {
                                                             return li()
                                                                 .with(
                                                                     a()
-                                                                        .withHref("{{ '/tags#' | append: tag | relative_url }}")
-                                                                        .withText("{{tag}}")
+                                                                        .withHref(Utils.relativeUrl("/tags/"+tag))
+                                                                        .withText(tag)
                                                                 );
                                                           })
                                                       )

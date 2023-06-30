@@ -20,10 +20,36 @@ public class Utils {
     }
 
     public static String format(LocalDate date) {
+        if(date == null) return null;
         return date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
     }
 
     public static String capitalize(String category) {
         return StringUtils.capitalize(category);
+    }
+
+    public static String urlFromKey(String key) {
+        int index = key.indexOf("-");
+        String year = key.substring(0,index);
+        key = key.substring(index+ 1);
+
+        index = key.indexOf("-");
+        String month = key.substring(0,index);
+        key = key.substring(index+ 1);
+
+        index = key.indexOf("-");
+        String day = key.substring(0,index);
+        String title = key.substring(index+ 1);
+
+        // = key.indexOf(".");
+        //String title = key.substring(0,index);
+        //key = key.substring(index+ 1);
+
+        return "/" + year + "/" + month + "/" + day + "/" + title + ".html";
+    }
+
+    public static String formatXmlSchema(LocalDate date) {
+        if(date == null) return "";
+        return date.atStartOfDay().format(DateTimeFormatter.ISO_DATE_TIME);
     }
 }

@@ -8,4 +8,5 @@ tags:
     - Programming
     - Technology
 podnews_url: https://podnews.net/podcast/i827
+date: 2023-06-30
 ---
