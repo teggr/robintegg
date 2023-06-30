@@ -24,6 +24,7 @@ public class ContentModel {
     private Feed feed = new Feed();
     private List<SocialLink> socialLinks = new ArrayList<>();
     private Page page;
+    private String environment = "local";
 
     public void visit(ContentModelVisitor visitor) {
 
@@ -127,5 +128,12 @@ public class ContentModel {
         this.page = null;
     }
 
+    public void environment(String environment) {
+        this.environment = environment;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
 
 }

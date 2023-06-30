@@ -21,6 +21,8 @@ public class Build {
 
         ContentModel contentModel = new ContentModel();
 
+        // contentModel.environment("local");
+
         // could load some configuration here
         Site site = new Site();
         site.setTitle("Robin Tegg");
