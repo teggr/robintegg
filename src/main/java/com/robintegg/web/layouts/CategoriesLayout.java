@@ -36,51 +36,47 @@ public class CategoriesLayout {
             iff(
                 contentModel.getCategories().size() > 0,
                 each(contentModel.getCategories(), category -> {
-                      return each(
-                          iff(
-                              contentModel.getPage().getListTitle() != null,
-                              h2()
-                                  .withClass("post-list-heading")
-                                  .withText("{{ category[0] | capitalize }}")
-                          ),
-                          ul()
-                              .withClass("post-list")
-                              .with(
-                                  each(contentModel.getPostsInCategory(category), post -> {
-                                    return li()
+                        return each(
+                                h2()
+                                        .withClass("post-list-heading")
+                                        .withText( Utils.capitalize(category) ),
+                                ul()
+                                        .withClass("post-list")
                                         .with(
-                                            span()
-                                                .withClass("post-meta")
-                                                .withText(Utils.format(post.getDate())),
-                                            h3()
-                                                .with(
-                                                    a()
-                                                        .withClass("post-link")
-                                                        .withHref("{{ post.url | relative_url }}")
-                                                        .withText("{{ post.title | escape }}")
-                                                ),
-                                            iff(
-                                                contentModel.getSite().showExcerpts(),
-                                                post.getExcerpt()
-                                            )
-                                        );
-                                  })
-                              )
-                      );
+                                                each(contentModel.getPostsInCategory(category), post -> {
+                                                    return li()
+                                                            .with(
+                                                                    span()
+                                                                            .withClass("post-meta")
+                                                                            .withText( Utils.format(post.getDate()) ),
+                                                                    h3()
+                                                                            .with(
+                                                                                    a()
+                                                                                            .withClass("post-link")
+                                                                                            .withHref(Utils.relativeUrl(post.getUrl()))
+                                                                                            .withText(Utils.escape(post.getTitle()))
+                                                                            ),
+                                                                    iff(
+                                                                            contentModel.getSite().showExcerpts(),
+                                                                            post.getExcerpt()
+                                                                    )
+                                                            );
+                                                })
+                                        )
+                        );
                     }
-
-
                 )
-
-
             ),
             p()
-                .withClass("rss-subscribe")
+                .withClass("feed-subscribe")
                 .with(
                     a()
-                        .withHref("{{ \"/feed.xml\" | relative_url }}")
-                    //  <svg class="svg-icon orange"><use xlink:href="{{ 'assets/minima-social-icons.svg#rss' | relative_url }}"></use></svg><span>Subscribe</span>
-
+                        .withHref(Utils.relativeUrl("/feed.xml"))
+                            .with(
+                                    rawHtml(
+                                          String.format(  "<svg class=\"svg-icon orange\"><use xlink:href=\"%s\"></use></svg><span>Subscribe</span>", Utils.relativeUrl("/assets/minima-social-icons.svg#rss") )
+                                    )
+                            )
                 )
         );
 

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -38,16 +39,24 @@ public class Page {
     return "Posts";
   }
 
-  public LocalDateTime getModifiedDate() {
-    return null;
+  public LocalDate getModifiedDate() {
+    List<String> dates = data.get("date");
+    if (dates == null) {
+      return LocalDate.MAX;
+    }
+    return LocalDate.parse(dates.get(0));
   }
 
-  public List<Author> getAuthor() {
-    return null;
+  public List<String> getAuthor() {
+    return data.get("author");
   }
 
   public String getSubtitle() {
-    return null;
+    List<String> stringList = data.get("subtitle");
+    if (stringList == null) {
+      return null;
+    }
+    return stringList.get(0);
   }
 
 }

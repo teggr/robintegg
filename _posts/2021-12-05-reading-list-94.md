@@ -2,7 +2,7 @@
 title: Reading list for December 2021
 layout: default
 category: reading-list
-date: "2012-12-05"
+date: "2022-12-05"
 ---
 * [Event handling](https://cadenceworkflow.io/docs/concepts/events/#event-aggregation-and-correlation)
 * [12 Signs You’re Working in a Feature Factory](https://cutle.fish/blog/12-signs-youre-working-in-a-feature-factory)

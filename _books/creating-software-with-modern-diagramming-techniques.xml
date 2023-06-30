@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<book>
+    <details>
+        <title>Creating Software with Modern Diagramming Techniques</title>
+        <subtitle>Build Better Software with Mermaid</subtitle>
+        <imageUrl><!--TODO: --></imageUrl>
+        <author>Ashley Peacock</author>
+        <series>The Pragmatic Programmers</series>
+    </details>
+    <bookshelf>
+        <added>2023-06-29</added>
+        <!--TODO: read-->
+        <!--TODO: review-->
+    </bookshelf>
+</book>

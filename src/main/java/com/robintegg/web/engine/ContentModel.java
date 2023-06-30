@@ -101,7 +101,6 @@ public class ContentModel {
     return feed;
   }
 
-
   public void reset() {
     this.content = TagCreator.text("");
     this.page = null;

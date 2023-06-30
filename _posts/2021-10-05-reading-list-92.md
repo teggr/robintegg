@@ -3,7 +3,7 @@ title: Reading list for October 2021
 
 layout: default
 category: reading-list
-date: "2012-10-05"
+date: "2022-10-05"
 ---
 * [Visualization of Business Function Message Flow with Vaadin and Neo4j](https://foojay.io/today/visualization-of-the-message-flow-between-business-functions-with-vaadin-and-neo4j/)
 * [Playwright Java](https://playwright.dev/java/docs/intro)
