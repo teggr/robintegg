@@ -4,6 +4,8 @@ import com.robintegg.web.utils.Utils;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.ToString;
+import org.commonmark.node.AbstractVisitor;
+import org.commonmark.node.Image;
 import org.commonmark.node.Node;
 import org.commonmark.renderer.html.HtmlRenderer;
 
@@ -64,7 +66,15 @@ public class Post {
     }
 
     public DomContent getContent(ContentModel contentModel) {
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        document.accept(new AbstractVisitor() {
+            @Override
+            public void visit(Image image) {
+                image.setDestination(image.getDestination().replaceAll("\\{\\{site\\.baseurl\\}\\}", contentModel.getSite().getBaseUrl()) );
+                super.visit(image);
+            }
+        });
+        HtmlRenderer renderer = HtmlRenderer.builder()
+                .build();
         return TagCreator.rawHtml(
                 renderer.render(document)
         );
