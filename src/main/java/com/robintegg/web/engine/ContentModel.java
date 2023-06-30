@@ -48,6 +48,9 @@ public class ContentModel {
         files.stream()
                 .forEach(visitor::file);
 
+        // feed
+        visitor.feed(feed);
+
     }
 
     public String getLang() {

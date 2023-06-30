@@ -1,6 +1,5 @@
-package com.robintegg.web;
+package com.robintegg.web.engine;
 
-import com.robintegg.web.engine.*;
 import com.robintegg.web.layouts.PodcastLayout;
 import com.robintegg.web.layouts.TagLayout;
 import j2html.TagCreator;
@@ -13,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +37,25 @@ public class ContentRenderer {
                 try {
                     Files.createDirectories(outputFile.getParent().toAbsolutePath());
                     Files.write(outputFile.toAbsolutePath(), file.getContent(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+
+            @Override
+            public void feed(Feed feed) {
+
+                String path = feed.getPath();
+                if (path.startsWith("/")) {
+                    path = path.substring(1);
+                }
+                var outputFile = outputDirectory.resolve(path);
+
+                // write to file
+                try {
+                    Files.createDirectories(outputFile.getParent().toAbsolutePath());
+                    Files.writeString(outputFile.toAbsolutePath(), feed.getContent(contentModel), StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -106,7 +123,7 @@ public class ContentRenderer {
                 contentModel.setContent(domContent);
                 DomContent layoutContent = layout.getRenderFunction().apply(contentModel);
 
-                Map<String, List<String>> layoutData =  layout.getData();
+                Map<String, List<String>> layoutData = layout.getData();
                 List<String> outLayoutName = layoutData != null ? layoutData.get("layout") : null;
                 if (outLayoutName != null) {
                     layoutName = outLayoutName.get(0);

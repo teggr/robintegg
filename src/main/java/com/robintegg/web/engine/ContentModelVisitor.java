@@ -12,4 +12,6 @@ public interface ContentModelVisitor {
 
     void file(RawContentItem file);
 
+    void feed(Feed feed);
+
 }

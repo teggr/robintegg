@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator>
+    <link href="https://www.robintegg.com/feed.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://www.robintegg.com/" rel="alternate" type="text/html"/>
+    <updated>2023-06-19T21:39:53+00:00</updated>
+    <id>https://www.robintegg.com/feed.xml</id>
+    <title type="html">Robin Tegg</title>
+    <subtitle>A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation,
+        Tooling and UI design.
+    </subtitle>
+    <author>
+        <name>Robin Tegg</name>
+    </author>
+    <entry>
+        <title type="html">j2html Static Site Generator</title>
+        <link href="https://www.robintegg.com/2023/06/19/j2html-static-site-generator.html" rel="alternate"
+              type="text/html" title="j2html Static Site Generator"/>
+        <published>2023-06-19T00:00:00+00:00</published>
+        <updated>2023-06-19T00:00:00+00:00</updated>
+        <id>https://www.robintegg.com/2023/06/19/j2html-static-site-generator</id>
+        <content type="html" xml:base="https://www.robintegg.com/2023/06/19/j2html-static-site-generator.html"><![CDATA[<p><a href="https://j2html.com/">j2html</a> is a <em>fast and fluent</em> Java Html5 builder from the authors of the <a href="https://javalin.io/">Javalin</a> web framework. It allows the developer to code HTML documents using Java code with type safety and in  a preferred language and development environment.</p>
+
+<p>To see a simple example, add the j2html dependency.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.j2html<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>j2html<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>1.6.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p>Use the TagCreator to get started. j2html’s syntax is fluent and closely matched to HTML:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">static</span> <span class="n">j2html</span><span class="o">.</span><span class="na">TagCreator</span><span class="o">.*;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">body</span><span class="o">(</span>
+            <span class="n">h1</span><span class="o">(</span><span class="s">"Hello, World!"</span><span class="o">),</span>
+            <span class="n">img</span><span class="o">().</span><span class="na">withSrc</span><span class="o">(</span><span class="s">"/img/hello.png"</span><span class="o">)</span>
+        <span class="o">).</span><span class="na">render</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>The Java code above becomes the HTML below:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;h1&gt;</span>Hello, World!<span class="nt">&lt;/h1&gt;</span>
+    <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"/img/hello.png"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div></div>
+
+<p>As a Java developer I like the idea of staying within a single language for both generation and rendering of web content.</p>
+
+<p>I’m going to explore how far I can push this concept, starting with the blog and re-developing it using the j2html library instead of jekyll.</p>
+
+<p>It will be interesting to see if it feels more or less productive to code with that the typical code in a html template or javascript framework. My recent experience with the <a href="https://robintegg.com/2022/07/26/first-look-at-hilla-web-framework.html">hilla framework</a> left me feeling that the learning curve was too steep and required too broad a knowledge for me to start using effectively.</p>]]></content>
+        <author>
+            <name>Robin Tegg</name>
+        </author>
+        <category term="java"/>
+        <category term="j2html"/>
+        <category term="web"/>
+        <summary type="html">
+            <![CDATA[j2html is a fast and fluent Java Html5 builder from the authors of the Javalin web framework. It allows the developer to code HTML documents using Java code with type safety and in a preferred language and development environment.]]></summary>
+        <media:thumbnail xmlns:media="http://search.yahoo.com/mrss/"
+                         url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"/>
+        <media:content medium="image" url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"
+                       xmlns:media="http://search.yahoo.com/mrss/"/>
+    </entry>
+    <entry>
+        <title type="html">Watch out for the Spring @Cacheable default key</title>
+        <link href="https://www.robintegg.com/2023/01/03/spring-cacheable.html" rel="alternate" type="text/html"
+              title="Watch out for the Spring @Cacheable default key"/>
+        <published>2023-01-03T00:00:00+00:00</published>
+        <updated>2023-01-03T00:00:00+00:00</updated>
+        <id>https://www.robintegg.com/2023/01/03/spring-cacheable</id>
+        <content type="html" xml:base="https://www.robintegg.com/2023/01/03/spring-cacheable.html"><![CDATA[<p>Spring provides a useful <a href="https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#cache">caching abstraction</a> that can be applied to your Spring beans using annotations.</p>
+
+<p>You can use the <code class="language-plaintext highlighter-rouge">@Cacheable</code> annotation to transparently mark methods or classes whose results are cacheable. If you are caching static data for example, this can reduce the number of calls to the database.</p>
+
+<p>What you need to be aware of is that the Spring <code class="language-plaintext highlighter-rouge">@Cacheable</code> annotation uses the <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/annotation/Cacheable.html">method parameters as the cache key by default</a>. This can display surprising behaviours at runtime that you might not run into when testing. One scenario where this behaviour is unwanted would be when two different repository methods share the same signature.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Cacheable</span><span class="o">(</span><span class="s">"staticdata"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">StaticDataRepository</span> <span class="kd">extends</span> <span class="nc">JpaRepository</span><span class="o">&lt;</span><span class="nc">StaticData</span><span class="o">,</span><span class="nc">Long</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">StaticData</span><span class="o">&gt;</span> <span class="nf">findAllByName</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">);</span>
+
+    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">StaticData</span><span class="o">&gt;</span> <span class="nf">findAllByLabel</span><span class="o">(</span><span class="nc">String</span> <span class="n">label</span><span class="o">);</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>In this repository implementation we have two different queries that we would expect to return different results.</p>
+
+<p>With the following test we can show in the logs that the cache is being used.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@DataJpaTest</span>
+<span class="nd">@ContextConfiguration</span>
+<span class="kd">class</span> <span class="nc">StaticDataRepositoryTest</span> <span class="o">{</span>
+
+    <span class="nd">@EnableCaching</span>
+    <span class="nd">@TestConfiguration</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">StaticDataRepositoryTestConfiguration</span> <span class="o">{</span>
+
+        <span class="nd">@Bean</span>
+        <span class="nc">CacheManager</span> <span class="nf">cacheManager</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">ConcurrentMapCacheManager</span><span class="o">(</span><span class="s">"staticdata"</span><span class="o">);</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">Logger</span> <span class="no">LOGGER</span> <span class="o">=</span> <span class="nc">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="nc">StaticDataRepositoryTest</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="nc">StaticDataRepository</span> <span class="n">staticData</span><span class="o">;</span>
+
+    <span class="nd">@BeforeEach</span>
+    <span class="kt">void</span> <span class="nf">setup</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">staticData</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="k">new</span> <span class="nc">StaticData</span><span class="o">(</span><span class="mi">1L</span><span class="o">,</span> <span class="s">"one"</span><span class="o">,</span> <span class="s">"two"</span><span class="o">));</span>
+        <span class="n">staticData</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="k">new</span> <span class="nc">StaticData</span><span class="o">(</span><span class="mi">2L</span><span class="o">,</span> <span class="s">"two"</span><span class="o">,</span> <span class="s">"two"</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="kt">void</span> <span class="nf">findAllByName</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="no">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"FIRST READ"</span><span class="o">);</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">StaticData</span><span class="o">&gt;</span> <span class="n">val1</span> <span class="o">=</span> <span class="n">staticData</span><span class="o">.</span><span class="na">findAllByName</span><span class="o">(</span><span class="s">"two"</span><span class="o">);</span>
+        <span class="no">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"SECOND READ"</span><span class="o">);</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">StaticData</span><span class="o">&gt;</span> <span class="n">val2</span> <span class="o">=</span> <span class="n">staticData</span><span class="o">.</span><span class="na">findAllByName</span><span class="o">(</span><span class="s">"two"</span><span class="o">);</span>
+        <span class="no">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"VERIFY"</span><span class="o">);</span>
+        <span class="nc">Assertions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">(</span><span class="n">val1</span><span class="o">).</span><span class="na">hasSize</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">flatMap</span><span class="o">(</span><span class="nl">StaticData:</span><span class="o">:</span><span class="n">getId</span><span class="o">).</span><span class="na">containsExactly</span><span class="o">(</span><span class="mi">2L</span><span class="o">);</span>
+        <span class="nc">Assertions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">(</span><span class="n">val2</span><span class="o">).</span><span class="na">hasSize</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">flatMap</span><span class="o">(</span><span class="nl">StaticData:</span><span class="o">:</span><span class="n">getId</span><span class="o">).</span><span class="na">containsExactly</span><span class="o">(</span><span class="mi">2L</span><span class="o">);</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Running the <code class="language-plaintext highlighter-rouge">findAllByName</code> twice in this tests we see the following output in the logs. The first read executes the SQL but the second does not because it is retrieved from the cache.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2023-01-03T14:41:12.572Z  INFO 28212 --- [           main] c.r.c.c.StaticDataRepositoryTest         : FIRST READ
+2023-01-03T14:41:12.643Z DEBUG 28212 --- [           main] org.hibernate.SQL                        : select s1_0.id,s1_0.label,s1_0.name from static_data s1_0 where s1_0.name=?
+Hibernate: select s1_0.id,s1_0.label,s1_0.name from static_data s1_0 where s1_0.name=?
+2023-01-03T14:41:12.648Z  INFO 28212 --- [           main] c.r.c.c.StaticDataRepositoryTest         : SECOND READ
+2023-01-03T14:41:12.649Z  INFO 28212 --- [           main] c.r.c.c.StaticDataRepositoryTest         : VERIFY
+</code></pre></div></div>
+
+<p>To see the conflict of the default key, we will now run the same test but mix the calls to use <code class="language-plaintext highlighter-rouge">findAllByLabel</code> first which would return a different set of results.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@Test</span>
+    <span class="kt">void</span> <span class="nf">findAllByName</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="no">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"FIRST READ"</span><span class="o">);</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">StaticData</span><span class="o">&gt;</span> <span class="n">val1</span> <span class="o">=</span> <span class="n">staticData</span><span class="o">.</span><span class="na">findAllByLabel</span><span class="o">(</span><span class="s">"two"</span><span class="o">);</span>
+        <span class="no">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"SECOND READ"</span><span class="o">);</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">StaticData</span><span class="o">&gt;</span> <span class="n">val2</span> <span class="o">=</span> <span class="n">staticData</span><span class="o">.</span><span class="na">findAllByName</span><span class="o">(</span><span class="s">"two"</span><span class="o">);</span>
+        <span class="no">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"VERIFY"</span><span class="o">);</span>
+        <span class="nc">Assertions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">(</span><span class="n">val1</span><span class="o">).</span><span class="na">hasSize</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="na">flatMap</span><span class="o">(</span><span class="nl">StaticData:</span><span class="o">:</span><span class="n">getId</span><span class="o">).</span><span class="na">containsExactly</span><span class="o">(</span><span class="mi">1L</span><span class="o">,</span><span class="mi">2L</span><span class="o">);</span>
+        <span class="nc">Assertions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">(</span><span class="n">val2</span><span class="o">).</span><span class="na">hasSize</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">flatMap</span><span class="o">(</span><span class="nl">StaticData:</span><span class="o">:</span><span class="n">getId</span><span class="o">).</span><span class="na">containsExactly</span><span class="o">(</span><span class="mi">2L</span><span class="o">);</span>
+
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<p>Here we see the error where the first read has read in the expected 2 items, but the second read has failed because it is using the value cached from the previous read because they share the same arguments in this case: “two”.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2023-01-03T14:44:01.353Z  INFO 7528 --- [           main] c.r.c.c.StaticDataRepositoryTest         : FIRST READ
+2023-01-03T14:44:01.417Z DEBUG 7528 --- [           main] org.hibernate.SQL                        : select s1_0.id,s1_0.label,s1_0.name from static_data s1_0 where s1_0.label=?
+Hibernate: select s1_0.id,s1_0.label,s1_0.name from static_data s1_0 where s1_0.label=?
+2023-01-03T14:44:01.420Z  INFO 7528 --- [           main] c.r.c.c.StaticDataRepositoryTest         : SECOND READ
+2023-01-03T14:44:01.421Z  INFO 7528 --- [           main] c.r.c.c.StaticDataRepositoryTest         : VERIFY
+
+java.lang.AssertionError:
+Expected size: 1 but was: 2 in:
+[com.robintegg.cache.cachedemo.StaticData@1,
+    com.robintegg.cache.cachedemo.StaticData@2]
+
+</code></pre></div></div>
+
+<p>So revisiting the <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/annotation/Cacheable.html">javadocs</a> for the <code class="language-plaintext highlighter-rouge">@Cacheable</code> annotation we have identified that we should be wary of using the default caching settings.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Each time an advised method is invoked, caching behavior will be applied, checking whether the method has been already invoked for the given arguments. A sensible default simply uses the method parameters to compute the key, but a SpEL expression can be provided via the key() attribute, or a custom KeyGenerator implementation can replace the default one (see keyGenerator()).
+</code></pre></div></div>
+
+<p>So in order to alleviate this issue and reduce contention, it would be wise to use the suggested <code class="language-plaintext highlighter-rouge">key</code> argument for the annotation and use the suggested SpEL values according to the possible contention in your arguments or method names</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Cacheable</span><span class="o">(</span><span class="n">cacheNames</span> <span class="o">=</span> <span class="s">"staticdata"</span><span class="o">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s">"#root.targetClass + ' ' +  #root.methodName + ' ' + #root.args"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">StaticDataRepository</span> <span class="kd">extends</span> <span class="nc">JpaRepository</span><span class="o">&lt;</span><span class="nc">StaticData</span><span class="o">,</span><span class="nc">Long</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">StaticData</span><span class="o">&gt;</span> <span class="nf">findAllByName</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">);</span>
+
+    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">StaticData</span><span class="o">&gt;</span> <span class="nf">findAllByLabel</span><span class="o">(</span><span class="nc">String</span> <span class="n">label</span><span class="o">);</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Now that we’ve used a fuller qualified key of <code class="language-plaintext highlighter-rouge">#root.targetClass + ' ' +  #root.methodName + ' ' + #root.args</code> then we see both method being executed.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2023-01-03T14:51:10.705Z  INFO 16976 --- [           main] c.r.c.c.StaticDataRepositoryTest         : FIRST READ
+2023-01-03T14:51:10.802Z DEBUG 16976 --- [           main] org.hibernate.SQL                        : select s1_0.id,s1_0.label,s1_0.name from static_data s1_0 where s1_0.label=?
+Hibernate: select s1_0.id,s1_0.label,s1_0.name from static_data s1_0 where s1_0.label=?
+2023-01-03T14:51:10.806Z  INFO 16976 --- [           main] c.r.c.c.StaticDataRepositoryTest         : SECOND READ
+2023-01-03T14:51:10.810Z DEBUG 16976 --- [           main] org.hibernate.SQL                        : select s1_0.id,s1_0.label,s1_0.name from static_data s1_0 where s1_0.name=?
+Hibernate: select s1_0.id,s1_0.label,s1_0.name from static_data s1_0 where s1_0.name=?
+2023-01-03T14:51:10.810Z  INFO 16976 --- [           main] c.r.c.c.StaticDataRepositoryTest         : VERIFY
+</code></pre></div></div>]]></content>
+        <author>
+            <name>Robin Tegg</name>
+        </author>
+        <category term="java"/>
+        <category term="spring"/>
+        <summary type="html">
+            <![CDATA[Spring provides a useful caching abstraction that can be applied to your Spring beans using annotations.]]></summary>
+        <media:thumbnail xmlns:media="http://search.yahoo.com/mrss/"
+                         url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"/>
+        <media:content medium="image" url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"
+                       xmlns:media="http://search.yahoo.com/mrss/"/>
+    </entry>
+    <entry>
+        <title type="html">Deploy a Jar to Heroku from the CLI</title>
+        <link href="https://www.robintegg.com/2022/07/27/deploy-jar-to-heroku-from-the-cli.html" rel="alternate"
+              type="text/html" title="Deploy a Jar to Heroku from the CLI"/>
+        <published>2022-07-27T00:00:00+00:00</published>
+        <updated>2022-07-27T00:00:00+00:00</updated>
+        <id>https://www.robintegg.com/2022/07/27/deploy-jar-to-heroku-from-the-cli</id>
+        <content type="html" xml:base="https://www.robintegg.com/2022/07/27/deploy-jar-to-heroku-from-the-cli.html">
+            <![CDATA[<p>Whilst taking a quick look into the <a href="https://robintegg.com/2022/07/26/first-look-at-hilla-web-framework.html">Hilla Web Framework</a> the documentation includes some useful steps for deploying a jar to <a href="https://hilla.dev/docs/tutorials/in-depth-course/production-build-and-deployment">heroku</a>.</p>
+
+<p>Deploying a jar straight to heroku is an alternative to the approach that builds and deploys from your git repo.</p>
+
+<p>Those steps are summarised here:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku login
+
+heroku plugins:install java
+
+heroku create --no-remote --region=eu teggr-some-app-name
+
+heroku config --app=teggr-some-app-name
+
+heroku config:set --app=teggr-some-app-name COM_ROBINTEGG_SOME_VALUE=a value
+
+mvn package -Pproduction
+
+heroku deploy:jar target\some-app-name-1.0-SNAPSHOT.jar --app
+teggr-some-app-name
+
+heroku logs --tail teggr-some-app-name
+
+heroku addons:create heroku-postgresql -a teggr-some-app-name
+</code></pre></div></div>]]></content>
+        <author>
+            <name>Robin Tegg</name>
+        </author>
+        <category term="heroku"/>
+        <category term="cli"/>
+        <summary type="html">
+            <![CDATA[Whilst taking a quick look into the Hilla Web Framework the documentation includes some useful steps for deploying a jar to heroku.]]></summary>
+        <media:thumbnail xmlns:media="http://search.yahoo.com/mrss/"
+                         url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"/>
+        <media:content medium="image" url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"
+                       xmlns:media="http://search.yahoo.com/mrss/"/>
+    </entry>
+    <entry>
+        <title type="html">First look at Hilla Web Framework from Vaadin</title>
+        <link href="https://www.robintegg.com/2022/07/26/first-look-at-hilla-web-framework.html" rel="alternate"
+              type="text/html" title="First look at Hilla Web Framework from Vaadin"/>
+        <published>2022-07-26T00:00:00+00:00</published>
+        <updated>2022-07-26T00:00:00+00:00</updated>
+        <id>https://www.robintegg.com/2022/07/26/first-look-at-hilla-web-framework</id>
+        <content type="html" xml:base="https://www.robintegg.com/2022/07/26/first-look-at-hilla-web-framework.html">
+            <![CDATA[<p>As part of a series of looking at <a href="https://robintegg.com/2022/06/15/less-code-over-low-code.html">less code options</a> I started to take a look at <a href="https://hilla.dev/">Hilla</a> from the Vaadin developers. It’s a relatively recent entry into the Java Web Framework space and tightly integrates a Spring Boot Java back end with a reactive TypeScript front end.</p>
+
+<p>There are plenty of resources in their documentation to help get you started such as the <a href="https://hilla.dev/docs/tutorials/quickstart">Quickstart tutorial</a> and a fuller <a href="https://hilla.dev/docs/tutorials/in-depth-course">In depth course</a>.</p>
+
+<p>What I liked about this framework is that the developers have put in a number of useful features for your development process, such as</p>
+
+<ul>
+  <li>auto creation of the Typescript bindings so you don’t need to define the dtos twice</li>
+  <li>cli creation of project with boiler plate security</li>
+  <li>existing component library</li>
+  <li>expressing Java validation annotations on the front end Typescript forms</li>
+</ul>
+
+<p>The framework also nicely segrates the front end and backend development without too much faff. Running the code like a normal spring boot app is sufficient in dev mode to also run the front end dev server so that all the code can be run at once.</p>
+
+<p>If you are going to be using the framework, then the combination of builtin vaadin components should enable you to build a working webapp in pretty short time. However, it feels that to reach that higher level of productivity you will need to understand some of the more advanced features of the framework such as the design system. If you are not going to adopt the design system, then you’ll likely have to build all the components again which you’d maybe have to do anyway if you used a different approach.</p>
+
+<p>In summary, I started the small <a href="https://github.com/teggr/hilla-dev-test-project">hilla-dev-test-project</a> on Github to explore the framework, but I think that for small projects there’s too much of a learning curve for me to build apps as I would want. However, in a work environment where the teams are commited to using it, I believe it could be a very productive and collaborative approach to building webapps.</p>]]></content>
+        <author>
+            <name>Robin Tegg</name>
+        </author>
+        <category term="spring boot"/>
+        <category term="hilla"/>
+        <category term="vaadin"/>
+        <category term="productivity"/>
+        <summary type="html">
+            <![CDATA[As part of a series of looking at less code options I started to take a look at Hilla from the Vaadin developers. It’s a relatively recent entry into the Java Web Framework space and tightly integrates a Spring Boot Java back end with a reactive TypeScript front end.]]></summary>
+        <media:thumbnail xmlns:media="http://search.yahoo.com/mrss/"
+                         url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"/>
+        <media:content medium="image" url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"
+                       xmlns:media="http://search.yahoo.com/mrss/"/>
+    </entry>
+    <entry>
+        <title type="html">An approach for a Spring Boot Service Template</title>
+        <link href="https://www.robintegg.com/2022/06/20/spring-boot-service-template.html" rel="alternate"
+              type="text/html" title="An approach for a Spring Boot Service Template"/>
+        <published>2022-06-20T00:00:00+00:00</published>
+        <updated>2022-06-20T00:00:00+00:00</updated>
+        <id>https://www.robintegg.com/2022/06/20/spring-boot-service-template</id>
+        <content type="html" xml:base="https://www.robintegg.com/2022/06/20/spring-boot-service-template.html"><![CDATA[<h1 id="an-approach-for-a-spring-boot-service-template">An approach for a Spring Boot Service Template</h1>
+
+<h2 id="the-problem">The problem</h2>
+
+<p>In my current organisation we have created and continue to create a number of Java projects using Maven and Spring Boot which we need to manage.</p>
+
+<p>We are continuing to evolve our approach to managing these codebases. We intially started from a single codebase using Spring Boot. This codebase was then copied and pasted a few times as we built new services. Beyond a few services it was clear that we had some common patterns and needed to apply some automation to ensure that there was some degree of consistency between projects.</p>
+
+<p>This first phase consisted of creating a <a href="https://microservices.io/patterns/service-template.html">Service Template</a> using a maven archetype to ensure that the projects are created with fixed set of dependencies and structure.  More on Service Templates in the article <a href="https://blog.thepete.net/blog/2020/09/25/service-templates-service-chassis/">Service Templates and Service Chassis
+managing the cost of microservice plumbing</a>. This has ensured that each project continues to start off on the right tracks.</p>
+
+<p>To further complement the template approach, we bundled a number of shared dependencies and patterns into their own <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.developing-auto-configuration">spring-boot-starter</a> feature libraries. This means that any updates to common code can be shared simply between projects, typically requiring only a version update to bring in the changes.</p>
+
+<p>So we are now running into an issue when a code change requires more that just a version update, such as a new configuration class or application property change. This class of change set includes minor and major upgrades to the Spring Boot version used, infrastructure, CI-CD pipeline changes and soon Java version upgrades.</p>
+
+<p>These types of change require some manual interaction with the codebase, typically following a loose script of changes that need to be made. Potentially this could be scripted in some circumstances if you were confident that the script could be applied to all codebases or at least the majority of cases (TODO: maybe we should investigate further the approach of applying scripts to multiple codebases).</p>
+
+<h2 id="using-git">Using git</h2>
+
+<p>One approach that we might be able to use is forking a git repository and pulling those changes from a master branch. On Github this is called <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks">forking</a>, though you are not able to fork your own repositories.</p>
+
+<p>The steps to do this are:</p>
+
+<h3 id="creating-a-fork-from-the-seed-project">Creating a fork from the seed project</h3>
+
+<ol>
+  <li>Create your service template repository - <a href="https://github.com/teggr/spring-boot-seed">spring-boot-seed</a></li>
+  <li>Create a new repository for your new service - <code class="language-plaintext highlighter-rouge">&lt;forked-repo&gt;</code></li>
+  <li>Clone your fork
+<code class="language-plaintext highlighter-rouge">git clone https://github.com/&lt;username&gt;/&lt;forked-repo&gt;.git</code></li>
+  <li>Add your original repository as an Upstream Remote
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd &lt;forked-repo&gt;
+git remote add seed https://github.com/teggr/spring-boot-seed.git
+</code></pre></div>    </div>
+  </li>
+  <li>Update your fork
+<code class="language-plaintext highlighter-rouge">git pull seed main</code></li>
+  <li>Push
+<code class="language-plaintext highlighter-rouge">git push origin master</code></li>
+</ol>
+
+<h3 id="updating-a-fork-from-the-seed-project">Updating a fork from the seed project</h3>
+
+<ol>
+  <li>Update your fork
+<code class="language-plaintext highlighter-rouge">git pull seed main</code></li>
+  <li>Resolve any merge conflicts
+    <ul>
+      <li>Common merge conflicts to resolve - Readme.md, pom.xml, application.properties</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="impact">Impact</h3>
+
+<p>So does this reduce the time to implement the changes? Well, it depends on the result of your merge. If you don’t make many changes to the files that originated from the seed project, then you may be able to simply automerge the changes and run a pipeline, otherwise conflicts will need to be resolved.</p>
+
+<p>Conflict resolution does at least ensure that the correct changes are being applied but the human operator still needs to decide on those conflicts so it’s not guaranteed to be completely error free.</p>
+
+<h2 id="some-other-thoughts">Some other thoughts</h2>
+
+<p>I’m not aware of any feature in the maven archetype approach that helps in this regard. <a href="https://stackoverflow.com/questions/6547965/maven-archetype-to-modify-an-existing-project#:~:text=You%20simply%20run%20the%20archetype,version%20of%20the%20existing%20project">Can you update an existing project from a maven archetype?</a>).</p>
+
+<p>So it might be possible according to the article <a href="http://www.avajava.com/tutorials/lessons/how-do-i-create-an-archetype-that-can-run-on-an-existing-project.html?page=2">How do I create an archetype that can run on an existing project?</a> but there look to be some issues if there are conflicting files so this approach may require some further investigation.</p>
+
+<p>Using maven archetypes does seem to be an under utlized approach, perhaps due to a lack of comprehensive documentation, so maybe the simple seed project / git approach may be a lower barrier of entry for developers looking to create and manage a service template.</p>]]></content>
+        <author>
+            <name>Robin Tegg</name>
+        </author>
+        <category term="spring boot"/>
+        <category term="service template"/>
+        <category term="productivity"/>
+        <summary type="html"><![CDATA[An approach for a Spring Boot Service Template]]></summary>
+        <media:thumbnail xmlns:media="http://search.yahoo.com/mrss/"
+                         url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"/>
+        <media:content medium="image" url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"
+                       xmlns:media="http://search.yahoo.com/mrss/"/>
+    </entry>
+    <entry>
+        <title type="html">Less-code over low-code</title>
+        <link href="https://www.robintegg.com/2022/06/15/less-code-over-low-code.html" rel="alternate" type="text/html"
+              title="Less-code over low-code"/>
+        <published>2022-06-15T00:00:00+00:00</published>
+        <updated>2022-06-15T00:00:00+00:00</updated>
+        <id>https://www.robintegg.com/2022/06/15/less-code-over-low-code</id>
+        <content type="html" xml:base="https://www.robintegg.com/2022/06/15/less-code-over-low-code.html"><![CDATA[<h1 id="id-prefer-less-code-over-low-code">I’d prefer less-code over low-code</h1>
+
+<p>In my current workplace I’ve had some experience working with a low-code platform called <a href="https://www.outsystems.com/">OutSystems</a> which provides a drag’n’drop like experience to building apps. This low-code approach can be quite refreshing and also quite productive. The Low-code approach to development is definitely gaining traction and I can see the benefits for both experienced and casual developer use cases. It’s certainly had me questioning the productivity of my own toolset. The visual aspect of developing UI and API components is particularly appealing to me personally as I can find the amount of HTML/Java code sometimes too much when scaled to the larger projects.</p>
+
+<p>My standard toolset for building webapps is the Spring Boot platform. Spring Boot is great for getting a project up and running with much of the framework infrastructure ready to go pending your configuration. The integration of the <a href="https://start.spring.io/">Spring Boot Initializr</a> into the <a href="https://code.visualstudio.com/docs/java/java-spring-boot">IDE</a>s is really useful, especially when trying any new Spring features or integrations.</p>
+
+<p>However, I feel like once the project has been loaded with my dependencies like the Web and Thymeleaf starters, there’s still quite a lot of boilerplate code to get a decent web application out of the door. Mainly I’m talking about plumbing together html, dtos, API and form controllers, mapping to domain objects and persistence.</p>
+
+<p>So I’m commiting to write a short series of articles where I evaluate some new features and combinations of libraries and tooling to see if I should be updating my toolset to enable some greater productivity or at least make the dev process a little more enjoyable.</p>]]></content>
+        <author>
+            <name>Robin Tegg</name>
+        </author>
+        <category term="spring boot"/>
+        <category term="outsystems"/>
+        <category term="productivity"/>
+        <summary type="html"><![CDATA[I’d prefer less-code over low-code]]></summary>
+        <media:thumbnail xmlns:media="http://search.yahoo.com/mrss/"
+                         url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"/>
+        <media:content medium="image" url="https://www.robintegg.com/assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg"
+                       xmlns:media="http://search.yahoo.com/mrss/"/>
+    </entry>
+    <entry>
+        <title type="html">Reading list for June 2022</title>
+        <link href="https://www.robintegg.com/reading-list/2022/06/05/reading-list-100.html" rel="alternate"
+              type="text/html" title="Reading list for June 2022"/>
+        <published>2022-06-05T00:00:00+00:00</published>
+        <updated>2022-06-05T00:00:00+00:00</updated>
+        <id>https://www.robintegg.com/reading-list/2022/06/05/reading-list-100</id>
+        <content type="html" xml:base="https://www.robintegg.com/reading-list/2022/06/05/reading-list-100.html">
+            <![CDATA[<ul>
+  <li><a href="https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/0.2.0">Release 0.2.0 · wimdeblauwe/htmx-spring-boot-thymeleaf · GitHub</a></li>
+  <li><a href="https://newrelic.com/resources/report/2022-state-of-java-ecosystem">New Relic 2022 State of the Java Ecosystem Report</a></li>
+  <li><a href="https://github.com/moduliths/moduliths">GitHub - moduliths/moduliths: Building modular, monolithic applications using Spring Boot</a></li>
+  <li><a href="https://foojay.io/today/wordish-with-javafx-part-1/">Wordish with JavaFX - Part 1</a></li>
+  <li><a href="https://sharedphysics.com/everything-is-important/">When Everything is Important But Nothing is Getting Done</a></li>
+</ul>]]></content>
+        <author>
+            <name>Robin Tegg</name>
+        </author>
+        <category term="reading-list"/>
+        <summary type="html">
+            <![CDATA[Release 0.2.0 · wimdeblauwe/htmx-spring-boot-thymeleaf · GitHub New Relic 2022 State of the Java Ecosystem Report GitHub - moduliths/moduliths: Building modular, monolithic applications using Spring Boot Wordish with JavaFX - Part 1 When Everything is Important But Nothing is Getting Done]]></summary>
+    </entry>
+    <entry>
+        <title type="html">Reading list for May 2022</title>
+        <link href="https://www.robintegg.com/reading-list/2022/05/05/reading-list-99.html" rel="alternate"
+              type="text/html" title="Reading list for May 2022"/>
+        <published>2022-05-05T00:00:00+00:00</published>
+        <updated>2022-05-05T00:00:00+00:00</updated>
+        <id>https://www.robintegg.com/reading-list/2022/05/05/reading-list-99</id>
+        <content type="html" xml:base="https://www.robintegg.com/reading-list/2022/05/05/reading-list-99.html"><![CDATA[<ul>
+  <li><a href="https://errorprone.info/docs/installation">ErrorProne</a></li>
+  <li><a href="https://www.jacoco.org/jacoco/trunk/doc/maven.html">JaCoCo - Maven Plug-in</a></li>
+  <li><a href="https://thorben-janssen.com/spring-data-jdbc-getting-started/">Spring Data JDBC - Getting Started</a></li>
+  <li><a href="https://github.com/abstracta/jmeter-java-dsl">GitHub - abstracta/jmeter-java-dsl: Simple JMeter performance tests API</a></li>
+  <li><a href="https://speakerdeck.com/mariofusco">Mario Fusco (@mariofusco) on Speaker Deck</a></li>
+</ul>]]></content>
+        <author>
+            <name>Robin Tegg</name>
+        </author>
+        <category term="reading-list"/>
+        <summary type="html">
+            <![CDATA[ErrorProne JaCoCo - Maven Plug-in Spring Data JDBC - Getting Started GitHub - abstracta/jmeter-java-dsl: Simple JMeter performance tests API Mario Fusco (@mariofusco) on Speaker Deck]]></summary>
+    </entry>
+    <entry>
+        <title type="html">Reading list for April 2022</title>
+        <link href="https://www.robintegg.com/reading-list/2022/04/05/reading-list-98.html" rel="alternate"
+              type="text/html" title="Reading list for April 2022"/>
+        <published>2022-04-05T00:00:00+00:00</published>
+        <updated>2022-04-05T00:00:00+00:00</updated>
+        <id>https://www.robintegg.com/reading-list/2022/04/05/reading-list-98</id>
+        <content type="html" xml:base="https://www.robintegg.com/reading-list/2022/04/05/reading-list-98.html"><![CDATA[<ul>
+  <li><a href="https://thenewstack.io/the-fediverse-points-to-our-social-media-future-post-musk/">The Fediverse Points to Our Social Media Future, Post-Musk – The New Stack</a></li>
+  <li><a href="https://github.com/pulumi/pulumi">GitHub - pulumi/pulumi: Pulumi - Universal Infrastructure as Code. Your Cloud, Your Language, Your Way 🚀</a></li>
+  <li><a href="https://www.wimdeblauwe.com/blog/2021/05/23/form-handling-with-thymeleaf/">Form handling with Thymeleaf - Wim Deblauwe</a></li>
+  <li><a href="https://foojay.io/today/how-to-publish-a-java-maven-project-to-the-maven-central-repository/">Publish a Java Project to the Maven Central Repository</a></li>
+  <li><a href="https://www.nytimes.com/games/wordle/index.html">Wordle - The New York Times</a></li>
+</ul>]]></content>
+        <author>
+            <name>Robin Tegg</name>
+        </author>
+        <category term="reading-list"/>
+        <summary type="html">
+            <![CDATA[The Fediverse Points to Our Social Media Future, Post-Musk – The New Stack GitHub - pulumi/pulumi: Pulumi - Universal Infrastructure as Code. Your Cloud, Your Language, Your Way 🚀 Form handling with Thymeleaf - Wim Deblauwe Publish a Java Project to the Maven Central Repository Wordle - The New York Times]]></summary>
+    </entry>
+    <entry>
+        <title type="html">Reading list for March 2022</title>
+        <link href="https://www.robintegg.com/reading-list/2022/03/05/reading-list-97.html" rel="alternate"
+              type="text/html" title="Reading list for March 2022"/>
+        <published>2022-03-05T00:00:00+00:00</published>
+        <updated>2022-03-05T00:00:00+00:00</updated>
+        <id>https://www.robintegg.com/reading-list/2022/03/05/reading-list-97</id>
+        <content type="html" xml:base="https://www.robintegg.com/reading-list/2022/03/05/reading-list-97.html"><![CDATA[<ul>
+  <li><a href="https://github.com/VerbalExpressions/JavaVerbalExpressions">GitHub - VerbalExpressions/JavaVerbalExpressions: Java regular expressions made easy.</a></li>
+  <li><a href="https://medium.com/codex/spring-boot-with-drools-engine-7119774c559f">Spring Boot with Drools Engine. In this blog we would see how Spring integrates with Drools Engine.</a></li>
+  <li><a href="https://microservices.io/post/misc/2022/01/19/writing-better-problem-reports.html">Writing better problem reports: 6 essential details</a></li>
+  <li><a href="https://blog.thepete.net/blog/2020/09/25/service-templates-service-chassis/">Pete Hodgson on Service Templates and Service Chassis</a></li>
+  <li><a href="https://microservices.io/patterns/service-template.html">Service Template</a></li>
+</ul>]]></content>
+        <author>
+            <name>Robin Tegg</name>
+        </author>
+        <category term="reading-list"/>
+        <summary type="html">
+            <![CDATA[GitHub - VerbalExpressions/JavaVerbalExpressions: Java regular expressions made easy. Spring Boot with Drools Engine. In this blog we would see how Spring integrates with Drools Engine. Writing better problem reports: 6 essential details Pete Hodgson on Service Templates and Service Chassis Service Template]]></summary>
+    </entry>
+</feed>
