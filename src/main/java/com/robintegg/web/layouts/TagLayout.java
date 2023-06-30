@@ -31,7 +31,7 @@ public class TagLayout {
                         ul()
                                 .withClass("post-list")
                                 .with(
-                                        each(contentModel.getTaggedContent(), post -> {
+                                        each(contentModel.getPostsWithTag(contentModel.getPage().getTag()), post -> {
                                             return each(
                                                     span()
                                                             .withClass("post-meta")

@@ -2,6 +2,8 @@ package com.robintegg.web.engine;
 
 public interface ContentModelVisitor {
 
-  void page(Page page);
+    void page(Page page);
+
+    void tag(String tag);
 
 }

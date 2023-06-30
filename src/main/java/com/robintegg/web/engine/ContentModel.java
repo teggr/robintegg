@@ -32,6 +32,10 @@ public class ContentModel {
         pages.stream()
                 .forEach(visitor::page);
 
+        // tags
+        getTags().stream()
+                .forEach(visitor::tag);
+
     }
 
     public String getLang() {
@@ -61,6 +65,10 @@ public class ContentModel {
 
     public List<String> getTags() {
         return this.posts.stream().flatMap(p -> p.getTags().stream()).distinct().toList();
+    }
+
+    public List<Post> getPostsWithTag(String tag) {
+        return this.posts.stream().filter(p -> p.getTags().contains(tag)).toList();
     }
 
     public List<String> getCategories() {

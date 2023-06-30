@@ -4,6 +4,7 @@ import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.ContentModelVisitor;
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.engine.Page;
+import com.robintegg.web.layouts.TagLayout;
 import j2html.TagCreator;
 import j2html.rendering.FlatHtml;
 import j2html.tags.DomContent;
@@ -25,6 +26,21 @@ public class ContentRenderer {
         log.info("render=start");
 
         contentModel.visit(new ContentModelVisitor() {
+
+            @Override
+            public void tag(String tag) {
+                log.info("tag={}", tag);
+
+                Page page = Page.builder()
+                        .data(Map.of(
+                                "tag", List.of(tag)
+                        ))
+                        .path("/tags/" + tag + "/index.html")
+                        .renderFunction(TagLayout::render)
+                        .build();
+
+                page(page);
+            }
 
             @Override
             public void page(Page page) {
