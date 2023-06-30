@@ -28,13 +28,11 @@ public class ContentSource {
 
     log.info("source directory: {}", sourceDirectory.toAbsolutePath());
 
-    // TODO: podcasts
     // load podcasts from folder with markdown
     var podcastDirectory = sourceDirectory.resolve("_podcasts");
     log.info("podcasts directory: " + podcastDirectory.toAbsolutePath());
 
     try (Stream<Path> paths = Files.walk(podcastDirectory)) {
-      // TODO: type the podcast data
       paths
           .filter(Files::isRegularFile)
           .peek(f -> log.info("{}", f))
@@ -42,13 +40,11 @@ public class ContentSource {
           .forEach(contentModel::addPodcast);
     }
 
-    // TODO: posts
     // load posts from folder with markdown
     var postsDirectory = sourceDirectory.resolve("_posts");
     log.info("posts directory: " + postsDirectory.toAbsolutePath());
 
     try (Stream<Path> paths = Files.walk(postsDirectory)) {
-      // TODO: type the post data
       paths
           .filter(Files::isRegularFile)
           .peek(f -> log.info("{}", f))
@@ -56,12 +52,10 @@ public class ContentSource {
           .forEach(contentModel::addPost);
     }
 
-    // TODO: raw files
     // load filers from all none special folders
     log.info("files directory: " + sourceDirectory.toAbsolutePath());
 
     try (Stream<Path> paths = Files.walk(sourceDirectory)) {
-      // TODO: type the file data
       paths
           .filter(Files::isRegularFile)
           .filter(f ->
@@ -83,7 +77,6 @@ public class ContentSource {
           .forEach(contentModel::addFile);
     }
 
-    // TODO: static pages
     contentModel.addPage(_404Page.create());
     contentModel.addPage(IndexPage.create());
     contentModel.addPage(CategoriesPage.create());
