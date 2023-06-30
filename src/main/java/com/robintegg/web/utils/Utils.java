@@ -1,5 +1,7 @@
 package com.robintegg.web.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -22,6 +24,6 @@ public class Utils {
     }
 
     public static String capitalize(String category) {
-        return category.toUpperCase();
+        return StringUtils.capitalize(category);
     }
 }

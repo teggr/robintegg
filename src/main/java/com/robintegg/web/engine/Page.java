@@ -59,4 +59,11 @@ public class Page {
     return stringList.get(0);
   }
 
+    public String getTag() {
+      List<String> stringList = data.get("tag");
+      if (stringList == null) {
+        return "";
+      }
+      return stringList.get(0);
+    }
 }
