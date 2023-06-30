@@ -24,12 +24,8 @@ public class Head {
                 link().
                         withRel("stylesheet")
                         // TODO: href="{{ "/assets/css/style.css" | relative_url }}"
-                        .withHref("https://robintegg.com/assets/css/style.css"),
-//        {%- feed_meta -%}
-                iff(
-                        "production".equals(contentModel.getEnvironment()),
-                        GoogleAnalytics.create(contentModel)
-                )
+                        .withHref("https://robintegg.com/assets/css/style.css")
+//              {%- feed_meta -%}
         );
     }
 }

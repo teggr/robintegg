@@ -5,6 +5,7 @@ import com.robintegg.web.engine.Layout;
 import com.robintegg.web.includes.Footer;
 import com.robintegg.web.includes.Head;
 import com.robintegg.web.includes.Header;
+import com.robintegg.web.includes.PiwikPro;
 import j2html.tags.DomContent;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public class DefaultLayout {
         .with(
             Head.create(contentModel),
             body(
+                iff(
+                    "production".equals(contentModel.getEnvironment()),
+                    PiwikPro.create(contentModel)
+                ),
                 Header.create(contentModel),
                 main()
                     .withClass("page-content")
