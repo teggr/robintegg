@@ -12,6 +12,19 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 public class Feed {
+
+    private static XmlMapper xmlMapper = null;
+
+    static {
+
+        xmlMapper = XmlMapper.builder()
+                .addModule(new JavaTimeModule())
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
+                .build();
+
+    }
+
     public String getPath() {
         return "feed.xml";
     }
@@ -98,16 +111,8 @@ public class Feed {
                 ))
                 .build();
 
-        XmlMapper mapper = XmlMapper.builder()
-                .addModule(new JavaTimeModule())
-                .enable(SerializationFeature.INDENT_OUTPUT)
-                .enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
-                //.defaultUseWrapper(false)
-                // enable/disable Features, change AnnotationIntrospector
-                .build();
-
         try {
-            return mapper.writeValueAsString(feed);
+            return xmlMapper.writeValueAsString(feed);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

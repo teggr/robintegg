@@ -1,6 +1,11 @@
 package com.robintegg.web.includes;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.robintegg.web.engine.ContentModel;
 import j2html.tags.DomContent;
 import j2html.tags.UnescapedText;
@@ -8,6 +13,17 @@ import j2html.tags.UnescapedText;
 import static j2html.TagCreator.*;
 
 public class SEO {
+
+    private static ObjectMapper objectMapper = null;
+
+    static {
+
+        objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.registerModule(new JavaTimeModule());
+
+    }
+
     public static DomContent render(ContentModel contentModel) {
         return each(
                 iffElse(
@@ -55,20 +71,24 @@ public class SEO {
 
     private static String ldJson(ContentModel contentModel) {
 
-        JsonObject author = new JsonObject();
-        author.addProperty("@type", "Person");
-        author.addProperty("name", contentModel.getSite().getAuthor().getName());
+        ObjectNode author = objectMapper.createObjectNode();
+        author.put("@type", "Person");
+        author.put("name", contentModel.getSite().getAuthor().getName());
 
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("@context", "https://schema.org");
-        jsonObject.addProperty("@type", "WebSite");
-        jsonObject.add("author", author);
-        jsonObject.addProperty("description", contentModel.getSite().getDescription());
-        jsonObject.addProperty("headline", contentModel.getSite().getTitle());
-        jsonObject.addProperty("name", contentModel.getSite().getTitle());
-        jsonObject.addProperty("url", contentModel.getSite().getUrl());
+        ObjectNode jsonObject = objectMapper.createObjectNode();
+        jsonObject.put("@context", "https://schema.org");
+        jsonObject.put("@type", "WebSite");
+        jsonObject.put("author", author);
+        jsonObject.put("description", contentModel.getSite().getDescription());
+        jsonObject.put("headline", contentModel.getSite().getTitle());
+        jsonObject.put("name", contentModel.getSite().getTitle());
+        jsonObject.put("url", contentModel.getSite().getUrl());
 
-        return jsonObject.toString();
+        try {
+            return objectMapper.writeValueAsString( jsonObject );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
