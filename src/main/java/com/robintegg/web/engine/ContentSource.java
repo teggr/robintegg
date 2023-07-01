@@ -69,7 +69,10 @@ public class ContentSource {
                     && !path.contains("pom.xml")
                     && !path.contains("README.md")
                     && !path.contains("Gemfile")
-                    && !path.contains("html");
+                    && !path.contains("html")
+                    && !path.contains(".mvn")
+                    && !path.contains(".toml")
+                    && !path.contains("mvnw");
               }
           )
           .peek(f -> log.info("{}", f))
