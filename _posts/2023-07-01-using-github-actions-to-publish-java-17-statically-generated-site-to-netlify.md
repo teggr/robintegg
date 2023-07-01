@@ -1,13 +1,13 @@
 ---
 layout: post
-title: Publishing Java 17 statically generated site to Netlify from Github
+title: Using Github Actions to publish Java 17 statically generated site to Netlify
 date: "2023-07-01"
 image: /assets/images/carl-heyerdahl-KE0nC8-58MQ-unsplash.jpg
 tags:
-- netlify
-- java
-- maven
-- j2html
+  - netlify
+  - java
+  - maven
+  - j2html
 ---
 As part of an interest piece around using [j2html](https://j2html.com/) as part of a pure Java approach to web development, I decided to rebuild this site using [j2html](https://j2html.com/). The site was previously generated using the popular ruby static site generator - [jekyll](https://jekyllrb.com/).
 
