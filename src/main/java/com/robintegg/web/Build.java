@@ -21,7 +21,7 @@ public class Build {
 
         ContentModel contentModel = new ContentModel();
 
-        String environment = System.getProperty("env", "local");
+        String environment = System.getProperty("environment", "local");
         log.info("environment: {}", environment);
 
         contentModel.environment( environment );
