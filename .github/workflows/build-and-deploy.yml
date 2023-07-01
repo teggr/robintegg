@@ -1,4 +1,4 @@
-name: Java CI
+name: Build and deploy
 
 on: [push]
 
@@ -13,5 +13,16 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: maven
       - name: Build with Maven
         run: mvn --batch-mode clean test exec:java
+      - name: Publish
+        uses: South-Paw/action-netlify-cli@1.0.1
+        id: netlify
+        with:
+          # be sure to escape any double quotes with a backslash and note that the --json
+          # flag has been passed when deploying - if you want the outputs to work you'll need to include it
+          args: 'deploy --json --dir \"./target/site\" --message \"draft [${{ github.sha }}]\"'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
