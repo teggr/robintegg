@@ -9,4 +9,5 @@ tags:
     - Programming
     - Technology
 podnews_url: https://podnews.net/podcast/imng
+date: 2023-06-30
 ---

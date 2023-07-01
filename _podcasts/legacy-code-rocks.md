@@ -8,4 +8,5 @@ tags:
     - Programming
     - Architecture
 podnews_url: https://podnews.net/podcast/i5gw2
+date: 2023-06-30
 ---
