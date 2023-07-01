@@ -72,7 +72,8 @@ public class ContentSource {
                     && !path.contains("html")
                     && !path.contains(".mvn")
                     && !path.contains(".toml")
-                    && !path.contains("mvnw");
+                    && !path.contains("mvnw")
+                    && !path.contains(".github");
               }
           )
           .peek(f -> log.info("{}", f))
