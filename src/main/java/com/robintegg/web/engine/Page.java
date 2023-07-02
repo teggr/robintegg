@@ -90,4 +90,13 @@ public class Page {
         }
         return stringList.get(0);
     }
+
+  public String getPodnewsUrl() {
+      List<String> stringList = data.get("podnews_url");
+      if (stringList == null) {
+          return null;
+      }
+      return stringList.get(0);
+  }
+
 }

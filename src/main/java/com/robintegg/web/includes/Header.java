@@ -45,10 +45,6 @@ public class Header {
                                 div()
                                     .withClass("trigger")
                                     .with(
-                                        a()
-                                            .withClass("page-link")
-                                            .withHref("https://app.booqsi.com/users/9a0228a3-eb84-429a-b5e1-a1df57f6769c")
-                                            .withText("Books on booqsi"),
                                         each(contentModel.getPages(), myPage -> {
                                           return iff(
                                               myPage.isIncludeMenu(),

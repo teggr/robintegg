@@ -1,5 +1,6 @@
 package com.robintegg.web.engine;
 
+import com.robintegg.web.layouts.BookLayout;
 import com.robintegg.web.layouts.PodcastLayout;
 import com.robintegg.web.layouts.TagLayout;
 import j2html.TagCreator;
@@ -17,149 +18,162 @@ import java.util.Map;
 
 @Slf4j
 public class ContentRenderer {
-    public void render(Path outputDirectory, Map<String, Layout> layouts, ContentModel contentModel) {
+  public void render(Path outputDirectory, Map<String, Layout> layouts, ContentModel contentModel) {
 
-        log.info("render=start");
+    log.info("render=start");
 
-        contentModel.visit(new ContentModelVisitor() {
+    contentModel.visit(new ContentModelVisitor() {
 
-            @Override
-            public void file(RawContentItem file) {
-                log.info("file={}", file);
+      @Override
+      public void file(RawContentItem file) {
+        log.info("file={}", file);
 
-                String path = file.getPath();
-                if (path.startsWith("/")) {
-                    path = path.substring(1);
-                }
-                var outputFile = outputDirectory.resolve(path);
+        String path = file.getPath();
+        if (path.startsWith("/")) {
+          path = path.substring(1);
+        }
+        var outputFile = outputDirectory.resolve(path);
 
-                // write to file
-                try {
-                    Files.createDirectories(outputFile.getParent().toAbsolutePath());
-                    Files.write(outputFile.toAbsolutePath(), file.getContent(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        // write to file
+        try {
+          Files.createDirectories(outputFile.getParent().toAbsolutePath());
+          Files.write(outputFile.toAbsolutePath(), file.getContent(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
 
-            }
+      }
 
-            @Override
-            public void feed(Feed feed) {
+      @Override
+      public void feed(Feed feed) {
 
-                String path = feed.getPath();
-                if (path.startsWith("/")) {
-                    path = path.substring(1);
-                }
-                var outputFile = outputDirectory.resolve(path);
+        String path = feed.getPath();
+        if (path.startsWith("/")) {
+          path = path.substring(1);
+        }
+        var outputFile = outputDirectory.resolve(path);
 
-                // write to file
-                try {
-                    Files.createDirectories(outputFile.getParent().toAbsolutePath());
-                    Files.writeString(outputFile.toAbsolutePath(), feed.getContent(contentModel), StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        // write to file
+        try {
+          Files.createDirectories(outputFile.getParent().toAbsolutePath());
+          Files.writeString(outputFile.toAbsolutePath(), feed.getContent(contentModel), StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
 
-            }
+      }
 
-            @Override
-            public void post(Post post) {
-                log.info("post={}", post);
+      @Override
+      public void post(Post post) {
+        log.info("post={}", post);
 
-                Page page = Page.builder()
-                        .data(post.getData())
-                        .path(post.getUrl())
-                        .renderFunction(post::getContent)
-                        .build();
+        Page page = Page.builder()
+            .data(post.getData())
+            .path(post.getUrl())
+            .renderFunction(post::getContent)
+            .build();
 
-                page(page);
-            }
+        page(page);
+      }
 
-            @Override
-            public void podcast(Podcast podcast) {
-                log.info("podcast={}", podcast);
+      @Override
+      public void book(Book book) {
+        log.info("book={}", book);
 
-                Page page = Page.builder()
-                        .data(podcast.getData())
-                        .path(podcast.getUrl())
-                        .renderFunction(PodcastLayout::render)
-                        .build();
+        Page page = Page.builder()
+            .data(book.getData())
+            .path(book.getUrl())
+            .renderFunction(BookLayout::render)
+            .build();
 
-                page(page);
-            }
+        page(page);
+      }
 
-            @Override
-            public void tag(String tag) {
-                log.info("tag={}", tag);
+      @Override
+      public void podcast(Podcast podcast) {
+        log.info("podcast={}", podcast);
 
-                Page page = Page.builder()
-                        .data(Map.of(
-                                "tag", List.of(tag)
-                        ))
-                        .path("/tags/" + tag + "/index.html")
-                        .renderFunction(TagLayout::render)
-                        .build();
+        Page page = Page.builder()
+            .data(podcast.getData())
+            .path(podcast.getUrl())
+            .renderFunction(PodcastLayout::render)
+            .build();
 
-                page(page);
-            }
+        page(page);
+      }
 
-            @Override
-            public void page(Page page) {
-                log.info("page={}", page);
+      @Override
+      public void tag(String tag) {
+        log.info("tag={}", tag);
 
-                contentModel.setPage(page);
+        Page page = Page.builder()
+            .data(Map.of(
+                "tag", List.of(tag)
+            ))
+            .path("/tags/" + tag + "/index.html")
+            .renderFunction(TagLayout::render)
+            .build();
 
-                Map<String, List<String>> data = page.getData();
-                String layoutName = data.getOrDefault("layout", List.of("default")).get(0);
+        page(page);
+      }
 
-                log.info("layout={}", layoutName);
+      @Override
+      public void page(Page page) {
+        log.info("page={}", page);
 
-                DomContent domContent = page.getRenderFunction().apply(contentModel);
+        contentModel.setPage(page);
 
-                // do i need to add the layout? yes
-                Layout layout = layouts.get(layoutName);
+        Map<String, List<String>> data = page.getData();
+        String layoutName = data.getOrDefault("layout", List.of("default")).get(0);
 
-                // need to update the content for this model here
-                contentModel.setContent(domContent);
-                DomContent layoutContent = layout.getRenderFunction().apply(contentModel);
+        log.info("layout={}", layoutName);
 
-                Map<String, List<String>> layoutData = layout.getData();
-                List<String> outLayoutName = layoutData != null ? layoutData.get("layout") : null;
-                if (outLayoutName != null) {
-                    layoutName = outLayoutName.get(0);
-                    log.info("outerlayout={}", layoutName);
-                    layout = layouts.get(layoutName);
-                    contentModel.setContent(layoutContent);
-                    layoutContent = layout.getRenderFunction().apply(contentModel);
-                }
+        DomContent domContent = page.getRenderFunction().apply(contentModel);
 
-                // this is what we want to render
-                StringBuilder render = null;
-                try {
-                    render = layoutContent.render(FlatHtml.inMemory());
-                    //System.out.println(render);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        // do i need to add the layout? yes
+        Layout layout = layouts.get(layoutName);
 
-                String path = page.getPath();
-                if (path.startsWith("/")) {
-                    path = path.substring(1);
-                }
-                var outputFile = outputDirectory.resolve(path);
+        // need to update the content for this model here
+        contentModel.setContent(domContent);
+        DomContent layoutContent = layout.getRenderFunction().apply(contentModel);
 
-                // write to file
-                try {
-                    Files.createDirectories(outputFile.getParent().toAbsolutePath());
-                    Files.writeString(outputFile.toAbsolutePath(), TagCreator.document() + render.toString(), StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        Map<String, List<String>> layoutData = layout.getData();
+        List<String> outLayoutName = layoutData != null ? layoutData.get("layout") : null;
+        if (outLayoutName != null) {
+          layoutName = outLayoutName.get(0);
+          log.info("outerlayout={}", layoutName);
+          layout = layouts.get(layoutName);
+          contentModel.setContent(layoutContent);
+          layoutContent = layout.getRenderFunction().apply(contentModel);
+        }
 
-                contentModel.reset();
+        // this is what we want to render
+        StringBuilder render = null;
+        try {
+          render = layoutContent.render(FlatHtml.inMemory());
+          //System.out.println(render);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
 
-            }
-        });
+        String path = page.getPath();
+        if (path.startsWith("/")) {
+          path = path.substring(1);
+        }
+        var outputFile = outputDirectory.resolve(path);
 
-    }
+        // write to file
+        try {
+          Files.createDirectories(outputFile.getParent().toAbsolutePath());
+          Files.writeString(outputFile.toAbsolutePath(), TagCreator.document() + render.toString(), StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+
+        contentModel.reset();
+
+      }
+    });
+
+  }
 }

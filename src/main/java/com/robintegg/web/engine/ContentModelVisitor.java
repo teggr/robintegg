@@ -14,4 +14,6 @@ public interface ContentModelVisitor {
 
     void feed(Feed feed);
 
+    void book(Book book);
+
 }
