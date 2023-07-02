@@ -97,7 +97,7 @@ public class Feed {
             )
             .published(entry.getDate().atStartOfDay().atOffset(ZoneOffset.UTC))
             .updated(entry.getModifiedDate().atStartOfDay().atOffset(ZoneOffset.UTC))
-            .id(entry.getUrl())
+            .id(feedId(entry.getUrl()))
             .content(Content.builder()
                 .type("html")
                 .xmlBase(entry.getUrl())
@@ -127,6 +127,10 @@ public class Feed {
                 .url(entry.getImageUrl())
                 .build())
             .build();
+  }
+
+  private String feedId(String url) {
+    return url.replaceAll("\\.html","");
   }
 
   public void addEntry(FeedEntry entry) {
