@@ -3,9 +3,13 @@
     <details>
         <title>Creating Software with Modern Diagramming Techniques</title>
         <subtitle>Build Better Software with Mermaid</subtitle>
-        <imageUrl><!--TODO: --></imageUrl>
+        <imageUrl>https://m.media-amazon.com/images/I/81Qu4QCh0PL.jpg</imageUrl>
         <author>Ashley Peacock</author>
         <series>The Pragmatic Programmers</series>
+        <tag>Mermaid</tag>
+        <tag>Documentation</tag>
+        <tag>Architecture</tag>
+        <tag>Tool</tag>
     </details>
     <bookshelf>
         <added>2023-06-29</added>

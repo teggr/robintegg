@@ -25,6 +25,7 @@ public class ContentModel {
   private List<SocialLink> socialLinks = new ArrayList<>();
   private Page page;
   private String environment = "local";
+  private List<Book> books = new ArrayList<>();
 
   public void visit(ContentModelVisitor visitor) {
 
@@ -43,6 +44,10 @@ public class ContentModel {
     // podcast
     podcasts.stream()
         .forEach(visitor::podcast);
+
+    // books
+    books.stream()
+            .forEach(visitor::book);
 
     // raw contents
     files.stream()
@@ -152,6 +157,14 @@ public class ContentModel {
 
   public String getEnvironment() {
     return environment;
+  }
+
+  public void addBook(Book book) {
+    this.books.add(book);
+  }
+
+  public List<Book> getBooks() {
+    return books;
   }
 
 }
