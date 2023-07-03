@@ -54,4 +54,20 @@ public class Book {
         "date", List.of(bookEntry.getBookshelf().getAdded().toString())
     );
   }
+
+  public DomContent getExcerpt(ContentModel contentModel) {
+    return TagCreator.each();
+  }
+
+  public DomContent getContent(ContentModel contentModel) {
+    return TagCreator.each();
+  }
+
+  public LocalDate getAddedDate() {
+    return bookEntry.getBookshelf().getAdded();
+  }
+
+  public String getAuthor() {
+    return bookEntry.getBookDetails().getAuthor();
+  }
 }

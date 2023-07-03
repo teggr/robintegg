@@ -3,6 +3,7 @@ package com.robintegg.web.engine;
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class LocalDateXmlAdapter extends XmlAdapter<String, LocalDate> {
 
@@ -11,7 +12,7 @@ public class LocalDateXmlAdapter extends XmlAdapter<String, LocalDate> {
   }
 
   public String marshal(LocalDate v) throws Exception {
-    return v.toString();
+    return v.format(DateTimeFormatter.ISO_DATE_TIME);
   }
 
 }

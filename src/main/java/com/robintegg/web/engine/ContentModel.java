@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -160,11 +161,31 @@ public class ContentModel {
   }
 
   public void addBook(Book book) {
+    this.feed.addEntry(FeedEntry.builder()
+        .title(book.getTitle())
+        .url(book.getUrl())
+        .date(book.getAddedDate())
+        .modifiedDate(book.getAddedDate())
+        .content(book::getContent)
+        .author(book.getAuthor())
+        .tags(book.getTags())
+        .excerpt(book::getExcerpt)
+        .imageUrl(book.getImageUrl())
+        .build());
     this.books.add(book);
   }
 
   public List<Book> getBooks() {
     return books;
+  }
+
+  public List<IndexContent> getIndexedContent() {
+    List<IndexContent> indexedContentList = new ArrayList<>();
+    this.books.stream().map(BookIndexedContent::map).forEach(indexedContentList::add);
+    this.posts.stream().map(PostIndexedContent::map).forEach(indexedContentList::add);
+    return indexedContentList.stream().sorted(
+        Comparator.comparing(IndexContent::getDate).reversed()
+    ).toList();
   }
 
 }

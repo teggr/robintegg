@@ -33,7 +33,7 @@ public class HomeLayout {
                         ),
                         contentModel.getContent(),
                         iff(
-                                contentModel.getPosts().size() > 0,
+                                contentModel.getIndexedContent().size() > 0,
                                 each(
                                         iff(
                                                 contentModel.getPage().getListTitle() != null,
@@ -44,35 +44,33 @@ public class HomeLayout {
                                         ul()
                                                 .withClass("post-list")
                                                 .with(
-                                                        each(contentModel.getPosts().stream().sorted(
-                                                                Comparator.comparing(Post::getDate).reversed()
-                                                        ).toList(), post -> {
+                                                        each(contentModel.getIndexedContent(), indexContent -> {
                                                             return li()
                                                                     .with(
                                                                             span()
                                                                                     .withClass("post-meta")
-                                                                                    .withText(Utils.format( post.getDate())),
+                                                                                    .withText(Utils.format( indexContent.getDate())),
                                                                             h3()
                                                                                     .with(
                                                                                             a()
                                                                                                     .withClass("post-link")
-                                                                                                    .withHref(Utils.relativeUrl(post.getUrl()))
-                                                                                                    .withText(Utils.escape(post.getTitle()))
+                                                                                                    .withHref(Utils.relativeUrl(indexContent.getUrl()))
+                                                                                                    .withText(Utils.escape(indexContent.getTitle()))
                                                                                     ),
                                                                             iff(
                                                                                     contentModel.getSite().showExcerpts(),
-                                                                                    post.getExcerpt(contentModel)
+                                                                                    indexContent.getExcerpt(contentModel)
                                                                             ),
                                                                             iff(
-                                                                                    "reading-list".equals(post.getCategory()),
-                                                                                    post.getContent(contentModel)
+                                                                                    "reading-list".equals(indexContent.getCategory()),
+                                                                                    indexContent.getContent(contentModel)
                                                                             ),
                                                                             iff(
-                                                                                    post.getTags().size() > 0,
+                                                                                    indexContent.getTags().size() > 0,
                                                                                     ul()
                                                                                             .withClass("post-tags")
                                                                                             .with(
-                                                                                                    each(post.getTags(), tag -> {
+                                                                                                    each(indexContent.getTags(), tag -> {
                                                                                                         return li()
                                                                                                                 .with(
                                                                                                                         a()

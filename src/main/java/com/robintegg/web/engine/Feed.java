@@ -11,6 +11,7 @@ import com.robintegg.web.feed.*;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Feed {
@@ -34,6 +35,8 @@ public class Feed {
   }
 
   public String getContent(ContentModel contentModel) {
+
+    feedEntries.sort(Comparator.comparing(FeedEntry::getDate).reversed());
 
     AtomFeed feed = AtomFeed.builder()
         .generator(Generator.builder()
