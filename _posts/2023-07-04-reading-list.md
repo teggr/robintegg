@@ -1,4 +1,3 @@
-2023-07-04-reading-list.md
 ---
 title: Reading list for week 27 of 2023
 layout: default
