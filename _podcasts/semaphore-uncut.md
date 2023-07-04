@@ -8,5 +8,5 @@ tags:
     - testing
     - ci-cd
 podnews_url: https://podnews.net/podcast/i9qjk
-date: 2023-06-30
+date: 2022-06-30
 ---

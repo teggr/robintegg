@@ -5,27 +5,28 @@ import j2html.tags.DomContent;
 import java.time.LocalDate;
 import java.util.List;
 
-public class BookIndexedContent {
-  public static IndexContent map(Book book) {
+public class PodcastIndexedContent {
+  public static IndexContent map(Podcast podcast) {
     return new IndexContent() {
+
       @Override
       public LocalDate getDate() {
-        return book.getAddedDate();
+        return podcast.getDate();
       }
 
       @Override
       public String getUrl() {
-        return book.getUrl();
+        return podcast.getUrl();
       }
 
       @Override
       public String getTitle() {
-        return book.getTitle() + " [New Book]";
+        return podcast.getTitle() + " [New Podcast]";
       }
 
       @Override
       public DomContent getExcerpt(ContentModel contentModel) {
-        return book.getExcerpt(contentModel);
+        return podcast.getExcerpt(contentModel);
       }
 
       @Override
@@ -35,12 +36,12 @@ public class BookIndexedContent {
 
       @Override
       public DomContent getContent(ContentModel contentModel) {
-        return book.getContent(contentModel);
+        return podcast.getContent(contentModel);
       }
 
       @Override
       public List<String> getTags() {
-        return book.getTags();
+        return podcast.getTags();
       }
     };
   }

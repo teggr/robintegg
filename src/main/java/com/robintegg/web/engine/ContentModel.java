@@ -80,16 +80,22 @@ public class ContentModel {
     this.page = page;
   }
 
-  public List<Post> getTaggedContent() {
-    return this.posts.stream().filter(p -> p.getTags().size() > 0).toList();
-  }
-
   public List<String> getTags() {
-    return this.posts.stream().flatMap(p -> p.getTags().stream()).distinct().toList();
+    List<String> tags = new ArrayList<>();
+    this.books.stream().map(Book::getTags).flatMap(List::stream).forEach(tags::add);
+    this.posts.stream().map(Post::getTags).flatMap(List::stream).forEach(tags::add);
+    this.podcasts.stream().map(Podcast::getTags).flatMap(List::stream).forEach(tags::add);
+    return tags.stream().distinct().sorted().toList();
   }
 
-  public List<Post> getPostsWithTag(String tag) {
-    return this.posts.stream().filter(p -> p.getTags().contains(tag)).toList();
+  public List<IndexContent> getTaggedContent(String tag) {
+    List<IndexContent> taggedContentList = new ArrayList<>();
+    this.books.stream().filter(p -> p.getTags().contains(tag)).map(BookIndexedContent::map).forEach(taggedContentList::add);
+    this.posts.stream().filter(p -> p.getTags().contains(tag)).map(PostIndexedContent::map).forEach(taggedContentList::add);
+    this.podcasts.stream().filter(p -> p.getTags().contains(tag)).map(PodcastIndexedContent::map).forEach(taggedContentList::add);
+    return taggedContentList.stream().sorted(
+        Comparator.comparing(IndexContent::getDate).reversed()
+    ).toList();
   }
 
   public List<String> getCategories() {
@@ -183,6 +189,7 @@ public class ContentModel {
     List<IndexContent> indexedContentList = new ArrayList<>();
     this.books.stream().map(BookIndexedContent::map).forEach(indexedContentList::add);
     this.posts.stream().map(PostIndexedContent::map).forEach(indexedContentList::add);
+    this.podcasts.stream().map(PodcastIndexedContent::map).forEach(indexedContentList::add);
     return indexedContentList.stream().sorted(
         Comparator.comparing(IndexContent::getDate).reversed()
     ).toList();

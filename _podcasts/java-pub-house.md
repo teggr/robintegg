@@ -7,5 +7,5 @@ authors: Freddy Guime & Bob Paulin
 tags:
     - Java
 podnews_url: https://podnews.net/podcast/i45zr
-date: 2023-06-30
+date: 2022-06-30
 ---

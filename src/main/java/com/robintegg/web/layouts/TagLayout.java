@@ -31,21 +31,21 @@ public class TagLayout {
                         ul()
                                 .withClass("post-list")
                                 .with(
-                                        each(contentModel.getPostsWithTag(contentModel.getPage().getTag()), post -> {
+                                        each(contentModel.getTaggedContent(contentModel.getPage().getTag()), taggedContent -> {
                                             return each(
                                                     span()
                                                             .withClass("post-meta")
-                                                            .withText(Utils.format(post.getDate())),
+                                                            .withText(Utils.format(taggedContent.getDate())),
                                                     h3()
                                                             .with(
                                                                     a()
                                                                             .withClass("post-link")
-                                                                            .withHref(Utils.relativeUrl(post.getUrl()))
-                                                                            .withText(Utils.escape(post.getTitle()))
+                                                                            .withHref(Utils.relativeUrl(taggedContent.getUrl()))
+                                                                            .withText(Utils.escape(taggedContent.getTitle()))
                                                             ),
                                                     iff(
                                                             contentModel.getSite().showExcerpts(),
-                                                            post.getExcerpt(contentModel)
+                                                            taggedContent.getExcerpt(contentModel)
                                                     )
                                             );
                                         })

@@ -7,5 +7,5 @@ authors: Chad Arimura, David Delabassee
 tags:
     - Java
 podnews_url: https://podnews.net/podcast/i5ich
-date: 2023-06-30
+date: 2022-06-30
 ---
