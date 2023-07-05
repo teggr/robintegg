@@ -20,4 +20,10 @@ public class Plugins {
 
   // TODO: add plugin type to attach to consumption of items, such as feed
 
+  public static final List<ContentRenderPlugin> contentRenderPlugins = List.of(
+      DefaultThemePlugin.create(),
+      PostContentTypePlugin.create(),
+      PodcastContentTypePlugin.create()
+  );
+
 }

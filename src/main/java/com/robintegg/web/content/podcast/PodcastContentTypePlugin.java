@@ -1,6 +1,8 @@
 package com.robintegg.web.content.podcast;
 
 import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.Layout;
+import com.robintegg.web.plugins.ContentRenderPlugin;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +15,11 @@ import org.commonmark.parser.Parser;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @Slf4j
-public class PodcastContentTypePlugin implements ContentTypePlugin {
+public class PodcastContentTypePlugin implements ContentTypePlugin, ContentRenderPlugin {
   public static PodcastContentTypePlugin create() {
     return new PodcastContentTypePlugin();
   }
@@ -72,4 +75,8 @@ public class PodcastContentTypePlugin implements ContentTypePlugin {
 
   }
 
+  @Override
+  public void loadLayout(Map<String, Layout> layouts) {
+    layouts.put("podcast", PodcastLayout.create());
+  }
 }

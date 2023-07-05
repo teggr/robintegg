@@ -1,10 +1,7 @@
 package com.robintegg.web;
 
-import com.robintegg.web.content.podcast.PodcastLayout;
-import com.robintegg.web.content.post.PostLayout;
 import com.robintegg.web.engine.*;
-import com.robintegg.web.layouts.*;
-import com.robintegg.web.theme.layouts.*;
+import com.robintegg.web.plugins.Plugins;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -56,15 +53,8 @@ public class Build {
 
         // load layouts
         Map<String, Layout> layouts = new HashMap<>();
-        layouts.put("categories", CategoriesLayout.create());
-        layouts.put("default", DefaultLayout.create());
-        layouts.put("home", HomeLayout.create());
-        layouts.put("page", PageLayout.create());
-        layouts.put("podcast", PodcastLayout.create());
-        layouts.put("post", PostLayout.create());
-        layouts.put("tag", TagLayout.create());
-
-
+        Plugins.contentRenderPlugins.stream()
+            .forEach( contentRenderPlugin -> contentRenderPlugin.loadLayout(layouts) );
 
         // create output directory
         var outputDirectory = workingDirectory.resolve("target/site");
