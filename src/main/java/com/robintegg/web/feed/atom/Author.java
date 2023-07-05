@@ -1,4 +1,4 @@
-package com.robintegg.web.feed;
+package com.robintegg.web.feed.atom;
 
 import lombok.Builder;
 import lombok.Data;

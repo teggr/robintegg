@@ -1,5 +1,6 @@
-package com.robintegg.web.engine;
+package com.robintegg.web.feed;
 
+import com.robintegg.web.engine.ContentModel;
 import j2html.tags.DomContent;
 import lombok.Builder;
 import lombok.Data;

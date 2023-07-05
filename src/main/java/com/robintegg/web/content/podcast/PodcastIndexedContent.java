@@ -45,6 +45,16 @@ public class PodcastIndexedContent {
       public List<String> getTags() {
         return podcast.getTags();
       }
+
+      @Override
+      public String getAuthor() {
+        return null;
+      }
+
+      @Override
+      public String getImage() {
+        return null;
+      }
     };
   }
 }

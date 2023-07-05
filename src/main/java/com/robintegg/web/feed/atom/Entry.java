@@ -1,4 +1,4 @@
-package com.robintegg.web.feed;
+package com.robintegg.web.feed.atom;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;

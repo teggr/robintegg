@@ -44,6 +44,16 @@ public class BookIndexedContent {
       public List<String> getTags() {
         return book.getTags();
       }
+
+      @Override
+      public String getAuthor() {
+        return book.getAuthor();
+      }
+
+      @Override
+      public String getImage() {
+        return book.getImageUrl();
+      }
     };
   }
 }

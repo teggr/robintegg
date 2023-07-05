@@ -8,6 +8,8 @@ import com.robintegg.web.content.podcast.PodcastIndexedContent;
 import com.robintegg.web.content.podcast.PodcastLayout;
 import com.robintegg.web.content.post.Post;
 import com.robintegg.web.content.post.PostIndexedContent;
+import com.robintegg.web.feed.Feed;
+import com.robintegg.web.feed.FeedEntry;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.Getter;
@@ -161,17 +163,8 @@ public class ContentModel {
   }
 
   public void addPost(Post post) {
-    this.feed.addEntry(FeedEntry.builder()
-            .title(post.getTitle())
-            .url(post.getUrl())
-            .date(post.getDate())
-            .modifiedDate(post.getDate())
-            .content(post::getContent)
-            .author(post.getAuthor())
-            .tags(post.getTags())
-            .excerpt(post::getExcerpt)
-            .imageUrl(post.getImage())
-        .build());
+
+    this.feed.addContent(PostIndexedContent.map(post));
     this.posts.add(post);
   }
 

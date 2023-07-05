@@ -1,8 +1,7 @@
 package com.robintegg.web.engine;
 
+import com.robintegg.web.feed.Feed;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class FeedTest {
 

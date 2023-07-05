@@ -45,6 +45,16 @@ public class PostIndexedContent {
       public List<String> getTags() {
         return post.getTags();
       }
+
+      @Override
+      public String getAuthor() {
+        return post.getAuthor();
+      }
+
+      @Override
+      public String getImage() {
+        return post.getImage();
+      }
     };
   }
 }

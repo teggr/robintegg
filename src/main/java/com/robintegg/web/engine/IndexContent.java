@@ -21,4 +21,8 @@ public interface IndexContent {
 
   List<String> getTags();
 
+  String getAuthor();
+
+  String getImage();
+
 }

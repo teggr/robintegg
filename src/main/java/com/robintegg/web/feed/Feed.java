@@ -1,12 +1,14 @@
-package com.robintegg.web.engine;
+package com.robintegg.web.feed;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.robintegg.web.feed.Author;
-import com.robintegg.web.feed.*;
+import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.IndexContent;
+import com.robintegg.web.feed.atom.*;
+import com.robintegg.web.feed.atom.Author;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -139,4 +141,19 @@ public class Feed {
   public void addEntry(FeedEntry entry) {
     this.feedEntries.add(entry);
   }
+
+  public void addContent(IndexContent post) {
+    addEntry(FeedEntry.builder()
+        .title(post.getTitle())
+        .url(post.getUrl())
+        .date(post.getDate())
+        .modifiedDate(post.getDate())
+        .content(post::getContent)
+        .author(post.getAuthor())
+        .tags(post.getTags())
+        .excerpt(post::getExcerpt)
+        .imageUrl(post.getImage())
+        .build());
+  }
+
 }
