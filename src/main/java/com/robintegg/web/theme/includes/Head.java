@@ -1,4 +1,4 @@
-package com.robintegg.web.includes;
+package com.robintegg.web.theme.includes;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.utils.Utils;

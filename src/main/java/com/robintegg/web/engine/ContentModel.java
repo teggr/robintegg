@@ -93,6 +93,7 @@ public class ContentModel {
     files.stream()
         .forEach(visitor::file);
 
+    // TODO: generated at the end when all the other types are captured
     // feed
     StaticFile staticFile = new StaticFile(
         feed.getPath(),
@@ -164,7 +165,6 @@ public class ContentModel {
   }
 
   public void addPost(Post post) {
-
     this.feed.addContent(PostIndexedContent.map(post));
     this.posts.add(post);
   }

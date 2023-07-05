@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface ContentTypePlugin {
 
-  List<Page> pages();
-
   void loadContent(Path sourceDirectory, ContentModel contentModel);
 
 }

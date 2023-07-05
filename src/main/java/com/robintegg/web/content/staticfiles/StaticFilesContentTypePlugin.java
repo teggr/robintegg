@@ -2,21 +2,19 @@ package com.robintegg.web.content.staticfiles;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
-import com.robintegg.web.engine.Page;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Stream;
 
 @Slf4j
 public class StaticFilesContentTypePlugin implements ContentTypePlugin {
-  @Override
-  public List<Page> pages() {
-    return Collections.emptyList();
+
+  public static StaticFilesContentTypePlugin create() {
+    return new StaticFilesContentTypePlugin();
   }
 
   @SneakyThrows

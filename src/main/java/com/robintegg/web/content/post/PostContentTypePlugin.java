@@ -2,7 +2,6 @@ package com.robintegg.web.content.post;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
-import com.robintegg.web.engine.Page;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.commonmark.Extension;
@@ -20,12 +19,6 @@ import java.util.stream.Stream;
 public class PostContentTypePlugin implements ContentTypePlugin {
   public static PostContentTypePlugin create() {
     return new PostContentTypePlugin();
-  }
-
-
-  @Override
-  public List<Page> pages() {
-    return List.of();
   }
 
   @SneakyThrows

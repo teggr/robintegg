@@ -2,7 +2,6 @@ package com.robintegg.web.content.book;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
-import com.robintegg.web.engine.Page;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -11,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -31,11 +29,6 @@ public class BookContentTypePlugin implements ContentTypePlugin {
     }
   }
 
-  @Override
-  public List<Page> pages() {
-    return List.of(BooksPage.create());
-  }
-
   @SneakyThrows
   @Override
   public void loadContent(Path sourceDirectory, ContentModel contentModel) {
@@ -50,6 +43,9 @@ public class BookContentTypePlugin implements ContentTypePlugin {
           .map(BookContentTypePlugin::readBook)
           .forEach(contentModel::addBook);
     }
+
+    contentModel.addPage(BooksPage.create());
+
   }
 
 

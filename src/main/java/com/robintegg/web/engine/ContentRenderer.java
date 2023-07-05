@@ -1,7 +1,7 @@
 package com.robintegg.web.engine;
 
 import com.robintegg.web.content.staticfiles.StaticFile;
-import com.robintegg.web.layouts.TagLayout;
+import com.robintegg.web.theme.layouts.TagLayout;
 import j2html.TagCreator;
 import j2html.rendering.FlatHtml;
 import j2html.tags.DomContent;

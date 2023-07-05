@@ -2,7 +2,6 @@ package com.robintegg.web.content.podcast;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
-import com.robintegg.web.engine.Page;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.commonmark.Extension;
@@ -22,11 +21,6 @@ public class PodcastContentTypePlugin implements ContentTypePlugin {
     return new PodcastContentTypePlugin();
   }
 
-  @Override
-  public List<Page> pages() {
-    return List.of(PodcastsPage.create());
-  }
-
   @SneakyThrows
   @Override
   public void loadContent(Path sourceDirectory, ContentModel contentModel) {
@@ -41,6 +35,8 @@ public class PodcastContentTypePlugin implements ContentTypePlugin {
           .map(PodcastContentTypePlugin::readPodcast)
           .forEach(contentModel::addPodcast);
     }
+
+    contentModel.addPage(PodcastsPage.create());
   }
 
   private static Podcast readPodcast(Path path) {

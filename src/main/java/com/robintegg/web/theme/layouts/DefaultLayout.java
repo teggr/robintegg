@@ -1,15 +1,13 @@
-package com.robintegg.web.layouts;
+package com.robintegg.web.theme.layouts;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
-import com.robintegg.web.includes.Footer;
-import com.robintegg.web.includes.Head;
-import com.robintegg.web.includes.Header;
-import com.robintegg.web.includes.PiwikPro;
+import com.robintegg.web.theme.includes.Footer;
+import com.robintegg.web.theme.includes.Head;
+import com.robintegg.web.theme.includes.Header;
+import com.robintegg.web.theme.includes.PiwikPro;
+import j2html.TagCreator;
 import j2html.tags.DomContent;
-
-import java.util.List;
-import java.util.Map;
 
 import static j2html.TagCreator.*;
 
@@ -27,8 +25,8 @@ public class DefaultLayout {
         .withLang(contentModel.getLang())
         .with(
             Head.create(contentModel),
-            body(
-                iff(
+            TagCreator.body(
+                TagCreator.iff(
                     "production".equals(contentModel.getEnvironment()),
                     PiwikPro.create(contentModel)
                 ),

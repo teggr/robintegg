@@ -1,4 +1,4 @@
-package com.robintegg.web.layouts;
+package com.robintegg.web.theme.layouts;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;

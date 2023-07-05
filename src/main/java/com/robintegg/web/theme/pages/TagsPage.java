@@ -1,11 +1,10 @@
-package com.robintegg.web.pages;
+package com.robintegg.web.theme.pages;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Page;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
