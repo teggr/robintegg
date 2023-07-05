@@ -8,6 +8,7 @@ import com.robintegg.web.content.podcast.PodcastIndexedContent;
 import com.robintegg.web.content.podcast.PodcastLayout;
 import com.robintegg.web.content.post.Post;
 import com.robintegg.web.content.post.PostIndexedContent;
+import com.robintegg.web.content.staticfiles.StaticFile;
 import com.robintegg.web.feed.Feed;
 import com.robintegg.web.feed.FeedEntry;
 import j2html.TagCreator;
@@ -30,7 +31,7 @@ public class ContentModel {
   private Site site = new Site();
   private List<Podcast> podcasts = new ArrayList<>();
   private List<Post> posts = new ArrayList<>();
-  private List<RawContentItem> files = new ArrayList<>();
+  private List<StaticFile> files = new ArrayList<>();
   private List<Page> pages = new ArrayList<>();
   private Feed feed = new Feed();
   private List<SocialLink> socialLinks = new ArrayList<>();
@@ -93,13 +94,13 @@ public class ContentModel {
         .forEach(visitor::file);
 
     // feed
-    RawContentItem rawContentItem = new RawContentItem(
+    StaticFile staticFile = new StaticFile(
         feed.getPath(),
         Map.of(),
         feed.getContent(this).getBytes(StandardCharsets.UTF_8)
     );
 
-    visitor.file(rawContentItem);
+    visitor.file(staticFile);
 
   }
 
@@ -172,8 +173,8 @@ public class ContentModel {
     return this.posts;
   }
 
-  public void addFile(RawContentItem rawContentItem) {
-    this.files.add(rawContentItem);
+  public void addFile(StaticFile staticFile) {
+    this.files.add(staticFile);
   }
 
   public void addPage(Page page) {

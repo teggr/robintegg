@@ -1,8 +1,7 @@
 package com.robintegg.web.content.book;
 
 import com.robintegg.web.engine.ContentModel;
-import com.robintegg.web.engine.ContentSource;
-import com.robintegg.web.engine.ContentTypePlugin;
+import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.engine.Page;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;

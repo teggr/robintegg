@@ -1,8 +1,7 @@
 package com.robintegg.web.content.post;
 
 import com.robintegg.web.engine.ContentModel;
-import com.robintegg.web.engine.ContentSource;
-import com.robintegg.web.engine.ContentTypePlugin;
+import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.engine.Page;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

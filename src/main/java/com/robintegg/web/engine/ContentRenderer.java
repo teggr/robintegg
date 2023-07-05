@@ -1,5 +1,6 @@
 package com.robintegg.web.engine;
 
+import com.robintegg.web.content.staticfiles.StaticFile;
 import com.robintegg.web.layouts.TagLayout;
 import j2html.TagCreator;
 import j2html.rendering.FlatHtml;
@@ -23,7 +24,7 @@ public class ContentRenderer {
     contentModel.visit(new ContentModelVisitor() {
 
       @Override
-      public void file(RawContentItem file) {
+      public void file(StaticFile file) {
         log.info("file={}", file);
 
         String path = file.getPath();

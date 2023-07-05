@@ -63,6 +63,8 @@ public class Build {
         layouts.put("post", PostLayout.create());
         layouts.put("tag", TagLayout.create());
 
+
+
         // create output directory
         var outputDirectory = workingDirectory.resolve("target/site");
         log.info("output directory: {}", outputDirectory.toAbsolutePath());
