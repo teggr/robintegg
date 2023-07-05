@@ -1,10 +1,5 @@
 package com.robintegg.web.engine;
 
-import com.robintegg.web.content.book.Book;
-import com.robintegg.web.content.podcast.Podcast;
-import com.robintegg.web.content.post.Post;
-import com.robintegg.web.content.book.BookLayout;
-import com.robintegg.web.content.podcast.PodcastLayout;
 import com.robintegg.web.layouts.TagLayout;
 import j2html.TagCreator;
 import j2html.rendering.FlatHtml;
@@ -45,64 +40,6 @@ public class ContentRenderer {
           throw new RuntimeException(e);
         }
 
-      }
-
-      @Override
-      public void feed(Feed feed) {
-
-        String path = feed.getPath();
-        if (path.startsWith("/")) {
-          path = path.substring(1);
-        }
-        var outputFile = outputDirectory.resolve(path);
-
-        // write to file
-        try {
-          Files.createDirectories(outputFile.getParent().toAbsolutePath());
-          Files.writeString(outputFile.toAbsolutePath(), feed.getContent(contentModel), StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-
-      }
-
-      @Override
-      public void post(Post post) {
-        log.info("post={}", post);
-
-        Page page = Page.builder()
-            .data(post.getData())
-            .path(post.getUrl())
-            .renderFunction(post::getContent)
-            .build();
-
-        page(page);
-      }
-
-      @Override
-      public void book(Book book) {
-        log.info("book={}", book);
-
-        Page page = Page.builder()
-            .data(book.getData())
-            .path(book.getUrl())
-            .renderFunction(BookLayout::render)
-            .build();
-
-        page(page);
-      }
-
-      @Override
-      public void podcast(Podcast podcast) {
-        log.info("podcast={}", podcast);
-
-        Page page = Page.builder()
-            .data(podcast.getData())
-            .path(podcast.getUrl())
-            .renderFunction(PodcastLayout::render)
-            .build();
-
-        page(page);
       }
 
       @Override

@@ -2,8 +2,10 @@ package com.robintegg.web.engine;
 
 import com.robintegg.web.content.book.Book;
 import com.robintegg.web.content.book.BookIndexedContent;
+import com.robintegg.web.content.book.BookLayout;
 import com.robintegg.web.content.podcast.Podcast;
 import com.robintegg.web.content.podcast.PodcastIndexedContent;
+import com.robintegg.web.content.podcast.PodcastLayout;
 import com.robintegg.web.content.post.Post;
 import com.robintegg.web.content.post.PostIndexedContent;
 import j2html.TagCreator;
@@ -11,12 +13,12 @@ import j2html.tags.DomContent;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
+@Slf4j
 @ToString
 public class ContentModel {
 
@@ -46,22 +48,56 @@ public class ContentModel {
 
     // posts
     posts.stream()
-        .forEach(visitor::post);
+        .map(post ->
+            {
+              log.info("post={}", post);
+
+              return Page.builder()
+                  .data(post.getData())
+                  .path(post.getUrl())
+                  .renderFunction(post::getContent)
+                  .build();
+            })
+        .forEach(visitor::page);
 
     // podcast
     podcasts.stream()
-        .forEach(visitor::podcast);
+        .map(podcast -> {
+          log.info("podcast={}", podcast);
+
+          return Page.builder()
+              .data(podcast.getData())
+              .path(podcast.getUrl())
+              .renderFunction(PodcastLayout::render)
+              .build();
+        })
+        .forEach(visitor::page);
 
     // books
     books.stream()
-            .forEach(visitor::book);
+        .map(book -> {
+          log.info("book={}", book);
+
+          return Page.builder()
+              .data(book.getData())
+              .path(book.getUrl())
+              .renderFunction(BookLayout::render)
+              .build();
+        })
+            .forEach(visitor::page);
 
     // raw contents
     files.stream()
         .forEach(visitor::file);
 
     // feed
-    visitor.feed(feed);
+    RawContentItem rawContentItem = new RawContentItem(
+        feed.getPath(),
+        Map.of(),
+        feed.getContent(this).getBytes(StandardCharsets.UTF_8)
+    );
+
+    visitor.file(rawContentItem);
 
   }
 
