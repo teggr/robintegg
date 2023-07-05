@@ -1,6 +1,6 @@
 package com.robintegg.web.content.book;
 
-import com.robintegg.web.engine.LocalDateXmlAdapter;
+import com.robintegg.web.utils.LocalDateXmlAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
