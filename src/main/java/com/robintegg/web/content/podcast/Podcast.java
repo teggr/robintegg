@@ -1,5 +1,6 @@
-package com.robintegg.web.engine;
+package com.robintegg.web.content.podcast;
 
+import com.robintegg.web.engine.ContentModel;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.ToString;

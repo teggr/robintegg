@@ -1,5 +1,7 @@
 package com.robintegg.web;
 
+import com.robintegg.web.content.podcast.PodcastLayout;
+import com.robintegg.web.content.post.PostLayout;
 import com.robintegg.web.engine.*;
 import com.robintegg.web.layouts.*;
 import lombok.extern.slf4j.Slf4j;

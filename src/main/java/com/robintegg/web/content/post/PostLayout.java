@@ -1,9 +1,8 @@
-package com.robintegg.web.layouts;
+package com.robintegg.web.content.post;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.utils.Utils;
-import j2html.TagCreator;
 import j2html.tags.DomContent;
 
 import java.util.List;

@@ -1,5 +1,11 @@
 package com.robintegg.web.engine;
 
+import com.robintegg.web.content.book.Book;
+import com.robintegg.web.content.book.BookIndexedContent;
+import com.robintegg.web.content.podcast.Podcast;
+import com.robintegg.web.content.podcast.PodcastIndexedContent;
+import com.robintegg.web.content.post.Post;
+import com.robintegg.web.content.post.PostIndexedContent;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.Getter;

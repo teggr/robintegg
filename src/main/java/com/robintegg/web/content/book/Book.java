@@ -1,13 +1,10 @@
-package com.robintegg.web.engine;
+package com.robintegg.web.content.book;
 
-import com.robintegg.web.utils.Utils;
+import com.robintegg.web.content.book.BookEntry;
+import com.robintegg.web.engine.ContentModel;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.ToString;
-import org.commonmark.node.AbstractVisitor;
-import org.commonmark.node.Image;
-import org.commonmark.node.Node;
-import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.time.LocalDate;
 import java.util.*;

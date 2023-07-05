@@ -2,11 +2,9 @@ package com.robintegg.web.layouts;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
-import com.robintegg.web.engine.Post;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 

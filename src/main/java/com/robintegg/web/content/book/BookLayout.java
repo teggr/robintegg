@@ -1,4 +1,4 @@
-package com.robintegg.web.layouts;
+package com.robintegg.web.content.book;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
@@ -10,12 +10,12 @@ import java.util.Map;
 
 import static j2html.TagCreator.*;
 
-public class PodcastLayout {
+public class BookLayout {
 
     public static Layout create() {
         return Layout.builder()
                 .data(Map.of("layout", List.of("default")))
-                .renderFunction(PodcastLayout::render)
+                .renderFunction(BookLayout::render)
                 .build();
     }
 
@@ -78,13 +78,12 @@ public class PodcastLayout {
                         div()
                                 .withClass("post-content e-content")
                                 .attr("itemprop", "articleBody")
-                                .withText(
-                                        contentModel.getPage().getSubtitle()
+                                .with(
+                                    p(contentModel.getPage().getSubtitle()),
+                                    img()
+                                        .withWidth("150px")
+                                        .withSrc(contentModel.getPage().getImageUrl())
                                 ),
-                        a()
-                                .withClass("u-url")
-                                .withHref(contentModel.getPage().getPodnewsUrl())
-                                .withText("Find out more and subscribe to the Podcast on Podnews"),
                         a()
                                 .withClass("u-url")
                                 .withHref(Utils.relativeUrl(contentModel.getPage().getUrl()))

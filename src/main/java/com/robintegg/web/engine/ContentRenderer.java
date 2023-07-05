@@ -1,7 +1,10 @@
 package com.robintegg.web.engine;
 
-import com.robintegg.web.layouts.BookLayout;
-import com.robintegg.web.layouts.PodcastLayout;
+import com.robintegg.web.content.book.Book;
+import com.robintegg.web.content.podcast.Podcast;
+import com.robintegg.web.content.post.Post;
+import com.robintegg.web.content.book.BookLayout;
+import com.robintegg.web.content.podcast.PodcastLayout;
 import com.robintegg.web.layouts.TagLayout;
 import j2html.TagCreator;
 import j2html.rendering.FlatHtml;

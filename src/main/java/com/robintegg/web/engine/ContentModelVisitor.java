@@ -1,5 +1,9 @@
 package com.robintegg.web.engine;
 
+import com.robintegg.web.content.book.Book;
+import com.robintegg.web.content.podcast.Podcast;
+import com.robintegg.web.content.post.Post;
+
 public interface ContentModelVisitor {
 
     void page(Page page);

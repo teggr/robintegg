@@ -1,4 +1,4 @@
-package com.robintegg.web.engine;
+package com.robintegg.web.content.book;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
