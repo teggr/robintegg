@@ -1,12 +1,18 @@
 package com.robintegg.web.engine;
 
 import com.robintegg.web.content.book.Book;
+import com.robintegg.web.content.book.BookContentTypePlugin;
 import com.robintegg.web.content.book.BookEntry;
 import com.robintegg.web.content.book.BooksPage;
 import com.robintegg.web.content.podcast.Podcast;
+import com.robintegg.web.content.podcast.PodcastContentTypePlugin;
 import com.robintegg.web.content.podcast.PodcastsPage;
 import com.robintegg.web.content.post.Post;
-import com.robintegg.web.pages.*;
+import com.robintegg.web.content.post.PostContentTypePlugin;
+import com.robintegg.web.pages.CategoriesPage;
+import com.robintegg.web.pages.IndexPage;
+import com.robintegg.web.pages.TagsPage;
+import com.robintegg.web.pages._404Page;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -26,15 +32,12 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class ContentSource {
-  private static JAXBContext jaxbContext = null;
 
-  static {
-    try {
-      jaxbContext = JAXBContext.newInstance(BookEntry.class);
-    } catch (JAXBException e) {
-      throw new RuntimeException(e);
-    }
-  }
+  private static List<ContentTypePlugin> contentTypePlugins = List.of(
+      BookContentTypePlugin.create(),
+      PodcastContentTypePlugin.create(),
+      PostContentTypePlugin.create()
+  );
 
   private final Path sourceDirectory;
 
@@ -47,41 +50,10 @@ public class ContentSource {
 
     log.info("source directory: {}", sourceDirectory.toAbsolutePath());
 
-    // load podcasts from folder with markdown
-    var podcastDirectory = sourceDirectory.resolve("_podcasts");
-    log.info("podcasts directory: " + podcastDirectory.toAbsolutePath());
-
-    try (Stream<Path> paths = Files.walk(podcastDirectory)) {
-      paths
-          .filter(Files::isRegularFile)
-          .peek(f -> log.info("{}", f))
-          .map(ContentSource::readPodcast)
-          .forEach(contentModel::addPodcast);
-    }
-
-    // load posts from folder with markdown
-    var postsDirectory = sourceDirectory.resolve("_posts");
-    log.info("posts directory: " + postsDirectory.toAbsolutePath());
-
-    try (Stream<Path> paths = Files.walk(postsDirectory)) {
-      paths
-          .filter(Files::isRegularFile)
-          .peek(f -> log.info("{}", f))
-          .map(ContentSource::readPost)
-          .forEach(contentModel::addPost);
-    }
-
-    // load books from folder with xml
-    var booksDirectory = sourceDirectory.resolve("_books");
-    log.info("books directory: " + booksDirectory.toAbsolutePath());
-
-    try (Stream<Path> paths = Files.walk(booksDirectory)) {
-      paths
-          .filter(Files::isRegularFile)
-          .peek(f -> log.info("{}", f))
-          .map(ContentSource::readBook)
-          .forEach(contentModel::addBook);
-    }
+    contentTypePlugins.stream()
+        .forEach(contentTypePlugin -> {
+          contentTypePlugin.loadContent( sourceDirectory.toAbsolutePath(), contentModel );
+        });
 
     // load filers from all none special folders
     log.info("files directory: " + sourceDirectory.toAbsolutePath());
@@ -115,103 +87,13 @@ public class ContentSource {
     contentModel.addPage(_404Page.create());
     contentModel.addPage(IndexPage.create());
     contentModel.addPage(CategoriesPage.create());
-    contentModel.addPage(PodcastsPage.create());
     contentModel.addPage(TagsPage.create());
-    contentModel.addPage(BooksPage.create());
 
-  }
-
-  private static Podcast readPodcast(Path path) {
-
-    try {
-      // Extract filename, filename without extension, and extension using Path methods
-      String filename = path.getFileName().toString();
-      int dotIndex = filename.lastIndexOf('.');
-      String filenameWithoutExtension = (dotIndex == -1) ? filename : filename.substring(0, dotIndex);
-      String fileExtension = (dotIndex == -1) ? "" : filename.substring(dotIndex + 1);
-
-      if (fileExtension.equals("md")) {
-
-        Extension extension = YamlFrontMatterExtension.create();
-        Parser parser = Parser.builder()
-            .extensions(List.of(extension))
-            .build();
-
-        Node document = parser.parseReader(Files.newBufferedReader(path));
-
-        YamlFrontMatterVisitor yamlFrontMatterVisitor = new YamlFrontMatterVisitor();
-        document.accept(yamlFrontMatterVisitor);
-
-        return new Podcast(filenameWithoutExtension, yamlFrontMatterVisitor.getData(), document);
-
-      }
-
-      return null;
-
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-
-  }
-
-  private static Post readPost(Path path) {
-
-    try {
-      // Extract filename, filename without extension, and extension using Path methods
-      String filename = path.getFileName().toString();
-      int dotIndex = filename.lastIndexOf('.');
-      String filenameWithoutExtension = (dotIndex == -1) ? filename : filename.substring(0, dotIndex);
-      String fileExtension = (dotIndex == -1) ? "" : filename.substring(dotIndex + 1);
-
-      if (fileExtension.equals("md")) {
-
-        Extension extension = YamlFrontMatterExtension.create();
-        Parser parser = Parser.builder()
-            .extensions(List.of(extension))
-            .build();
-
-        Node document = parser.parseReader(Files.newBufferedReader(path));
-
-        YamlFrontMatterVisitor yamlFrontMatterVisitor = new YamlFrontMatterVisitor();
-        document.accept(yamlFrontMatterVisitor);
-
-        return new Post(filenameWithoutExtension, yamlFrontMatterVisitor.getData(), document);
-
-
-      }
-
-      return null;
-
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-
-  }
-
-  private static Book readBook(Path path) {
-
-    try {
-      // Extract filename, filename without extension, and extension using Path methods
-      String filename = path.getFileName().toString();
-      int dotIndex = filename.lastIndexOf('.');
-      String filenameWithoutExtension = (dotIndex == -1) ? filename : filename.substring(0, dotIndex);
-      String fileExtension = (dotIndex == -1) ? "" : filename.substring(dotIndex + 1);
-
-      if (fileExtension.equals("xml")) {
-
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
-        BookEntry book = (BookEntry) unmarshaller.unmarshal(Files.newInputStream(path));
-
-        return new Book(filenameWithoutExtension, book);
-
-      }
-
-      return null;
-
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    // type based pages
+    contentTypePlugins.stream()
+        .map(ContentTypePlugin::pages)
+        .flatMap(List::stream)
+        .forEach(contentModel::addPage);
 
   }
 
