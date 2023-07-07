@@ -48,7 +48,6 @@ public class BookPlugin implements ContentTypePlugin {
 
   }
 
-
   private static Book readBook(Path path) {
 
     try {

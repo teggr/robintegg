@@ -97,46 +97,39 @@ public class ContentModel {
   }
 
   public List<String> getTags() {
-    List<String> tags = new ArrayList<>();
-    this.items.stream()
-        .filter(i -> i instanceof TaggedContent)
-        .map(i -> ((TaggedContent) i).getTags())
+    return getContentOfType(TaggedContent.class).stream()
+        .map(TaggedContent::getTags)
         .flatMap(List::stream)
-        .forEach(tags::add);
-    return tags.stream().distinct().sorted().toList();
+        .distinct()
+        .sorted()
+        .toList();
   }
 
   public List<IndexContent> getTaggedContent(String tag) {
-    List<IndexContent> taggedContentList = new ArrayList<>();
-    this.items.stream()
-        .filter(i -> i instanceof TaggedContent)
-        .filter(i -> ((TaggedContent) i).getTags().contains(tag))
+    return getContentOfType(TaggedContent.class).stream()
+        .filter(tc -> tc.getTags().contains(tag))
         .filter(i -> i instanceof IndexedContent)
         .map(i -> ((IndexedContent) i).getIndexContent())
-        .forEach(taggedContentList::add);
-    return taggedContentList.stream().sorted(
-        Comparator.comparing(IndexContent::getDate).reversed()
-    ).toList();
+        .sorted(Comparator.comparing(IndexContent::getDate).reversed())
+        .toList();
   }
 
   public List<String> getCategories() {
-    return this.items.stream()
-        .filter(i -> i instanceof CategorisedContent)
-        .map(i -> ((CategorisedContent) i).getCategory())
-        .filter(Objects::nonNull).distinct().toList();
+    return getContentOfType(CategorisedContent.class).stream()
+        .map(CategorisedContent::getCategory)
+        .filter(Objects::nonNull)
+        .distinct()
+        .sorted()
+        .toList();
   }
 
   public List<IndexContent> getPostsInCategory(String category) {
-    List<IndexContent> taggedContentList = new ArrayList<>();
-    this.items.stream()
-        .filter(i -> i instanceof CategorisedContent)
-        .filter(i -> Objects.equals( ((CategorisedContent) i).getCategory(), category))
+    return getContentOfType(CategorisedContent.class).stream()
+        .filter(i -> Objects.equals(((CategorisedContent) i).getCategory(), category))
         .filter(i -> i instanceof IndexedContent)
         .map(i -> ((IndexedContent) i).getIndexContent())
-        .forEach(taggedContentList::add);
-    return taggedContentList.stream().sorted(
-        Comparator.comparing(IndexContent::getDate).reversed()
-    ).toList();
+        .sorted(Comparator.comparing(IndexContent::getDate).reversed())
+        .toList();
   }
 
   public void setContent(DomContent domContent) {
@@ -169,14 +162,10 @@ public class ContentModel {
   }
 
   public List<IndexContent> getIndexedContent() {
-    List<IndexContent> indexedContentList = new ArrayList<>();
-    this.items.stream()
-        .filter(i -> i instanceof IndexedContent)
-        .map(i -> ((IndexedContent) i).getIndexContent())
-        .forEach(indexedContentList::add);
-    return indexedContentList.stream().sorted(
-        Comparator.comparing(IndexContent::getDate).reversed()
-    ).toList();
+    return getContentOfType(IndexedContent.class).stream()
+        .map(IndexedContent::getIndexContent)
+        .sorted(Comparator.comparing(IndexContent::getDate).reversed())
+        .toList();
   }
 
 }

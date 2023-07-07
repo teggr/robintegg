@@ -41,8 +41,7 @@ public class PostPlugin implements ContentTypePlugin, ContentRenderPlugin {
     }
   }
 
-
-  private static Post readPost(Path path) {
+  static Post readPost(Path path) {
 
     try {
       // Extract filename, filename without extension, and extension using Path methods

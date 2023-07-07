@@ -1,8 +1,6 @@
 package com.robintegg.web.feed;
 
 import com.robintegg.web.content.IndexedContent;
-import com.robintegg.web.content.book.Book;
-import com.robintegg.web.content.post.Post;
 import com.robintegg.web.content.staticfiles.StaticFile;
 import com.robintegg.web.engine.ContentItem;
 import com.robintegg.web.engine.ContentModelVisitor;
@@ -22,26 +20,6 @@ public class FeedAggregatorPlugin implements AggregatorPlugin {
   private Feed feed = new Feed();
 
   @Override
-  public void add(Book book) {
-    this.feed.addEntry(FeedEntry.builder()
-        .title(book.getTitle())
-        .url(book.getUrl())
-        .date(book.getAddedDate())
-        .modifiedDate(book.getAddedDate())
-        .content(book::getContent)
-        .author(book.getAuthor())
-        .tags(book.getTags())
-        .excerpt(book::getExcerpt)
-        .imageUrl(book.getImageUrl())
-        .build());
-  }
-
-  @Override
-  public void add(Post post) {
-
-  }
-
-  @Override
   public void visit(ContentModelVisitor visitor) {
 
     // feed
@@ -53,6 +31,7 @@ public class FeedAggregatorPlugin implements AggregatorPlugin {
     );
 
     visitor.file(staticFile);
+
   }
 
   @Override

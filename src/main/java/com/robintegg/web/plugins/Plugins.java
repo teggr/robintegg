@@ -2,6 +2,7 @@ package com.robintegg.web.plugins;
 
 import com.robintegg.web.content.book.BookPlugin;
 import com.robintegg.web.content.podcast.PodcastPlugin;
+import com.robintegg.web.content.post.DraftPostPlugin;
 import com.robintegg.web.content.post.PostPlugin;
 import com.robintegg.web.content.staticfiles.StaticFilesPlugin;
 import com.robintegg.web.feed.FeedAggregatorPlugin;
@@ -24,6 +25,7 @@ public class Plugins {
     StaticFilesPlugin staticFilesPlugin = StaticFilesPlugin.create();
     DefaultThemePlugin defaultThemePlugin = DefaultThemePlugin.create();
     FeedAggregatorPlugin feedAggregatorPlugin = FeedAggregatorPlugin.create();
+    DraftPostPlugin draftPostPlugin = DraftPostPlugin.create();
 
     // content types
     contentTypePlugins.add(bookPlugin);
@@ -31,6 +33,7 @@ public class Plugins {
     contentTypePlugins.add(postPlugin);
     contentTypePlugins.add(staticFilesPlugin);
     contentTypePlugins.add(defaultThemePlugin);
+    contentTypePlugins.add(draftPostPlugin);
 
     // rendering
     contentRenderPlugins.add(podcastPlugin);

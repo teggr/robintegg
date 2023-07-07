@@ -17,6 +17,7 @@
 
         <!-- build properties -->
         <build.environment>non-prod</build.environment>
+        <build.include-drafts>true</build.include-drafts>
     </properties>
 
     <dependencies>
@@ -129,6 +130,10 @@
                             <key>environment</key>
                             <value>${build.environment}</value>
                         </systemProperty>
+                        <systemProperty>
+                            <key>drafts</key>
+                            <value>${build.include-drafts}</value>
+                        </systemProperty>
                     </systemProperties>
                 </configuration>
             </plugin>
@@ -140,6 +145,7 @@
             <id>prod</id>
             <properties>
                 <build.environment>production</build.environment>
+                <build.include-drafts>false</build.include-drafts>
             </properties>
         </profile>
     </profiles>

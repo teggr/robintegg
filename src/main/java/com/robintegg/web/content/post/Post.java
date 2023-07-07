@@ -16,6 +16,7 @@ import org.commonmark.node.Node;
 import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
   private final Map<String, List<String>> data;
   @ToString.Exclude
   private final Node document;
-  private final String url;
+  private String url;
 
   public Post(String key, Map<String, List<String>> data, Node document) {
     this.key = key;
@@ -116,5 +117,15 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
   @Override
   public IndexContent getIndexContent() {
     return PostIndexedContent.map(this);
+  }
+
+  public Post withDate(LocalDate date) {
+    data.put("date", List.of(date.format(DateTimeFormatter.ISO_DATE)));
+    return this;
+  }
+
+  public Post withKeyUrl() {
+    this.url = key + ".html";
+    return this;
   }
 }

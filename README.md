@@ -10,26 +10,53 @@ https://www.robintegg.com
 
 ```mermaid
 classDiagram
-    theme --> contentitem
-    theme *-- includes
-    theme *-- layouts
-    theme *-- pages
-    theme --> feed
-    theme --> tags
-    theme --> categories
-    theme --> index
-    feed --> contentitem
+    
+    theme *-- includes : has
+    theme *-- layouts : has
+    theme *-- pages : has
+    theme --> feed : uses
+    theme --> tags : uses
+    theme --> categories : uses
+    theme --> index : uses
 
+    pages --> contentitem : made up of
+    
+    pages --> layouts : uses
+    layouts --> includes : uses
+    pages --> includes : uses
+    
     contentitem <|-- book
     contentitem <|-- podcast
     contentitem <|-- post
     contentitem <|-- staticfiles
     
-    tags -- contentitem 
-    categories -- contentitem 
-    index -- contentitem
+    tags -- contentitem : built from
+    categories -- contentitem  : built from
+    index -- contentitem : built from
+    
+    feed --> index : uses
     
 ```
+
+## Engine
+
+```mermaid
+classDiagram
+    
+    contentmodel --> contenttypeplugins : finds content\n using
+    contentmodel *-- contentitems
+    contentmodel --> aggregatorplugins : builds other models\n using content
+    
+    contentmodel --> contentmodelvisitor : exposes model via\n common types
+    contentmodelvisitor --> page : 
+    contentmodelvisitor --> files
+    contentmodelvisitor --> tags
+    
+    contentrenderer --> contentmodelvisitor : uses to find\n items to render
+    contentrenderer --> contentrenderplugins : use to render content types
+    
+```
+
 
 # Finding Podcast Links
 
@@ -46,4 +73,13 @@ com.robintegg.web.Build.main();
 ```
 cd target\site
 C:\Users\teggro01\.jdks\temurin-19.0.2\bin\jwebserver   
+```
+
+# Configuration
+
+## System properties
+
+```properties
+environment=local - name of target environment for built site [local|production] 
+drafts=false - include the posts in the _drafts folder [true|false]
 ```
