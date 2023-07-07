@@ -10,6 +10,8 @@ import com.robintegg.web.content.post.Post;
 import com.robintegg.web.content.post.PostIndexedContent;
 import com.robintegg.web.content.staticfiles.StaticFile;
 import com.robintegg.web.plugins.Plugins;
+import com.robintegg.web.site.Site;
+import com.robintegg.web.site.SocialLink;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.Getter;
@@ -30,13 +32,15 @@ public class ContentModel {
   @Getter
   @Setter
   private Site site = new Site();
-  private List<Podcast> podcasts = new ArrayList<>();
-  private List<Post> posts = new ArrayList<>();
-  private List<StaticFile> files = new ArrayList<>();
   private List<Page> pages = new ArrayList<>();
   private List<SocialLink> socialLinks = new ArrayList<>();
   private Page page;
   private String environment = "local";
+
+  // TODO: abstract away from known content types
+  private List<Podcast> podcasts = new ArrayList<>();
+  private List<Post> posts = new ArrayList<>();
+  private List<StaticFile> files = new ArrayList<>();
   private List<Book> books = new ArrayList<>();
 
   public void visit(ContentModelVisitor visitor) {

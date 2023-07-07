@@ -2,6 +2,9 @@ package com.robintegg.web;
 
 import com.robintegg.web.engine.*;
 import com.robintegg.web.plugins.Plugins;
+import com.robintegg.web.site.Author;
+import com.robintegg.web.site.Site;
+import com.robintegg.web.site.SocialLink;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
