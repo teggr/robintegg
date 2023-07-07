@@ -4,6 +4,7 @@ import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.plugins.ContentRenderPlugin;
 import com.robintegg.web.plugins.ContentTypePlugin;
+import com.robintegg.web.plugins.Plugins;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.commonmark.Extension;
@@ -78,5 +79,10 @@ public class PodcastPlugin implements ContentTypePlugin, ContentRenderPlugin {
   @Override
   public void loadLayout(Map<String, Layout> layouts) {
     layouts.put("podcast", PodcastLayout.create());
+  }
+
+  public void registerPlugins() {
+    Plugins.contentTypePlugins.add(this);
+    Plugins.contentRenderPlugins.add(this);
   }
 }

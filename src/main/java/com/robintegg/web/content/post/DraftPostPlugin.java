@@ -2,6 +2,7 @@ package com.robintegg.web.content.post;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
+import com.robintegg.web.plugins.Plugins;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,4 +55,7 @@ public class DraftPostPlugin implements ContentTypePlugin {
 
   }
 
+  public void registerPlugins() {
+    Plugins.contentTypePlugins.add(this);
+  }
 }

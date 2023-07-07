@@ -15,7 +15,7 @@ public class ContentSource {
     this.sourceDirectory = sourceDirectory;
   }
 
-  public void loadContent(ContentModel contentModel) throws IOException {
+  public void loadContent(ContentModel contentModel) {
 
     log.info("source directory: {}", sourceDirectory.toAbsolutePath());
 

@@ -5,6 +5,7 @@ import com.robintegg.web.plugins.Plugins;
 import com.robintegg.web.site.Author;
 import com.robintegg.web.site.Site;
 import com.robintegg.web.site.SocialLink;
+import com.robintegg.web.theme.DefaultThemePlugin;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -21,6 +22,9 @@ public class Build {
 
         var workingDirectory = Paths.get("");
         log.info("working directory: {}",  workingDirectory.toAbsolutePath());
+
+        // register plugins
+        DefaultThemePlugin.create().registerPlugins();
 
         ContentModel contentModel = new ContentModel();
 
@@ -49,7 +53,6 @@ public class Build {
 
         contentModel.setSite(site);
 
-
         // generate content
         var contentSource = new ContentSource(workingDirectory);
         contentSource.loadContent(contentModel);
@@ -59,6 +62,7 @@ public class Build {
         Plugins.contentRenderPlugins.stream()
             .forEach( contentRenderPlugin -> contentRenderPlugin.loadLayout(layouts) );
 
+        // TODO: filesystem plugin for output
         // create output directory
         var outputDirectory = workingDirectory.resolve("target/site");
         log.info("output directory: {}", outputDirectory.toAbsolutePath());

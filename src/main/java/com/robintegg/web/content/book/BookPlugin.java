@@ -2,6 +2,7 @@ package com.robintegg.web.content.book;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
+import com.robintegg.web.plugins.Plugins;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -73,6 +74,10 @@ public class BookPlugin implements ContentTypePlugin {
       throw new RuntimeException(e);
     }
 
+  }
+
+  public void registerPlugins() {
+    Plugins.contentTypePlugins.add(this);
   }
 
 }

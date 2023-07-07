@@ -5,6 +5,7 @@ import com.robintegg.web.content.staticfiles.StaticFile;
 import com.robintegg.web.engine.ContentItem;
 import com.robintegg.web.engine.ContentModelVisitor;
 import com.robintegg.web.plugins.AggregatorPlugin;
+import com.robintegg.web.plugins.Plugins;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -45,4 +46,7 @@ public class FeedAggregatorPlugin implements AggregatorPlugin {
     return feed;
   }
 
+  public void registerPlugins() {
+    Plugins.aggregatorPlugins.add(this);
+  }
 }

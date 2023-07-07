@@ -21,7 +21,14 @@ public class ContentRenderer {
 
     log.info("render=start");
 
+    // TODO: assess
+    // rendering of pre calculated resources? just resource name + function to final render?
+    // where does the website come into it? writer (filesystem writer)?; external to the rendering (this knows
+    // about locations and files)
+
     contentModel.visit(new ContentModelVisitor() {
+
+      // TODO: rendering of a page needs to be less attached to the content model
 
       @Override
       public void file(StaticFile file) {
