@@ -2,6 +2,7 @@ package com.robintegg.web.theme.pages;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Page;
+import com.robintegg.web.tags.TagPlugin;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
@@ -39,7 +40,7 @@ public class TagsPage {
                         ul()
                                 .withClass("post-list")
                                 .with(
-                                        each(contentModel.getTags().stream().sorted(String.CASE_INSENSITIVE_ORDER).toList(), tag ->{
+                                        each(TagPlugin.INSTANCE.getTags().stream().sorted(String.CASE_INSENSITIVE_ORDER).toList(), tag ->{
                                             return h3()
                                                     .with(
                                                             a()

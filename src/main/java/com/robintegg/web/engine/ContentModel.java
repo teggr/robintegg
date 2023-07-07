@@ -52,10 +52,6 @@ public class ContentModel {
     pages.stream()
         .forEach(visitor::page);
 
-    // tags
-    getTags().stream()
-        .forEach(visitor::tag);
-
     // content model
     items.stream()
         .map(item ->
@@ -94,24 +90,6 @@ public class ContentModel {
 
   public void setPage(Page page) {
     this.page = page;
-  }
-
-  public List<String> getTags() {
-    return getContentOfType(TaggedContent.class).stream()
-        .map(TaggedContent::getTags)
-        .flatMap(List::stream)
-        .distinct()
-        .sorted()
-        .toList();
-  }
-
-  public List<IndexContent> getTaggedContent(String tag) {
-    return getContentOfType(TaggedContent.class).stream()
-        .filter(tc -> tc.getTags().contains(tag))
-        .filter(i -> i instanceof IndexedContent)
-        .map(i -> ((IndexedContent) i).getIndexContent())
-        .sorted(Comparator.comparing(IndexContent::getDate).reversed())
-        .toList();
   }
 
   public List<String> getCategories() {

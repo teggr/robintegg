@@ -53,21 +53,6 @@ public class ContentRenderer {
       }
 
       @Override
-      public void tag(String tag) {
-        log.info("tag={}", tag);
-
-        Page page = Page.builder()
-            .data(Map.of(
-                "tag", List.of(tag)
-            ))
-            .path("/tags/" + tag + "/index.html")
-            .renderFunction(TagLayout::render)
-            .build();
-
-        page(page);
-      }
-
-      @Override
       public void page(Page page) {
         log.info("page={}", page);
 

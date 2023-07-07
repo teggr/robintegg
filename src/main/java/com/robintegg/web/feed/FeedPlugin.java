@@ -10,11 +10,11 @@ import com.robintegg.web.plugins.Plugins;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class FeedAggregatorPlugin implements AggregatorPlugin {
+public class FeedPlugin implements AggregatorPlugin {
 
-  public static final FeedAggregatorPlugin INSTANCE = new FeedAggregatorPlugin();
+  public static final FeedPlugin INSTANCE = new FeedPlugin();
 
-  public static FeedAggregatorPlugin create() {
+  public static FeedPlugin create() {
     return INSTANCE;
   }
 

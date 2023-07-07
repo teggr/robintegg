@@ -7,11 +7,12 @@ import com.robintegg.web.content.post.PostPlugin;
 import com.robintegg.web.content.staticfiles.StaticFilesPlugin;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
-import com.robintegg.web.feed.FeedAggregatorPlugin;
+import com.robintegg.web.feed.FeedPlugin;
 import com.robintegg.web.plugins.ContentRenderPlugin;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
 import com.robintegg.web.plugins.ThemePlugin;
+import com.robintegg.web.tags.TagPlugin;
 import com.robintegg.web.theme.layouts.*;
 import com.robintegg.web.theme.pages.CategoriesPage;
 import com.robintegg.web.theme.pages.IndexPage;
@@ -54,8 +55,9 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     PostPlugin.create().registerPlugins();
     StaticFilesPlugin.create().registerPlugins();
 
-    FeedAggregatorPlugin.create().registerPlugins();
+    FeedPlugin.create().registerPlugins();
     DraftPostPlugin.create().registerPlugins();
+    TagPlugin.create().registerPlugins();
 
   }
 

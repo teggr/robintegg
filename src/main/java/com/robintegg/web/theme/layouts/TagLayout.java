@@ -2,6 +2,7 @@ package com.robintegg.web.theme.layouts;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
+import com.robintegg.web.tags.TagPlugin;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
@@ -31,7 +32,7 @@ public class TagLayout {
                         ul()
                                 .withClass("post-list")
                                 .with(
-                                        each(contentModel.getTaggedContent(contentModel.getPage().getTag()), taggedContent -> {
+                                        each(TagPlugin.INSTANCE.getTaggedContent(contentModel.getPage().getTag()), taggedContent -> {
                                             return each(
                                                     span()
                                                             .withClass("post-meta")
