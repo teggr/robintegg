@@ -1,7 +1,5 @@
 package com.robintegg.web.engine;
 
-import com.robintegg.web.content.IndexContent;
-import com.robintegg.web.content.IndexedContent;
 import com.robintegg.web.content.staticfiles.StaticFile;
 import com.robintegg.web.plugins.Plugins;
 import com.robintegg.web.site.Site;
@@ -13,29 +11,37 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
 @ToString
 public class ContentModel {
 
+  // TODO: these values are more in scope of render time
   private DomContent content = TagCreator.text("");
   @Getter
   @Setter
   private Site site = new Site();
-  private List<Page> pages = new ArrayList<>();
   private Page page;
   private String environment = "local";
-  private List<StaticFile> files = new ArrayList<>();
-  private List<ContentItem> items = new ArrayList<>();
+
+  // TODO: these should be streamed to the rendering engine
+  private final List<Page> pages = new ArrayList<>();
+  private final List<StaticFile> files = new ArrayList<>();
+  private final List<ContentItem> items = new ArrayList<>();
 
   public void add(ContentItem contentItem) {
+    // TODO: this would be where the item would be passed
+    // onto the next stage rather than stored. only the aggregator
+    // plugins would be interested in the stored content
     this.items.add(contentItem);
-    Plugins.aggregatorPlugins.stream()
+    Plugins.aggregatorPlugins
         .forEach(aggregatorPlugin -> aggregatorPlugin.add(contentItem));
   }
 
+  // TODO: is this entry point or the plugins? plugins would need to
+  // have all the information before creating any container pages
+  // currently we wait until the processing occurs
   public <T> List<T> getContentOfType(Class<T> clazz) {
     return this.items.stream()
         .filter(i -> clazz.isAssignableFrom(i.getClass()))
@@ -46,7 +52,7 @@ public class ContentModel {
   public void visit(ContentModelVisitor visitor) {
 
     // pages
-    pages.stream()
+    pages
         .forEach(visitor::page);
 
     // content model
@@ -64,10 +70,10 @@ public class ContentModel {
         .forEach(visitor::page);
 
     // raw contents
-    files.stream()
+    files
         .forEach(visitor::file);
 
-    Plugins.aggregatorPlugins.stream()
+    Plugins.aggregatorPlugins
         .forEach(aggregatorPlugin -> aggregatorPlugin.visit(visitor));
 
   }
@@ -116,13 +122,6 @@ public class ContentModel {
 
   public String getEnvironment() {
     return environment;
-  }
-
-  public List<IndexContent> getIndexedContent() {
-    return getContentOfType(IndexedContent.class).stream()
-        .map(IndexedContent::getIndexContent)
-        .sorted(Comparator.comparing(IndexContent::getDate).reversed())
-        .toList();
   }
 
 }

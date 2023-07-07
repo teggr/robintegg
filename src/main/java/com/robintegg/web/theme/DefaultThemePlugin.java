@@ -9,6 +9,7 @@ import com.robintegg.web.content.staticfiles.StaticFilesPlugin;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.feed.FeedPlugin;
+import com.robintegg.web.index.IndexPlugin;
 import com.robintegg.web.plugins.ContentRenderPlugin;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
@@ -60,6 +61,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     DraftPostPlugin.create().registerPlugins();
     TagPlugin.create().registerPlugins();
     CategoriesPlugin.create().registerPlugins();
+    IndexPlugin.create().registerPlugins();
 
   }
 

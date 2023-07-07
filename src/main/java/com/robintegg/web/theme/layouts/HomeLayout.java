@@ -2,6 +2,7 @@ package com.robintegg.web.theme.layouts;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
+import com.robintegg.web.index.IndexPlugin;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
@@ -31,7 +32,7 @@ public class HomeLayout {
                         ),
                         contentModel.getContent(),
                         iff(
-                                contentModel.getIndexedContent().size() > 0,
+                            IndexPlugin.INSTANCE.getIndexedContent().size() > 0,
                                 each(
                                         iff(
                                                 contentModel.getPage().getListTitle() != null,
@@ -42,7 +43,7 @@ public class HomeLayout {
                                         ul()
                                                 .withClass("post-list")
                                                 .with(
-                                                        each(contentModel.getIndexedContent(), indexContent -> {
+                                                        each(IndexPlugin.INSTANCE.getIndexedContent(), indexContent -> {
                                                             return li()
                                                                     .with(
                                                                             span()
