@@ -1,17 +1,12 @@
 package com.robintegg.web.engine;
 
-import com.robintegg.web.content.book.Book;
-import com.robintegg.web.content.book.BookIndexedContent;
-import com.robintegg.web.content.book.BookLayout;
-import com.robintegg.web.content.podcast.Podcast;
-import com.robintegg.web.content.podcast.PodcastIndexedContent;
-import com.robintegg.web.content.podcast.PodcastLayout;
-import com.robintegg.web.content.post.Post;
-import com.robintegg.web.content.post.PostIndexedContent;
+import com.robintegg.web.content.CategorisedContent;
+import com.robintegg.web.content.IndexContent;
+import com.robintegg.web.content.IndexedContent;
+import com.robintegg.web.content.TaggedContent;
 import com.robintegg.web.content.staticfiles.StaticFile;
 import com.robintegg.web.plugins.Plugins;
 import com.robintegg.web.site.Site;
-import com.robintegg.web.site.SocialLink;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.Getter;
@@ -33,15 +28,23 @@ public class ContentModel {
   @Setter
   private Site site = new Site();
   private List<Page> pages = new ArrayList<>();
-  private List<SocialLink> socialLinks = new ArrayList<>();
   private Page page;
   private String environment = "local";
-
-  // TODO: abstract away from known content types
-  private List<Podcast> podcasts = new ArrayList<>();
-  private List<Post> posts = new ArrayList<>();
   private List<StaticFile> files = new ArrayList<>();
-  private List<Book> books = new ArrayList<>();
+  private List<ContentItem> items = new ArrayList<>();
+
+  public void add(ContentItem contentItem) {
+    this.items.add(contentItem);
+    Plugins.aggregatorPlugins.stream()
+        .forEach(aggregatorPlugin -> aggregatorPlugin.add(contentItem));
+  }
+
+  public <T> List<T> getContentOfType(Class<T> clazz) {
+    return this.items.stream()
+        .filter(i -> clazz.isAssignableFrom(i.getClass()))
+        .map(i -> (T) i)
+        .toList();
+  }
 
   public void visit(ContentModelVisitor visitor) {
 
@@ -53,52 +56,26 @@ public class ContentModel {
     getTags().stream()
         .forEach(visitor::tag);
 
-    // posts
-    posts.stream()
-        .map(post ->
-            {
-              log.info("post={}", post);
-
-              return Page.builder()
-                  .data(post.getData())
-                  .path(post.getUrl())
-                  .renderFunction(post::getContent)
-                  .build();
-            })
-        .forEach(visitor::page);
-
-    // podcast
-    podcasts.stream()
-        .map(podcast -> {
-          log.info("podcast={}", podcast);
+    // content model
+    items.stream()
+        .map(item ->
+        {
+          log.info("item={}", item);
 
           return Page.builder()
-              .data(podcast.getData())
-              .path(podcast.getUrl())
-              .renderFunction(PodcastLayout::render)
+              .data(item.getData())
+              .path(item.getUrl())
+              .renderFunction(item::getContent)
               .build();
         })
         .forEach(visitor::page);
-
-    // books
-    books.stream()
-        .map(book -> {
-          log.info("book={}", book);
-
-          return Page.builder()
-              .data(book.getData())
-              .path(book.getUrl())
-              .renderFunction(BookLayout::render)
-              .build();
-        })
-            .forEach(visitor::page);
 
     // raw contents
     files.stream()
         .forEach(visitor::file);
 
     Plugins.aggregatorPlugins.stream()
-        .forEach( aggregatorPlugin -> aggregatorPlugin.visit(visitor) );
+        .forEach(aggregatorPlugin -> aggregatorPlugin.visit(visitor));
 
   }
 
@@ -111,10 +88,6 @@ public class ContentModel {
     return content;
   }
 
-  public void addSocialLink(SocialLink socialLink) {
-    this.socialLinks.add(socialLink);
-  }
-
   public Page getPage() {
     return page;
   }
@@ -125,50 +98,49 @@ public class ContentModel {
 
   public List<String> getTags() {
     List<String> tags = new ArrayList<>();
-    this.books.stream().map(Book::getTags).flatMap(List::stream).forEach(tags::add);
-    this.posts.stream().map(Post::getTags).flatMap(List::stream).forEach(tags::add);
-    this.podcasts.stream().map(Podcast::getTags).flatMap(List::stream).forEach(tags::add);
+    this.items.stream()
+        .filter(i -> i instanceof TaggedContent)
+        .map(i -> ((TaggedContent) i).getTags())
+        .flatMap(List::stream)
+        .forEach(tags::add);
     return tags.stream().distinct().sorted().toList();
   }
 
   public List<IndexContent> getTaggedContent(String tag) {
     List<IndexContent> taggedContentList = new ArrayList<>();
-    this.books.stream().filter(p -> p.getTags().contains(tag)).map(BookIndexedContent::map).forEach(taggedContentList::add);
-    this.posts.stream().filter(p -> p.getTags().contains(tag)).map(PostIndexedContent::map).forEach(taggedContentList::add);
-    this.podcasts.stream().filter(p -> p.getTags().contains(tag)).map(PodcastIndexedContent::map).forEach(taggedContentList::add);
+    this.items.stream()
+        .filter(i -> i instanceof TaggedContent)
+        .filter(i -> ((TaggedContent) i).getTags().contains(tag))
+        .filter(i -> i instanceof IndexedContent)
+        .map(i -> ((IndexedContent) i).getIndexContent())
+        .forEach(taggedContentList::add);
     return taggedContentList.stream().sorted(
         Comparator.comparing(IndexContent::getDate).reversed()
     ).toList();
   }
 
   public List<String> getCategories() {
-    return this.posts.stream().map(Post::getCategory).filter(Objects::nonNull).distinct().toList();
+    return this.items.stream()
+        .filter(i -> i instanceof CategorisedContent)
+        .map(i -> ((CategorisedContent) i).getCategory())
+        .filter(Objects::nonNull).distinct().toList();
   }
 
-  public List<Post> getPostsInCategory(String category) {
-    return this.posts.stream().filter(p -> category.equals(p.getCategory())).toList();
+  public List<IndexContent> getPostsInCategory(String category) {
+    List<IndexContent> taggedContentList = new ArrayList<>();
+    this.items.stream()
+        .filter(i -> i instanceof CategorisedContent)
+        .filter(i -> Objects.equals( ((CategorisedContent) i).getCategory(), category))
+        .filter(i -> i instanceof IndexedContent)
+        .map(i -> ((IndexedContent) i).getIndexContent())
+        .forEach(taggedContentList::add);
+    return taggedContentList.stream().sorted(
+        Comparator.comparing(IndexContent::getDate).reversed()
+    ).toList();
   }
 
   public void setContent(DomContent domContent) {
     this.content = domContent;
-  }
-
-  public void addPodcast(Podcast podcast) {
-    this.podcasts.add(podcast);
-  }
-
-  public List<Podcast> getPodcasts() {
-    return this.podcasts;
-  }
-
-  public void addPost(Post post) {
-    Plugins.aggregatorPlugins.stream()
-        .forEach( aggregatorPlugin -> aggregatorPlugin.add(post) );
-    this.posts.add(post);
-  }
-
-  public List<Post> getPosts() {
-    return this.posts;
   }
 
   public void addFile(StaticFile staticFile) {
@@ -196,21 +168,12 @@ public class ContentModel {
     return environment;
   }
 
-  public void addBook(Book book) {
-    Plugins.aggregatorPlugins.stream()
-        .forEach( aggregatorPlugin -> aggregatorPlugin.add(book) );
-    this.books.add(book);
-  }
-
-  public List<Book> getBooks() {
-    return books;
-  }
-
   public List<IndexContent> getIndexedContent() {
     List<IndexContent> indexedContentList = new ArrayList<>();
-    this.books.stream().map(BookIndexedContent::map).forEach(indexedContentList::add);
-    this.posts.stream().map(PostIndexedContent::map).forEach(indexedContentList::add);
-    this.podcasts.stream().map(PodcastIndexedContent::map).forEach(indexedContentList::add);
+    this.items.stream()
+        .filter(i -> i instanceof IndexedContent)
+        .map(i -> ((IndexedContent) i).getIndexContent())
+        .forEach(indexedContentList::add);
     return indexedContentList.stream().sorted(
         Comparator.comparing(IndexContent::getDate).reversed()
     ).toList();

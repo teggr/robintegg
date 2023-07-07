@@ -34,7 +34,7 @@ public class PodcastsPage {
             ul()
                 .with(
                     iff(
-                        contentModel.getPodcasts().size() > 0,
+                        contentModel.getContentOfType(Podcast.class).size() > 0,
                         each(
                             h2()
                                 .withClass("post-list-heading")
@@ -42,7 +42,7 @@ public class PodcastsPage {
                             ul()
                                 .withClass("post-list")
                                 .with(
-                                    each( contentModel.getPodcasts(), podcast -> {
+                                    each( contentModel.getContentOfType(Podcast.class), podcast -> {
                                       return li()
                                           .with(
                                               h3()

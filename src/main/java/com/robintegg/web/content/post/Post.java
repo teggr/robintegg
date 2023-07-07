@@ -1,5 +1,10 @@
 package com.robintegg.web.content.post;
 
+import com.robintegg.web.content.CategorisedContent;
+import com.robintegg.web.content.IndexContent;
+import com.robintegg.web.content.IndexedContent;
+import com.robintegg.web.content.TaggedContent;
+import com.robintegg.web.engine.ContentItem;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.utils.Utils;
 import j2html.TagCreator;
@@ -11,12 +16,11 @@ import org.commonmark.node.Node;
 import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class Post {
+public class Post implements ContentItem, TaggedContent, CategorisedContent, IndexedContent {
   private final String key;
   private final Map<String, List<String>> data;
   @ToString.Exclude
@@ -107,5 +111,10 @@ public class Post {
       return null;
     }
     return image.get(0);
+  }
+
+  @Override
+  public IndexContent getIndexContent() {
+    return PostIndexedContent.map(this);
   }
 }

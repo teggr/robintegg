@@ -1,13 +1,13 @@
 package com.robintegg.web.content.post;
 
 import com.robintegg.web.engine.ContentModel;
-import com.robintegg.web.engine.IndexContent;
+import com.robintegg.web.content.IndexContent;
 import j2html.tags.DomContent;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class PostIndexedContent {
+class PostIndexedContent {
   public static IndexContent map(Post post) {
     return new IndexContent() {
 

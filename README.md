@@ -6,19 +6,28 @@ https://www.robintegg.com
 
 # Design
 
+## Content
+
 ```mermaid
 classDiagram
-    theme -- content
+    theme --> contentitem
     theme *-- includes
     theme *-- layouts
     theme *-- pages
-    theme -- feed
-    feed -- content
+    theme --> feed
+    theme --> tags
+    theme --> categories
+    theme --> index
+    feed --> contentitem
+
+    contentitem <|-- book
+    contentitem <|-- podcast
+    contentitem <|-- post
+    contentitem <|-- staticfiles
     
-    content <|-- book
-    content <|-- podcast
-    content <|-- post
-    content <|-- staticfiles
+    tags -- contentitem 
+    categories -- contentitem 
+    index -- contentitem
     
 ```
 

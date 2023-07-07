@@ -43,12 +43,12 @@ public class Build {
         site.setLinkedinUsername("robintegg");
         site.setUrl("https://robintegg.com");
         site.setBaseUrl("");
+        site.addSocialLink(new SocialLink("github", "teggr", "https://github.com/teggr"));
+        site.addSocialLink(new SocialLink("linkedin", "robintegg", "https://www.linkedin.com/in/robintegg"));
+        site.addSocialLink(new SocialLink("robintegg", "twitter", "https://www.twitter.com/robintegg"));
 
         contentModel.setSite(site);
 
-        contentModel.addSocialLink(new SocialLink("github", "teggr", "https://github.com/teggr"));
-        contentModel.addSocialLink(new SocialLink("linkedin", "robintegg", "https://www.linkedin.com/in/robintegg"));
-        contentModel.addSocialLink(new SocialLink("robintegg", "twitter", "https://www.twitter.com/robintegg"));
 
         // generate content
         var contentSource = new ContentSource(workingDirectory);

@@ -1,15 +1,19 @@
 package com.robintegg.web.content.book;
 
-import com.robintegg.web.content.book.BookEntry;
+import com.robintegg.web.content.IndexContent;
+import com.robintegg.web.content.IndexedContent;
+import com.robintegg.web.content.TaggedContent;
+import com.robintegg.web.engine.ContentItem;
 import com.robintegg.web.engine.ContentModel;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
-public class Book {
+public class Book implements ContentItem, TaggedContent, IndexedContent {
   private final String key;
   @ToString.Exclude
   private final BookEntry bookEntry;
@@ -66,5 +70,10 @@ public class Book {
 
   public String getAuthor() {
     return bookEntry.getBookDetails().getAuthor();
+  }
+
+  @Override
+  public IndexContent getIndexContent() {
+    return BookIndexedContent.map(this);
   }
 }

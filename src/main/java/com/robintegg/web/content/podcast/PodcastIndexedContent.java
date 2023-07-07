@@ -1,13 +1,13 @@
 package com.robintegg.web.content.podcast;
 
+import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.engine.ContentModel;
-import com.robintegg.web.engine.IndexContent;
 import j2html.tags.DomContent;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class PodcastIndexedContent {
+class PodcastIndexedContent {
   public static IndexContent map(Podcast podcast) {
     return new IndexContent() {
 

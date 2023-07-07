@@ -14,6 +14,9 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- build properties -->
+        <build.environment>non-prod</build.environment>
     </properties>
 
     <dependencies>
@@ -124,12 +127,21 @@
                     <systemProperties>
                         <systemProperty>
                             <key>environment</key>
-                            <value>production</value>
+                            <value>${build.environment}</value>
                         </systemProperty>
                     </systemProperties>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <build.environment>production</build.environment>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

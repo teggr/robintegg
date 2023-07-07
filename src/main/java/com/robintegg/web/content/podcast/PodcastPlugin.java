@@ -36,7 +36,7 @@ public class PodcastPlugin implements ContentTypePlugin, ContentRenderPlugin {
           .filter(Files::isRegularFile)
           .peek(f -> log.info("{}", f))
           .map(PodcastPlugin::readPodcast)
-          .forEach(contentModel::addPodcast);
+          .forEach(contentModel::add);
     }
 
     contentModel.addPage(PodcastsPage.create());

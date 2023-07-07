@@ -1,7 +1,10 @@
 package com.robintegg.web.content.podcast;
 
+import com.robintegg.web.content.IndexContent;
+import com.robintegg.web.content.IndexedContent;
+import com.robintegg.web.engine.ContentItem;
 import com.robintegg.web.engine.ContentModel;
-import j2html.TagCreator;
+import com.robintegg.web.content.TaggedContent;
 import j2html.tags.DomContent;
 import lombok.ToString;
 import org.commonmark.node.Node;
@@ -13,7 +16,7 @@ import java.util.Map;
 
 import static j2html.TagCreator.*;
 
-public class Podcast {
+public class Podcast implements ContentItem, TaggedContent, IndexedContent {
 
   private final String key;
   private final Map<String, List<String>> data;
@@ -65,5 +68,10 @@ public class Podcast {
 
   public DomContent getContent(ContentModel contentModel) {
     return each();
+  }
+
+  @Override
+  public IndexContent getIndexContent() {
+    return PodcastIndexedContent.map(this);
   }
 }

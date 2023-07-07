@@ -6,7 +6,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.robintegg.web.engine.ContentModel;
-import com.robintegg.web.engine.IndexContent;
+import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.feed.atom.*;
 import com.robintegg.web.feed.atom.Author;
 

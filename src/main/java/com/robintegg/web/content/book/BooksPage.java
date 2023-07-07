@@ -1,5 +1,6 @@
 package com.robintegg.web.content.book;
 
+import com.robintegg.web.content.podcast.Podcast;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Page;
 import com.robintegg.web.utils.Utils;
@@ -34,7 +35,7 @@ public class BooksPage {
             ul()
                 .with(
                     iff(
-                        contentModel.getBooks().size() > 0,
+                        contentModel.getContentOfType(Book.class).size() > 0,
                         each(
                             h2()
                                 .withClass("post-list-heading")
@@ -42,7 +43,7 @@ public class BooksPage {
                             ul()
                                 .withClass("post-list")
                                 .with(
-                                    each(contentModel.getBooks(), book -> {
+                                    each(contentModel.getContentOfType(Book.class), book -> {
                                       return li()
                                           .with(
                                               h3()

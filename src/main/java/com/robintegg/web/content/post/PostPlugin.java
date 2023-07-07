@@ -37,7 +37,7 @@ public class PostPlugin implements ContentTypePlugin, ContentRenderPlugin {
           .filter(Files::isRegularFile)
           .peek(f -> log.info("{}", f))
           .map(PostPlugin::readPost)
-          .forEach(contentModel::addPost);
+          .forEach(contentModel::add);
     }
   }
 

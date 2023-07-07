@@ -41,7 +41,7 @@ public class BookPlugin implements ContentTypePlugin {
           .filter(Files::isRegularFile)
           .peek(f -> log.info("{}", f))
           .map(BookPlugin::readBook)
-          .forEach(contentModel::addBook);
+          .forEach(contentModel::add);
     }
 
     contentModel.addPage(BooksPage.create());

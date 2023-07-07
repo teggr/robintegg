@@ -1,7 +1,7 @@
 package com.robintegg.web.content.book;
 
 import com.robintegg.web.engine.ContentModel;
-import com.robintegg.web.engine.IndexContent;
+import com.robintegg.web.content.IndexContent;
 import j2html.tags.DomContent;
 
 import java.time.LocalDate;
