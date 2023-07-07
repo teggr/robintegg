@@ -1,6 +1,7 @@
 package com.robintegg.web.theme.includes;
 
 import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.feed.FeedAggregatorPlugin;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
@@ -27,7 +28,7 @@ public class Head {
         link()
             .withType("application/atom+xml")
             .withRel("alternate")
-            .withHref(contentModel.getFeed().getPath())
+            .withHref(FeedAggregatorPlugin.INSTANCE.getFeed().getPath()) // TODO: need to make available via the theme and plugins
             .withTitle(contentModel.getSite().getTitle())
     );
   }

@@ -1,4 +1,4 @@
-package com.robintegg.web.content.post;
+package com.robintegg.web.content.podcast;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
@@ -19,30 +19,30 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @Slf4j
-public class PostContentTypePlugin implements ContentTypePlugin, ContentRenderPlugin {
-  public static PostContentTypePlugin create() {
-    return new PostContentTypePlugin();
+public class PodcastPlugin implements ContentTypePlugin, ContentRenderPlugin {
+  public static PodcastPlugin create() {
+    return new PodcastPlugin();
   }
 
   @SneakyThrows
   @Override
   public void loadContent(Path sourceDirectory, ContentModel contentModel) {
+    // load podcasts from folder with markdown
+    var podcastDirectory = sourceDirectory.resolve("_podcasts");
+    log.info("podcasts directory: " + podcastDirectory.toAbsolutePath());
 
-    // load posts from folder with markdown
-    var postsDirectory = sourceDirectory.resolve("_posts");
-    log.info("posts directory: " + postsDirectory.toAbsolutePath());
-
-    try (Stream<Path> paths = Files.walk(postsDirectory)) {
+    try (Stream<Path> paths = Files.walk(podcastDirectory)) {
       paths
           .filter(Files::isRegularFile)
           .peek(f -> log.info("{}", f))
-          .map(PostContentTypePlugin::readPost)
-          .forEach(contentModel::addPost);
+          .map(PodcastPlugin::readPodcast)
+          .forEach(contentModel::addPodcast);
     }
+
+    contentModel.addPage(PodcastsPage.create());
   }
 
-
-  private static Post readPost(Path path) {
+  private static Podcast readPodcast(Path path) {
 
     try {
       // Extract filename, filename without extension, and extension using Path methods
@@ -63,8 +63,7 @@ public class PostContentTypePlugin implements ContentTypePlugin, ContentRenderPl
         YamlFrontMatterVisitor yamlFrontMatterVisitor = new YamlFrontMatterVisitor();
         document.accept(yamlFrontMatterVisitor);
 
-        return new Post(filenameWithoutExtension, yamlFrontMatterVisitor.getData(), document);
-
+        return new Podcast(filenameWithoutExtension, yamlFrontMatterVisitor.getData(), document);
 
       }
 
@@ -76,9 +75,8 @@ public class PostContentTypePlugin implements ContentTypePlugin, ContentRenderPl
 
   }
 
-
   @Override
   public void loadLayout(Map<String, Layout> layouts) {
-    layouts.put("post", PostLayout.create());
+    layouts.put("podcast", PodcastLayout.create());
   }
 }

@@ -11,10 +11,10 @@ import java.util.Collections;
 import java.util.stream.Stream;
 
 @Slf4j
-public class StaticFilesContentTypePlugin implements ContentTypePlugin {
+public class StaticFilesPlugin implements ContentTypePlugin {
 
-  public static StaticFilesContentTypePlugin create() {
-    return new StaticFilesContentTypePlugin();
+  public static StaticFilesPlugin create() {
+    return new StaticFilesPlugin();
   }
 
   @SneakyThrows
@@ -45,7 +45,7 @@ public class StaticFilesContentTypePlugin implements ContentTypePlugin {
               }
           )
           .peek(f -> log.info("{}", f))
-          .map(StaticFilesContentTypePlugin::readFile)
+          .map(StaticFilesPlugin::readFile)
           .forEach(contentModel::addFile);
     }
 

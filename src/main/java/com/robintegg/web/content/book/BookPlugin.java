@@ -13,10 +13,10 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 @Slf4j
-public class BookContentTypePlugin implements ContentTypePlugin {
+public class BookPlugin implements ContentTypePlugin {
 
-  public static BookContentTypePlugin create() {
-    return new BookContentTypePlugin();
+  public static BookPlugin create() {
+    return new BookPlugin();
   }
 
   private static JAXBContext jaxbContext = null;
@@ -40,7 +40,7 @@ public class BookContentTypePlugin implements ContentTypePlugin {
       paths
           .filter(Files::isRegularFile)
           .peek(f -> log.info("{}", f))
-          .map(BookContentTypePlugin::readBook)
+          .map(BookPlugin::readBook)
           .forEach(contentModel::addBook);
     }
 

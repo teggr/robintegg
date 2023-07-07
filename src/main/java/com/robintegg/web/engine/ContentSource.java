@@ -21,7 +21,7 @@ public class ContentSource {
 
     Plugins.contentTypePlugins.stream()
         .forEach(contentTypePlugin -> {
-          contentTypePlugin.loadContent(sourceDirectory.toAbsolutePath(), contentModel);
+          contentTypePlugin.loadContent(sourceDirectory, contentModel);
         });
 
   }

@@ -48,7 +48,7 @@ public class Feed {
             .build())
         .link(List.of(
             Link.builder()
-                .href(contentModel.getSite().resolveUrl(contentModel.getFeed().getPath()))
+                .href(contentModel.getSite().resolveUrl(getPath()))
                 .rel("self")
                 .type("application/atom+xml")
                 .build(),
@@ -59,7 +59,7 @@ public class Feed {
                 .build()
         ))
         .updated(OffsetDateTime.now())
-        .id(contentModel.getSite().resolveUrl(contentModel.getFeed().getPath()))
+        .id(contentModel.getSite().resolveUrl(getPath()))
         .title(Title.builder()
             .type("html")
             .value(contentModel.getSite().getTitle())

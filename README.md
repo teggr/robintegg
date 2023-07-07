@@ -4,6 +4,24 @@
 
 https://www.robintegg.com
 
+# Design
+
+```mermaid
+classDiagram
+    theme -- content
+    theme *-- includes
+    theme *-- layouts
+    theme *-- pages
+    theme -- feed
+    feed -- content
+    
+    content <|-- book
+    content <|-- podcast
+    content <|-- post
+    content <|-- staticfiles
+    
+```
+
 # Finding Podcast Links
 
 https://podnews.net/search?q=

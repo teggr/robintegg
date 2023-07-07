@@ -27,6 +27,8 @@ public class ContentRenderer {
       public void file(StaticFile file) {
         log.info("file={}", file);
 
+        byte [] fileContent = file.getRenderFunction().apply(contentModel);
+
         String path = file.getPath();
         if (path.startsWith("/")) {
           path = path.substring(1);
@@ -36,7 +38,7 @@ public class ContentRenderer {
         // write to file
         try {
           Files.createDirectories(outputFile.getParent().toAbsolutePath());
-          Files.write(outputFile.toAbsolutePath(), file.getContent(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+          Files.write(outputFile.toAbsolutePath(), fileContent, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
@@ -114,6 +116,7 @@ public class ContentRenderer {
         contentModel.reset();
 
       }
+
     });
 
   }

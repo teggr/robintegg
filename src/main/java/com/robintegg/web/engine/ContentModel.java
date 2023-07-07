@@ -9,8 +9,7 @@ import com.robintegg.web.content.podcast.PodcastLayout;
 import com.robintegg.web.content.post.Post;
 import com.robintegg.web.content.post.PostIndexedContent;
 import com.robintegg.web.content.staticfiles.StaticFile;
-import com.robintegg.web.feed.Feed;
-import com.robintegg.web.feed.FeedEntry;
+import com.robintegg.web.plugins.Plugins;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.Getter;
@@ -18,8 +17,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @ToString
@@ -33,7 +34,6 @@ public class ContentModel {
   private List<Post> posts = new ArrayList<>();
   private List<StaticFile> files = new ArrayList<>();
   private List<Page> pages = new ArrayList<>();
-  private Feed feed = new Feed();
   private List<SocialLink> socialLinks = new ArrayList<>();
   private Page page;
   private String environment = "local";
@@ -93,15 +93,8 @@ public class ContentModel {
     files.stream()
         .forEach(visitor::file);
 
-    // TODO: generated at the end when all the other types are captured
-    // feed
-    StaticFile staticFile = new StaticFile(
-        feed.getPath(),
-        Map.of(),
-        feed.getContent(this).getBytes(StandardCharsets.UTF_8)
-    );
-
-    visitor.file(staticFile);
+    Plugins.aggregatorPlugins.stream()
+        .forEach( aggregatorPlugin -> aggregatorPlugin.visit(visitor) );
 
   }
 
@@ -165,7 +158,8 @@ public class ContentModel {
   }
 
   public void addPost(Post post) {
-    this.feed.addContent(PostIndexedContent.map(post));
+    Plugins.aggregatorPlugins.stream()
+        .forEach( aggregatorPlugin -> aggregatorPlugin.add(post) );
     this.posts.add(post);
   }
 
@@ -185,10 +179,6 @@ public class ContentModel {
     return pages;
   }
 
-  public Feed getFeed() {
-    return feed;
-  }
-
   public void reset() {
     this.content = TagCreator.text("");
     this.page = null;
@@ -203,17 +193,8 @@ public class ContentModel {
   }
 
   public void addBook(Book book) {
-    this.feed.addEntry(FeedEntry.builder()
-        .title(book.getTitle())
-        .url(book.getUrl())
-        .date(book.getAddedDate())
-        .modifiedDate(book.getAddedDate())
-        .content(book::getContent)
-        .author(book.getAuthor())
-        .tags(book.getTags())
-        .excerpt(book::getExcerpt)
-        .imageUrl(book.getImageUrl())
-        .build());
+    Plugins.aggregatorPlugins.stream()
+        .forEach( aggregatorPlugin -> aggregatorPlugin.add(book) );
     this.books.add(book);
   }
 
