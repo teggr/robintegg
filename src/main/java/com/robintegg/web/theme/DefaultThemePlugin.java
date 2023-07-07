@@ -1,5 +1,6 @@
 package com.robintegg.web.theme;
 
+import com.robintegg.web.categories.CategoriesPlugin;
 import com.robintegg.web.content.book.BookPlugin;
 import com.robintegg.web.content.podcast.PodcastPlugin;
 import com.robintegg.web.content.post.DraftPostPlugin;
@@ -58,6 +59,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     FeedPlugin.create().registerPlugins();
     DraftPostPlugin.create().registerPlugins();
     TagPlugin.create().registerPlugins();
+    CategoriesPlugin.create().registerPlugins();
 
   }
 

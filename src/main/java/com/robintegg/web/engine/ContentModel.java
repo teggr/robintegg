@@ -1,9 +1,7 @@
 package com.robintegg.web.engine;
 
-import com.robintegg.web.content.CategorisedContent;
 import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.content.IndexedContent;
-import com.robintegg.web.content.TaggedContent;
 import com.robintegg.web.content.staticfiles.StaticFile;
 import com.robintegg.web.plugins.Plugins;
 import com.robintegg.web.site.Site;
@@ -17,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @ToString
@@ -90,24 +87,6 @@ public class ContentModel {
 
   public void setPage(Page page) {
     this.page = page;
-  }
-
-  public List<String> getCategories() {
-    return getContentOfType(CategorisedContent.class).stream()
-        .map(CategorisedContent::getCategory)
-        .filter(Objects::nonNull)
-        .distinct()
-        .sorted()
-        .toList();
-  }
-
-  public List<IndexContent> getPostsInCategory(String category) {
-    return getContentOfType(CategorisedContent.class).stream()
-        .filter(i -> Objects.equals(((CategorisedContent) i).getCategory(), category))
-        .filter(i -> i instanceof IndexedContent)
-        .map(i -> ((IndexedContent) i).getIndexContent())
-        .sorted(Comparator.comparing(IndexContent::getDate).reversed())
-        .toList();
   }
 
   public void setContent(DomContent domContent) {

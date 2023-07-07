@@ -1,5 +1,6 @@
 package com.robintegg.web.theme.layouts;
 
+import com.robintegg.web.categories.CategoriesPlugin;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.utils.Utils;
@@ -33,8 +34,8 @@ public class CategoriesLayout {
                         ),
                         contentModel.getContent(),
                         iff(
-                                contentModel.getCategories().size() > 0,
-                                each(contentModel.getCategories(), category -> {
+                            CategoriesPlugin.INSTANCE.getCategories().size() > 0,
+                                each(CategoriesPlugin.INSTANCE.getCategories(), category -> {
                                             return each(
                                                     h2()
                                                             .withClass("post-list-heading")
@@ -42,7 +43,7 @@ public class CategoriesLayout {
                                                     ul()
                                                             .withClass("post-list")
                                                             .with(
-                                                                    each(contentModel.getPostsInCategory(category), post -> {
+                                                                    each(CategoriesPlugin.INSTANCE.getPostsInCategory(category), post -> {
                                                                         return li()
                                                                                 .with(
                                                                                         span()
