@@ -2,6 +2,7 @@ package com.robintegg.web.theme.layouts;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
+import com.robintegg.web.mermaid.MermaidJsTagCreator;
 import com.robintegg.web.theme.includes.Footer;
 import com.robintegg.web.theme.includes.Head;
 import com.robintegg.web.theme.includes.Header;
@@ -39,7 +40,8 @@ public class DefaultLayout {
                             .withClass("wrapper")
                             .with(contentModel.getContent())
                     ),
-                Footer.create(contentModel)
+                Footer.create(contentModel),
+                MermaidJsTagCreator.importAndInitializeMermaidJs()
             )
         );
 
