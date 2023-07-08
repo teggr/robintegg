@@ -8,6 +8,7 @@ import com.robintegg.web.engine.ContentModelVisitor;
 import com.robintegg.web.engine.Page;
 import com.robintegg.web.plugins.AggregatorPlugin;
 import com.robintegg.web.plugins.Plugins;
+import com.robintegg.web.theme.layouts.CategoryLayout;
 import com.robintegg.web.theme.layouts.TagLayout;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,14 +30,14 @@ public class CategoriesPlugin implements AggregatorPlugin {
 
     categorisedContentByCategory.entrySet().stream()
         .map(entry -> {
-          String tag = entry.getKey();
-          log.info("category={}", tag);
+          String category = entry.getKey();
+          log.info("category={}", category);
           return Page.builder()
               .data(Map.of(
-                  "tag", List.of(tag)
+                  "category", List.of(category)
               ))
-              .path("/categories/" + tag + "/index.html")
-              .renderFunction(TagLayout::render)
+              .path("/categories/" + category + "/index.html")
+              .renderFunction(CategoryLayout::render)
               .build();
         })
         .forEach(visitor::page);

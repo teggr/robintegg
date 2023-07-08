@@ -99,4 +99,11 @@ public class Page {
       return stringList.get(0);
   }
 
+    public String getCategory() {
+        List<String> stringList = data.get("category");
+        if (stringList == null) {
+            return "";
+        }
+        return stringList.get(0);
+    }
 }

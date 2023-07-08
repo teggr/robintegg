@@ -39,7 +39,11 @@ public class CategoriesLayout {
                                             return each(
                                                     h2()
                                                             .withClass("post-list-heading")
-                                                            .withText(Utils.capitalize(category)),
+                                                        .with(a()
+                                                            .withText(Utils.capitalize(category))
+                                                            .withHref(Utils.relativeUrl("/categories/" + category))
+                                                        )
+                                                            ,
                                                     ul()
                                                             .withClass("post-list")
                                                             .with(
