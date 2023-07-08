@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import static j2html.TagCreator.each;
+
 public class Book implements ContentItem, TaggedContent, IndexedContent {
   private final String key;
   @ToString.Exclude
@@ -47,6 +49,7 @@ public class Book implements ContentItem, TaggedContent, IndexedContent {
 
   public Map<String, List<String>> getData() {
     return Map.of(
+        "layout", List.of("book"),
         "tags", getTags(),
         "title", List.of(getTitle()),
         "subtitle", List.of(getSubtitle()),
@@ -61,7 +64,7 @@ public class Book implements ContentItem, TaggedContent, IndexedContent {
   }
 
   public DomContent getContent(ContentModel contentModel) {
-    return TagCreator.each();
+    return each(); //BookLayout.render(contentModel);
   }
 
   public LocalDate getAddedDate() {
