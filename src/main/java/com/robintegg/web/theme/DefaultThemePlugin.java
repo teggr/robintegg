@@ -5,6 +5,7 @@ import com.robintegg.web.content.book.BookPlugin;
 import com.robintegg.web.content.podcast.PodcastPlugin;
 import com.robintegg.web.content.post.DraftPostPlugin;
 import com.robintegg.web.content.post.PostPlugin;
+import com.robintegg.web.content.staticfiles.ClasspathFilesPlugin;
 import com.robintegg.web.content.staticfiles.StaticFilesPlugin;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
@@ -22,6 +23,7 @@ import com.robintegg.web.theme.pages.TagsPage;
 import com.robintegg.web.theme.pages._404Page;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugin, ThemePlugin {
@@ -62,6 +64,13 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     TagPlugin.create().registerPlugins();
     CategoriesPlugin.create().registerPlugins();
     IndexPlugin.create().registerPlugins();
+
+    ClasspathFilesPlugin.create(List.of(
+            "theme/default/assets/main.css",
+            "theme/default/assets/minima-social-icons.svg",
+            "theme/default/assets/css/style.css"
+        ))
+        .registerPlugins();
 
   }
 
