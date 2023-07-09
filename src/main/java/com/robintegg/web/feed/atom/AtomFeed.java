@@ -1,32 +1,33 @@
 package com.robintegg.web.feed.atom;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.robintegg.web.utils.OffsetDateTimeXmlAdapter;
+import jakarta.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.xml.XMLConstants;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
 @Builder
-@JacksonXmlRootElement(localName = "feed")
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlRootElement(name = "feed")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AtomFeed {
 
-    @JacksonXmlProperty(isAttribute = true)
-    private final String xmlns = "http://www.w3.org/2005/Atom";
-
     private Generator generator;
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<Link> link;
+    @XmlJavaTypeAdapter(OffsetDateTimeXmlAdapter.class)
     private OffsetDateTime updated;
     private String id;
     private Title title;
     private String subtitle;
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<Author> author;
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<Entry> entry;
 
 }

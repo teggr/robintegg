@@ -1,15 +1,13 @@
 package com.robintegg.web.feed;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.content.IndexContent;
+import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.feed.atom.*;
-import com.robintegg.web.feed.atom.Author;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 
+import java.io.StringWriter;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -18,16 +16,14 @@ import java.util.List;
 
 public class Feed {
 
-  private static XmlMapper xmlMapper = null;
+  private static JAXBContext jaxbContext = null;
 
   static {
-
-    xmlMapper = XmlMapper.builder()
-        .addModule(new JavaTimeModule())
-        .enable(SerializationFeature.INDENT_OUTPUT)
-        .enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
-        .build();
-
+    try {
+      jaxbContext = JAXBContext.newInstance(AtomFeed.class);
+    } catch (JAXBException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private List<FeedEntry> feedEntries = new ArrayList<>();
@@ -77,8 +73,19 @@ public class Feed {
         .build();
 
     try {
-      return xmlMapper.writeValueAsString(feed);
-    } catch (JsonProcessingException e) {
+
+      // https://stackoverflow.com/questions/6895486/jaxb-need-namespace-prefix-to-all-the-elements
+      // https://eclipse-ee4j.github.io/jaxb-ri/3.0.0/docs/ch05.html
+      // https://ibytecode.com/blog/jaxb-marshalling-and-unmarshalling-cdata-block/
+      Marshaller marshaller = jaxbContext.createMarshaller();
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+      marshaller.setProperty("org.glassfish.jaxb.characterEscapeHandler", new MyCharacterEscapeHandler());
+      marshaller.setProperty("org.glassfish.jaxb.xmlDeclaration", true);
+      StringWriter writer = new StringWriter();
+      marshaller.marshal(feed, writer);
+
+      return writer.toString();
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
 
@@ -135,7 +142,7 @@ public class Feed {
   }
 
   private String feedId(String url) {
-    return url.replaceAll("\\.html","");
+    return url.replaceAll("\\.html", "");
   }
 
   public void addEntry(FeedEntry entry) {

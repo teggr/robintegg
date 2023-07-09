@@ -1,21 +1,23 @@
 package com.robintegg.web.feed.atom;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import jakarta.xml.bind.annotation.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Generator {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String uri;
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String version;
-    @JacksonXmlText
+    @XmlValue
     private String value;
 
 }

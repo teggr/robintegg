@@ -1,21 +1,23 @@
 package com.robintegg.web.feed.atom;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
-import lombok.Builder;
-import lombok.Data;
+import com.robintegg.web.utils.CDataXmlAdatper;
+import jakarta.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import lombok.*;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Content {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String type;
-    @JacksonXmlProperty(localName = "xml:base", isAttribute = true)
+    @XmlAttribute(name = "xml:base")
     private String xmlBase;
-    @JacksonXmlText
-    @JacksonXmlCData
+    @XmlValue
+    @XmlJavaTypeAdapter(CDataXmlAdatper.class)
     private String value;
 
 }
