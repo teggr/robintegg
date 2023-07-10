@@ -106,4 +106,36 @@ public class Page {
         }
         return stringList.get(0);
     }
+
+    public int getPage() {
+        List<String> stringList = data.get("page");
+        if (stringList == null) {
+            return 1;
+        }
+        return Integer.parseInt(stringList.get(0));
+    }
+
+    public int getPagesize() {
+        List<String> stringList = data.get("pageSize");
+        if (stringList == null) {
+            return 1;
+        }
+        return Integer.parseInt(stringList.get(0));
+    }
+
+    public boolean next() {
+        List<String> stringList = data.get("next");
+        if (stringList == null) {
+            return false;
+        }
+        return Boolean.valueOf(stringList.get(0));
+    }
+
+    public boolean previous() {
+        List<String> stringList = data.get("previous");
+        if (stringList == null) {
+            return false;
+        }
+        return Boolean.valueOf(stringList.get(0));
+    }
 }

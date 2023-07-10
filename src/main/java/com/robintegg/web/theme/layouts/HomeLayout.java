@@ -21,6 +21,8 @@ public class HomeLayout {
 
     public static DomContent render(ContentModel contentModel) {
 
+      // TODO: render the pagination
+
         return div()
                 .withClass("home")
                 .with(

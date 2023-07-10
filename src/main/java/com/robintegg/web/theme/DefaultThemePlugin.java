@@ -34,7 +34,6 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
   @Override
   public void loadContent(Path sourceDirectory, ContentModel contentModel) {
     contentModel.addPage(_404Page.create());
-    contentModel.addPage(IndexPage.create());
     contentModel.addPage(CategoriesPage.create());
     contentModel.addPage(TagsPage.create());
   }

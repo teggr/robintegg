@@ -11,7 +11,7 @@ class IndexPageTest {
     @Test
     void shouldRender() {
 
-        Page page = IndexPage.create();
+        Page page = IndexPage.create( "index.html", 1, 10, true, true);
 
         System.out.println(
                 TagCreator.html(

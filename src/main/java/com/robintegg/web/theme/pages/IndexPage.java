@@ -11,20 +11,24 @@ import static j2html.TagCreator.*;
 
 public class IndexPage {
 
-    public static Page create() {
+  public static Page create(String path, int page, int pageSize, boolean next, boolean previous) {
 
-        return Page.builder()
-                .path("index.html")
-                .data(Map.of(
-                        "layout", List.of("home"),
-                        "list_title", List.of("Posts")
-                ))
-                .renderFunction(IndexPage::render)
-                .build();
-    }
+    return Page.builder()
+        .path(path)
+        .data(Map.of(
+            "layout", List.of("home"),
+            "list_title", List.of("Posts"),
+            "page", List.of(String.valueOf(page)),
+            "pageSize", List.of(String.valueOf(pageSize)),
+            "next", List.of(String.valueOf(next)),
+            "previous", List.of(String.valueOf(previous))
+        ))
+        .renderFunction(IndexPage::render)
+        .build();
+  }
 
-    public static DomContent render(ContentModel contentModel) {
-        return each();
-    }
+  public static DomContent render(ContentModel contentModel) {
+    return each();
+  }
 
 }

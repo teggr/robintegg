@@ -6,6 +6,7 @@ import com.robintegg.web.engine.ContentItem;
 import com.robintegg.web.engine.ContentModelVisitor;
 import com.robintegg.web.plugins.AggregatorPlugin;
 import com.robintegg.web.plugins.Plugins;
+import com.robintegg.web.theme.pages.IndexPage;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -23,10 +24,25 @@ public class IndexPlugin implements AggregatorPlugin {
 
   private List<IndexedContent> indexedContentList = new ArrayList<>();
 
+  private final int pageSize = 10;
+
   @Override
   public void visit(ContentModelVisitor visitor) {
 
-    // TODO: should probably be the home page registered here
+
+    int pages = indexedContentList.size() / pageSize;
+    if (indexedContentList.size() % pageSize != 0) pages++;
+
+    log.info("content={},pageSize={},pages={}", indexedContentList.size(), pageSize, pages);
+
+    for (int i = 0; i < pages; i++) {
+      int page = i + 1;
+      if (page == 1) {
+        visitor.page(IndexPage.create("index.html", page, pageSize));
+      } else {
+        visitor.page(IndexPage.create("page/" + page + "/index.html", page, pageSize));
+      }
+    }
 
   }
 
@@ -35,7 +51,7 @@ public class IndexPlugin implements AggregatorPlugin {
 
     if (contentItem instanceof IndexedContent ic) {
 
-        indexedContentList.add(ic);
+      indexedContentList.add(ic);
 
     }
 
