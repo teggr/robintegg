@@ -64,6 +64,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     CategoriesPlugin.create().registerPlugins();
     IndexPlugin.create().registerPlugins();
 
+    // TODO: jsass for sass compiling or move to ph-css or alternative
     ClasspathFilesPlugin.create(List.of(
             "theme/default/css/main.css",
             "theme/default/css/style.css",
