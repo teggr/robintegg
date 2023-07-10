@@ -2,7 +2,7 @@
 layout: post
 title: "Testing Spring Boot applications with TestContainers and Selenium WebDriver - Part Three"
 date: "2019-02-24"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot
   - testcontainers
@@ -27,7 +27,7 @@ This third post looks at the final layer - UI. We will cover using the [WebDrive
 
 We will continue to use the [testcontainers-demo](https://github.com/teggr/testcontainers-demo) application as the System under test (SUT). The application routes notification messages from a JMS Queue to a RabbitMQ exchange, storing each notification in a Postgres database. This application also provides a web interface to see a list of all the messages that are routed by the application.
 
-![]({{site.baseurl}}/assets/images/testcontainers-demo.png)
+![]({{site.baseurl}}/images/testcontainers-demo.png)
 
 ## UI tests
 
@@ -73,7 +73,7 @@ String url = "http://host.docker.internal:" + port + "/";
 
 If this test was to fail, then the target directory would have a _\*.flv_ file created for playback. This is a great feature which provides a valuable feedback mechanism for debugging broken tests. I've downloaded VLC to playback the captured format.
 
-![]({{site.baseurl}}/assets/images/failed-capture-video-1024x638.png)
+![]({{site.baseurl}}/images/failed-capture-video-1024x638.png)
 
 Because the @SpringBootTest annotation requires that the entire application is loaded, this means that our JMS and RabbitMQ auto configuration is also enabled, so for this test we also need to ensure that our other containers are running.
 

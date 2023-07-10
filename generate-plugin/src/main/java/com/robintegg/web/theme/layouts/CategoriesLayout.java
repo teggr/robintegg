@@ -78,7 +78,7 @@ public class CategoriesLayout {
                                                 .withHref(Utils.relativeUrl("/feed.xml"))
                                                 .with(
                                                         rawHtml(
-                                                                String.format("<svg class=\"svg-icon orange\"><use xlink:href=\"%s\"></use></svg><span>Subscribe</span>", Utils.relativeUrl("/assets/minima-social-icons.svg#rss"))
+                                                                String.format("<svg class=\"svg-icon orange\"><use xlink:href=\"%s\"></use></svg><span>Subscribe</span>", Utils.relativeUrl("/minima-social-icons.svg#rss"))
                                                         )
                                                 )
                                 )

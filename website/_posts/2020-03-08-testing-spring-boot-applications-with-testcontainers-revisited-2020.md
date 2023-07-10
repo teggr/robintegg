@@ -2,7 +2,7 @@
 layout: post
 title: "Testing Spring Boot applications with TestContainers revisted 2020"
 date: "2020-03-08"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot
   - testcontainers
@@ -29,7 +29,7 @@ So this post, will cover the changes required to upgrade.
 
 We will continue to use the [testcontainers-demo](https://github.com/teggr/testcontainers-demo) application as the System under test (SUT). The application routes notification messages from a JMS Queue to a RabbitMQ exchange, storing each notification in a Postgres database. This application also provides a web interface to see a list of all the messages that are routed by the application. The source code from the previous posts will now be availble on a [spring_boot_2_1_x_junit_4 branch](https://github.com/teggr/testcontainers-demo/tree/spring_boot_2_1_x_junit_4).
 
-![]({{site.baseurl}}/assets/images/testcontainers-demo.png)
+![]({{site.baseurl}}/images/testcontainers-demo.png)
 
 ## Upgrade Spring Boot
 

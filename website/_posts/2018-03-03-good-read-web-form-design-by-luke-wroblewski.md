@@ -2,14 +2,14 @@
 layout: post
 title: "Good Read: Web Form Design by Luke Wroblewski"
 date: "2018-03-03"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - web
   - design
 categories:
   - book review
 ---
-![]({{site.baseurl}}/assets/images/web-form-design-luke-wroblewski.jpg)
+![]({{site.baseurl}}/images/web-form-design-luke-wroblewski.jpg)
 
 ## **TL;DR**
 

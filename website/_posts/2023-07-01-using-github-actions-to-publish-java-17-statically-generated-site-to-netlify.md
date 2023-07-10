@@ -2,7 +2,7 @@
 layout: post
 title: Using Github Actions to publish Java 17 statically generated site to Netlify
 date: "2023-07-01"
-image: /assets/images/carl-heyerdahl-KE0nC8-58MQ-unsplash.jpg
+image: /images/carl-heyerdahl-KE0nC8-58MQ-unsplash.jpg
 tags:
   - netlify
   - java

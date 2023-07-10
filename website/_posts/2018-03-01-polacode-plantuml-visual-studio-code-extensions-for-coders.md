@@ -2,7 +2,7 @@
 layout: post
 title: "Polacode + PlantUML - Visual Studio Code extensions for coders"
 date: "2018-03-01"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - visual studio code
   - java
@@ -16,7 +16,7 @@ The [Polacode](https://marketplace.visualstudio.com/items?itemName=pnp.polacode)
 
 It's a great extension to get example code into a well formatted and nicely displayed image. Good for code snippets where you don't see a need for any copy or pasting. Also useful for putting screenshots into chat windows like skype or slack.
 
-![]({{site.baseurl}}/assets/images/code.png)
+![]({{site.baseurl}}/images/code.png)
 
 ## **PlantUML**
 
@@ -26,11 +26,11 @@ I'm a big fan of using PlantUML to generate technical diagrams on the fly using 
 
 PlantUML documents can be recognised and edited if they have a supporting file extension such as \*.puml
 
-![]({{site.baseurl}}/assets/images/plantuml-code-1024x387.png)
+![]({{site.baseurl}}/images/plantuml-code-1024x387.png)
 
 Those documents can then be exported as diagrams of various formats.
 
-![]({{site.baseurl}}/assets/images/example.png)
+![]({{site.baseurl}}/images/example.png)
 
 ## **Installation notes**
 
@@ -38,4 +38,4 @@ Those documents can then be exported as diagrams of various formats.
 - To install PlantUML go to http://plantuml.com/, download the JAR file and put in an easily accessible folder, such as C:\\tools\\plantuml\\plantuml.1.2018.1.jar
 - Install the PlantUML extension through the Extension tab in Visual Studio Code and update your user settings to point at your latest PlantUML jar
 
-![]({{site.baseurl}}/assets/images/plantuml-settings-1024x267.png)
+![]({{site.baseurl}}/images/plantuml-settings-1024x267.png)

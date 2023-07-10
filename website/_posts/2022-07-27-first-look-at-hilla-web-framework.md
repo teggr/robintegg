@@ -2,7 +2,7 @@
 layout: post
 title: First look at Hilla Web Framework from Vaadin
 date: "2022-07-26"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot
   - hilla

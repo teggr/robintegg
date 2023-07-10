@@ -2,7 +2,7 @@
 layout: post
 title: "Watch out for the Spring @Cacheable default key"
 date: "2023-01-03"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - java
   - spring

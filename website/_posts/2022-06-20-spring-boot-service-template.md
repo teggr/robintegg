@@ -2,7 +2,7 @@
 layout: post
 title: An approach for a Spring Boot Service Template 
 date: "2022-06-20"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot
   - service template

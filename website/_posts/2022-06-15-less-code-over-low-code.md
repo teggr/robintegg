@@ -2,7 +2,7 @@
 layout: post
 title: Less-code over low-code 
 date: "2022-06-15"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot
   - outsystems

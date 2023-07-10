@@ -2,7 +2,7 @@
 layout: post
 title: "First look at Java support in Visual Studio Code"
 date: "2018-01-07"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - visual studio
   - java
@@ -43,7 +43,7 @@ There is a comprehensive tutorial available with azure integrations on the Visua
 
 The **[Java Extension Pack](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)** should be available through the Visual Studio Code" extension tab in the editor.
 
-![]({{site.baseurl}}/assets/images/extension-pack-list-item.png)
+![]({{site.baseurl}}/images/extension-pack-list-item.png)
 
 The **Java Extension Pack** wraps two extensions togther.
 
@@ -53,7 +53,7 @@ The **Java Extension Pack** wraps two extensions togther.
 Note: After installation make sure you read the individual extension installation instructions. You will need to set the \`java.home\` user setting as per language extension instructions. Don't forget double backslashes in the path to the **root** of your JDK.  
 Install the **[Java Test Runner](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-test)** extension
 
-![]({{site.baseurl}}/assets/images/test-runner-extension.png)
+![]({{site.baseurl}}/images/test-runner-extension.png)
 
 ## **Creating a maven project**
 
@@ -81,7 +81,7 @@ log[INFO] ----------------------------------------------------------------------
 
 After the maven build has completed, then in the Visual Studio Code file explorer, open the newly created folder. You should then see the new maven project.
 
-![]({{site.baseurl}}/assets/images/initial-maven-project-1024x573.png)
+![]({{site.baseurl}}/images/initial-maven-project-1024x573.png)
 
 ### **Java Extension Pack features**
 
@@ -90,15 +90,15 @@ Open up the Java and XML files and you can try out the extension features.
 
 #### **Autocomplete**
 
-![]({{site.baseurl}}/assets/images/autocomplete.png)
+![]({{site.baseurl}}/images/autocomplete.png)
 
 #### **Code actions**
 
-![]({{site.baseurl}}/assets/images/code-actions.png)
+![]({{site.baseurl}}/images/code-actions.png)
 
 #### **Compilation errors**
 
-![]({{site.baseurl}}/assets/images/compilation-errors.png)
+![]({{site.baseurl}}/images/compilation-errors.png)
 
 ### **Debugger for Java**
 
@@ -106,17 +106,17 @@ Visual Studio Code requires a launch configuration to be created that will suppo
 
 Adding configuration can be done through the menu
 
-![]({{site.baseurl}}/assets/images/add-configuration.png)
+![]({{site.baseurl}}/images/add-configuration.png)
 
 If you have a maven project without any modules, then the tool appears to be able to find the 'main' method and prepopulate for you.
 
-![]({{site.baseurl}}/assets/images/initial-launch-configuration.png)
+![]({{site.baseurl}}/images/initial-launch-configuration.png)
 
 To run the application, use **Ctrl + F5**
 
 To use debugging, add breakpoints in your editor and run the application with debugging enabled, using **F5**
 
-![]({{site.baseurl}}/assets/images/debugging-1024x573.png)
+![]({{site.baseurl}}/images/debugging-1024x573.png)
 
 ## **Unit Testing**
 
@@ -125,7 +125,7 @@ Each test and class declaration gets a "run test | debug test" option which will
 
 There's a test explorer window and a test report tool. Supports junit 4.8 upwards so some classes extending TestCase won't work out the box with the extension, but these can call always be run with maven.
 
-![]({{site.baseurl}}/assets/images/spring-boot-application-launch-1024x720.png)
+![]({{site.baseurl}}/images/spring-boot-application-launch-1024x720.png)
 
 ## **Multi Module support**
 
@@ -135,20 +135,20 @@ I've create a project on github called [teggr/vs-code-multimodule](https://githu
 
 Loading this project is fine, if you change the root pom.xml, you might see a message like below:
 
-![]({{site.baseurl}}/assets/images/multi-module-build-change-1024x720.png)
+![]({{site.baseurl}}/images/multi-module-build-change-1024x720.png)
 
 I'm assuming this is Visual Studio Code making sure that it's m2eclipse or internal build files are keeping in sync with the poms.  
 One error I have not been able to solve yet, is managing the modules and the classpath. If you simply open the root project folder then you will be presented with a warning below complaining that the classes in the modules are not on the classpath.
 
-![]({{site.baseurl}}/assets/images/multi-module-classpath-warn-1024x720.png)
+![]({{site.baseurl}}/images/multi-module-classpath-warn-1024x720.png)
 
 Eclipse shows the same type of behaviour if you only import the root project, so I tried add the child modules folders to a workspace. I've not spent much time with workspaces in Visual Studio code.
 
-![]({{site.baseurl}}/assets/images/multi-module-add-folder-1024x721.png)
+![]({{site.baseurl}}/images/multi-module-add-folder-1024x721.png)
 
 This seems to resolve the classpath resolution. It does mean that you do need to open the workspace file through explorer (does this need to be checked into github?), not just the folder as you can with a single maven project. Not sure if there's a way to recursively import each module into a workspace, like "Import..." in Eclipse.
 
-![]({{site.baseurl}}/assets/images/multi-module-classpath-resolution-1024x721.png)
+![]({{site.baseurl}}/images/multi-module-classpath-resolution-1024x721.png)
 
 Once the classpath resolution was working ok, I tried unsuccessfully to run the application and kept getting a host/port error come. More investigation required here I think.
 
@@ -158,11 +158,11 @@ Quite often I like to try out and demo applications using [Spring Boot](https://
 
 I have a simple web application in development for testing Spring Boot support. If I clone [teggr/all-in-java](https://github.com/teggr/all-in-java) and open this folder in Visual Studio code then I should be able to start the web application.
 
-![]({{site.baseurl}}/assets/images/spring-boot-application-1024x720.png)
+![]({{site.baseurl}}/images/spring-boot-application-1024x720.png)
 
 Visual Studio code does create the launch configuration nicely for you
 
-![]({{site.baseurl}}/assets/images/spring-boot-application-launch-1024x720.png)
+![]({{site.baseurl}}/images/spring-boot-application-launch-1024x720.png)
 
 The application can then be run and debugged as documented above.
 

@@ -14,47 +14,38 @@ import java.util.stream.Stream;
 @Slf4j
 public class StaticFilesPlugin implements ContentTypePlugin {
 
-  public static StaticFilesPlugin create() {
-    return new StaticFilesPlugin();
+  private final String assetDirectory;
+
+  public StaticFilesPlugin(String assetDirectory) {
+    this.assetDirectory = assetDirectory;
+  }
+
+  public static StaticFilesPlugin create(String assetDirectory) {
+    return new StaticFilesPlugin(assetDirectory);
   }
 
   @SneakyThrows
   @Override
   public void loadContent(Path sourceDirectory, ContentModel contentModel) {
 // load filers from all none special folders
-    log.info("files directory: " + sourceDirectory.toAbsolutePath());
+    var staticDirectory = sourceDirectory.resolve(assetDirectory);
+    log.info("static directory: " + staticDirectory.toAbsolutePath());
 
-    try (Stream<Path> paths = Files.walk(sourceDirectory)) {
+    try (Stream<Path> paths = Files.walk(staticDirectory)) {
       paths
           .filter(Files::isRegularFile)
-          .filter(f ->
-              {
-                String path = f.toAbsolutePath().toString();
-                return !path.contains("_")
-                    && !path.contains(".git")
-                    && !path.contains(".idea")
-                    && !path.contains("src")
-                    && !path.contains("target")
-                    && !path.contains("pom.xml")
-                    && !path.contains("README.md")
-                    && !path.contains("Gemfile")
-                    && !path.contains("html")
-                    && !path.contains(".mvn")
-                    && !path.contains(".toml")
-                    && !path.contains("mvnw")
-                    && !path.contains(".github");
-              }
-          )
           .peek(f -> log.info("{}", f))
-          .map(StaticFilesPlugin::readFile)
+          .map( p -> this.readFile(p,staticDirectory))
           .forEach(contentModel::addFile);
     }
 
   }
 
-  private static StaticFile readFile(Path path) {
+  private StaticFile readFile(Path path, Path staticDirectory) {
 
     try {
+
+      Path relativize = staticDirectory.relativize(path);
 
       // Extract filename, filename without extension, and extension using Path methods
       String filename = path.getFileName().toString();
@@ -62,7 +53,7 @@ public class StaticFilesPlugin implements ContentTypePlugin {
       String filenameWithoutExtension = (dotIndex == -1) ? filename : filename.substring(0, dotIndex);
       String fileExtension = (dotIndex == -1) ? "" : filename.substring(dotIndex + 1);
 
-      return new StaticFile(path.toString(), Collections.emptyMap(), Files.readAllBytes(path));
+      return new StaticFile(relativize.toString(), Collections.emptyMap(), Files.readAllBytes(path));
 
     } catch (Exception e) {
       throw new RuntimeException(e);

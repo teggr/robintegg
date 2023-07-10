@@ -2,7 +2,7 @@
 layout: post
 title: Diagramming with Mermaid
 date: "2023-07-07"
-image: /assets/images/mermaid-js.png
+image: /images/mermaid-js.png
 tags:
   - web
   - diagramming
@@ -10,7 +10,7 @@ tags:
   - architecture
 ---
 
-![mermaid-js.png]({{site.baseurl}}/assets/images/mermaid-js.png)
+![mermaid-js.png]({{site.baseurl}}/images/mermaid-js.png)
 
 # Mermaid Diagramming
 

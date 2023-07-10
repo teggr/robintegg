@@ -56,7 +56,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     BookPlugin.create().registerPlugins();
     PodcastPlugin.create().registerPlugins();
     PostPlugin.create().registerPlugins();
-    StaticFilesPlugin.create().registerPlugins();
+    StaticFilesPlugin.create("_static").registerPlugins();
 
     FeedPlugin.create().registerPlugins();
     DraftPostPlugin.create().registerPlugins();
@@ -65,9 +65,9 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     IndexPlugin.create().registerPlugins();
 
     ClasspathFilesPlugin.create(List.of(
-            "theme/default/assets/main.css",
-            "theme/default/assets/minima-social-icons.svg",
-            "theme/default/assets/css/style.css"
+            "theme/default/css/main.css",
+            "theme/default/css/style.css",
+            "theme/default/images/minima-social-icons.svg"
         ))
         .registerPlugins();
 

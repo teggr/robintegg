@@ -2,7 +2,7 @@
 layout: post
 title: "Publish Maven Site to Netlify"
 date: "2018-01-21"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - maven
   - java

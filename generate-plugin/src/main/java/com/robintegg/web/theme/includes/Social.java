@@ -21,7 +21,7 @@ public class Social {
                                         a()
                                                 .withHref(Utils.escape("https://github.com/" + contentModel.getSite().getGithubUsername()))
                                                 .with(
-                                                      rawHtml("<svg class=\"svg-icon\"><use xlink:href=\"/assets/minima-social-icons.svg#github\"></use></svg>"),
+                                                      rawHtml("<svg class=\"svg-icon\"><use xlink:href=\"/images/minima-social-icons.svg#github\"></use></svg>"),
                                                       span()
                                                               .withClass("username")
                                                               .withText(Utils.escape(contentModel.getSite().getGithubUsername()))
@@ -35,7 +35,7 @@ public class Social {
                                             a()
                                                     .withHref(Utils.escape("https://www.linkedin.com/in/" + contentModel.getSite().getLinkedinUsername()))
                                                     .with(
-                                                            rawHtml("<svg class=\"svg-icon\"><use xlink:href=\"/assets/minima-social-icons.svg#linkedin\"></use></svg>"),
+                                                            rawHtml("<svg class=\"svg-icon\"><use xlink:href=\"/images/minima-social-icons.svg#linkedin\"></use></svg>"),
                                                             span()
                                                                     .withClass("username")
                                                                     .withText(Utils.escape(contentModel.getSite().getLinkedinUsername()))
@@ -49,7 +49,7 @@ public class Social {
                                             a()
                                                     .withHref(Utils.escape("https://www.twitter.com/" + contentModel.getSite().getTwitterUsername()))
                                                     .with(
-                                                            rawHtml("<svg class=\"svg-icon\"><use xlink:href=\"/assets/minima-social-icons.svg#twitter\"></use></svg>"),
+                                                            rawHtml("<svg class=\"svg-icon\"><use xlink:href=\"/images/minima-social-icons.svg#twitter\"></use></svg>"),
                                                             span()
                                                                     .withClass("username")
                                                                     .withText(Utils.escape(contentModel.getSite().getTwitterUsername()))

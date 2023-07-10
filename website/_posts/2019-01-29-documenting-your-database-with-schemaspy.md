@@ -2,7 +2,7 @@
 layout: post
 title: "Documenting your database with SchemaSpy"
 date: "2019-01-29"
-image: /assets/images/Screenshot_2019-01-29-SchemaSpy-•-Database-Documentation-Built-Easy-1.jpg
+image: /images/Screenshot_2019-01-29-SchemaSpy-•-Database-Documentation-Built-Easy-1.jpg
 tags:
   - database
   - postgres
@@ -73,15 +73,15 @@ docker run -v "${PWD}\target:/output" -v "${PWD}\config:/config"  schemaspy/sche
 
 The docker command will output to the console whilst executing...
 
-![]({{site.baseurl}}/assets/images/Capture-1024x773.png)
+![]({{site.baseurl}}/images/Capture-1024x773.png)
 
 Once complete, the HTML documentation will be available in the output directory. The HTML can be explored to see all the table information and relationships.
 
 Screenshot of the output
 
-![]({{site.baseurl}}/assets/images/Screenshot_2019-01-29-world-db-Database-1024x834.png)
+![]({{site.baseurl}}/images/Screenshot_2019-01-29-world-db-Database-1024x834.png)
 
-![]({{site.baseurl}}/assets/images/Screenshot_2019-01-29-country-world-db-Database-631x1024.png)
+![]({{site.baseurl}}/images/Screenshot_2019-01-29-country-world-db-Database-631x1024.png)
 
 ## Further thoughts
 

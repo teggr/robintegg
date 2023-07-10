@@ -2,7 +2,7 @@
 layout: post
 title: Using cloud sleuth for testing
 date: "2019-12-07"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - java
   - serenity

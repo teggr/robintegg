@@ -21,10 +21,10 @@ public class Head {
         SEO.render(contentModel),
         link().
             withRel("stylesheet")
-            .withHref(Utils.relativeUrl("/assets/main.css")),
+            .withHref(Utils.relativeUrl("/css/main.css")),
         link().
             withRel("stylesheet")
-            .withHref(Utils.relativeUrl("/assets/css/style.css")),
+            .withHref(Utils.relativeUrl("/css/style.css")),
         link()
             .withType("application/atom+xml")
             .withRel("alternate")

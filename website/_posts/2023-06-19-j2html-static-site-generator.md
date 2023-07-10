@@ -2,7 +2,7 @@
 layout: post
 title: "j2html Static Site Generator"
 date: "2023-06-19"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - java
   - j2html

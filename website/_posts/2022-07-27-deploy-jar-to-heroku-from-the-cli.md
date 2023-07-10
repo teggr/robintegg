@@ -2,7 +2,7 @@
 layout: post
 title: Deploy a Jar to Heroku from the CLI
 date: "2022-07-27"
-image: /assets/images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
+image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - heroku
   - cli
