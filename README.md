@@ -82,4 +82,5 @@ C:\Users\teggro01\.jdks\temurin-19.0.2\bin\jwebserver
 ```properties
 environment=local - name of target environment for built site [local|production] 
 drafts=false - include the posts in the _drafts folder [true|false]
+workingDirectory= - directory that contains content. defaults to "" the current execution directory
 ```

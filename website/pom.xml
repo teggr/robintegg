@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.robintegg.web</groupId>
+        <artifactId>website-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>website</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.robintegg.web</groupId>
+            <artifactId>generate-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <skip>false</skip>
+                    <mainClass>com.robintegg.web.Build</mainClass>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>workingDirectory</key>
+                            <value>${project.basedir}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <key>environment</key>
+                            <value>${build.environment}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <key>drafts</key>
+                            <value>${build.include-drafts}</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <build.environment>production</build.environment>
+                <build.include-drafts>false</build.include-drafts>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>

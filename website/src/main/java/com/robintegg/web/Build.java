@@ -17,10 +17,11 @@ import java.util.Map;
 @Slf4j
 public class Build {
 
-    // build the website
+    // build the website.
+    // TODO: whilst multi-module in Intellij - must set workdirectory to the module root, unless we set it to absolute?
     public static void main(String[] args) throws IOException {
 
-        var workingDirectory = Paths.get("");
+        var workingDirectory = Paths.get( System.getProperty("workingDirectory", "") );
         log.info("working directory: {}",  workingDirectory.toAbsolutePath());
 
         // register plugins

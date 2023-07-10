@@ -4,10 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.robintegg.web</groupId>
-    <artifactId>website</artifactId>
+    <artifactId>website-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>Robin Tegg Web site</name>
     <description>Robin Tegg Web site</description>
+
+    <modules>
+        <module>generate-plugin</module>
+        <module>website</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -30,39 +36,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.j2html/j2html -->
-        <dependency>
-            <groupId>com.j2html</groupId>
-            <artifactId>j2html</artifactId>
-            <version>1.6.0</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.7</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.7</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.commonmark</groupId>
-            <artifactId>commonmark</artifactId>
-            <version>0.21.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.commonmark</groupId>
-            <artifactId>commonmark-ext-yaml-front-matter</artifactId>
-            <version>0.21.0</version>
-        </dependency>
+        <!-- unit testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -74,40 +48,6 @@
             <artifactId>junit-jupiter</artifactId>
             <version>RELEASE</version>
             <scope>test</scope>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.15.2</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.15.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>4.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>4.0.3</version>
-<!--            <scope>runtime</scope>-->
         </dependency>
 
     </dependencies>
@@ -119,30 +59,11 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>com.robintegg.web.Build</mainClass>
-                    <systemProperties>
-                        <systemProperty>
-                            <key>environment</key>
-                            <value>${build.environment}</value>
-                        </systemProperty>
-                        <systemProperty>
-                            <key>drafts</key>
-                            <value>${build.include-drafts}</value>
-                        </systemProperty>
-                    </systemProperties>
+                    <skip>true</skip>
+                    <mainClass>none</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <build.environment>production</build.environment>
-                <build.include-drafts>false</build.include-drafts>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>
