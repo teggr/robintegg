@@ -7,7 +7,7 @@ import com.robintegg.web.engine.Layout;
 import com.robintegg.web.plugins.Plugins;
 import com.robintegg.web.plugins.ThemePlugin;
 import com.robintegg.web.site.Site;
-import com.robintegg.web.theme.DefaultThemePlugin;
+import com.robintegg.web.site.SitePlugin;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +22,13 @@ import java.util.Map;
 public class WebSiteBuilder {
 
     private final ThemePlugin themePlugin;
-    private final Site site;
 
     @SneakyThrows
     public void build() {
 
         // TODO: whilst multi-module in Intellij - must set workdirectory to the module root, unless we set it to absolute?
-        var workingDirectory = Paths.get( System.getProperty("workingDirectory", "") );
-        log.info("working directory: {}",  workingDirectory.toAbsolutePath());
+        var workingDirectory = Paths.get(System.getProperty("workingDirectory", ""));
+        log.info("working directory: {}", workingDirectory.toAbsolutePath());
 
         // register plugins
         themePlugin.registerPlugins();
@@ -39,7 +38,9 @@ public class WebSiteBuilder {
         String environment = System.getProperty("environment", "local");
         log.info("environment: {}", environment);
 
-        contentModel.environment( environment );
+        contentModel.environment(environment);
+
+        Site site = SitePlugin.loadFromFile(workingDirectory);
 
         contentModel.setSite(site);
 
@@ -50,7 +51,7 @@ public class WebSiteBuilder {
         // load layouts
         Map<String, Layout> layouts = new HashMap<>();
         Plugins.contentRenderPlugins.stream()
-                .forEach( contentRenderPlugin -> contentRenderPlugin.loadLayout(layouts) );
+                .forEach(contentRenderPlugin -> contentRenderPlugin.loadLayout(layouts));
 
         // TODO: filesystem plugin for output
         // create output directory

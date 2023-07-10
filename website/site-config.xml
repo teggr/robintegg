@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<site>
+    <title>Robin Tegg</title>
+    <author>
+        <name>Robin Tegg</name>
+        <email>robin@tegg.me.uk</email>
+    </author>
+    <description>A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design.</description>
+    <email>robin@tegg.me.uk</email>
+    <twitterUsername>robintegg</twitterUsername>
+    <githubUsername>teggr</githubUsername>
+    <linkedinUsername>robintegg</linkedinUsername>
+    <url>https://robintegg.com</url>
+    <baseUrl></baseUrl>
+    <socialLink>
+        <icon>github</icon>
+        <username>teggr</username>
+        <userUrl>"https://github.com/teggr"</userUrl>
+    </socialLink>
+</site>
