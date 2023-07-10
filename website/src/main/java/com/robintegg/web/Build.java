@@ -1,5 +1,6 @@
 package com.robintegg.web;
 
+import com.robintegg.web.builder.WebSiteBuilder;
 import com.robintegg.web.engine.*;
 import com.robintegg.web.plugins.Plugins;
 import com.robintegg.web.site.Author;
@@ -18,21 +19,7 @@ import java.util.Map;
 public class Build {
 
     // build the website.
-    // TODO: whilst multi-module in Intellij - must set workdirectory to the module root, unless we set it to absolute?
-    public static void main(String[] args) throws IOException {
-
-        var workingDirectory = Paths.get( System.getProperty("workingDirectory", "") );
-        log.info("working directory: {}",  workingDirectory.toAbsolutePath());
-
-        // register plugins
-        DefaultThemePlugin.create().registerPlugins();
-
-        ContentModel contentModel = new ContentModel();
-
-        String environment = System.getProperty("environment", "local");
-        log.info("environment: {}", environment);
-
-        contentModel.environment( environment );
+    public static void main(String[] args)  {
 
         // could load some configuration here
         Site site = new Site();
@@ -52,28 +39,12 @@ public class Build {
         site.addSocialLink(new SocialLink("linkedin", "robintegg", "https://www.linkedin.com/in/robintegg"));
         site.addSocialLink(new SocialLink("robintegg", "twitter", "https://www.twitter.com/robintegg"));
 
-        contentModel.setSite(site);
+        WebSiteBuilder webSiteBuilder = new WebSiteBuilder(
+                DefaultThemePlugin.create(),
+                site
+        );
 
-        // generate content
-        var contentSource = new ContentSource(workingDirectory);
-        contentSource.loadContent(contentModel);
-
-        // load layouts
-        Map<String, Layout> layouts = new HashMap<>();
-        Plugins.contentRenderPlugins.stream()
-            .forEach( contentRenderPlugin -> contentRenderPlugin.loadLayout(layouts) );
-
-        // TODO: filesystem plugin for output
-        // create output directory
-        var outputDirectory = workingDirectory.resolve("target/site");
-        log.info("output directory: {}", outputDirectory.toAbsolutePath());
-
-        Files.createDirectories(outputDirectory);
-
-        // create render engine
-
-        ContentRenderer contentRenderer = new ContentRenderer();
-        contentRenderer.render(outputDirectory, layouts, contentModel);
+        webSiteBuilder.build();
 
     }
 
