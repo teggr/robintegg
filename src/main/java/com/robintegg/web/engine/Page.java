@@ -24,6 +24,8 @@ public class Page {
     @ToString.Include
     private final Map<String, List<String>> data;
     private final Function<ContentModel, DomContent> renderFunction;
+    @Builder.Default
+    private final Pageable pageable = new Pageable(1,-1);
 
     public String getTitle() {
         return Optional
@@ -107,35 +109,4 @@ public class Page {
         return stringList.get(0);
     }
 
-    public int getPage() {
-        List<String> stringList = data.get("page");
-        if (stringList == null) {
-            return 1;
-        }
-        return Integer.parseInt(stringList.get(0));
-    }
-
-    public int getPagesize() {
-        List<String> stringList = data.get("pageSize");
-        if (stringList == null) {
-            return 1;
-        }
-        return Integer.parseInt(stringList.get(0));
-    }
-
-    public boolean next() {
-        List<String> stringList = data.get("next");
-        if (stringList == null) {
-            return false;
-        }
-        return Boolean.valueOf(stringList.get(0));
-    }
-
-    public boolean previous() {
-        List<String> stringList = data.get("previous");
-        if (stringList == null) {
-            return false;
-        }
-        return Boolean.valueOf(stringList.get(0));
-    }
 }

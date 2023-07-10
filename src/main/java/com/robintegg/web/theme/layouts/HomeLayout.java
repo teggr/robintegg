@@ -1,5 +1,6 @@
 package com.robintegg.web.theme.layouts;
 
+import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.index.IndexPlugin;
@@ -21,7 +22,9 @@ public class HomeLayout {
 
     public static DomContent render(ContentModel contentModel) {
 
-      // TODO: render the pagination
+        // TODO: render the pagination
+
+        PagedContent<IndexContent> indexedContent = IndexPlugin.INSTANCE.getIndexedContent(contentModel.getPage().getPageable());
 
         return div()
                 .withClass("home")
@@ -34,7 +37,7 @@ public class HomeLayout {
                         ),
                         contentModel.getContent(),
                         iff(
-                            IndexPlugin.INSTANCE.getIndexedContent().size() > 0,
+                                indexedContent.getContent().size() > 0,
                                 each(
                                         iff(
                                                 contentModel.getPage().getListTitle() != null,
@@ -45,12 +48,12 @@ public class HomeLayout {
                                         ul()
                                                 .withClass("post-list")
                                                 .with(
-                                                        each(IndexPlugin.INSTANCE.getIndexedContent(), indexContent -> {
+                                                        each(indexedContent.getContent(), indexContent -> {
                                                             return li()
                                                                     .with(
                                                                             span()
                                                                                     .withClass("post-meta")
-                                                                                    .withText(Utils.format( indexContent.getDate())),
+                                                                                    .withText(Utils.format(indexContent.getDate())),
                                                                             h3()
                                                                                     .with(
                                                                                             a()
@@ -86,7 +89,39 @@ public class HomeLayout {
                                                 )
                                 )
 
-                        )
+                        ),
+                        div()
+                                .withClass("pagination")
+                                .with(
+                                        iffElse(
+                                                indexedContent.isPrevious(),
+                                                a()
+                                                        .withHref(Utils.relativeUrl(indexedContent.getPreviousPagePath()))
+                                                        .withRel("previous")
+                                                        .withClass("previous")
+                                                        .withText("Previous"),
+                                                span()
+                                                        .withClass("previous")
+                                                        .withText("Previous")
+                                        ),
+                                        span()
+                                                .withClass("page_number")
+                                                .withText(String.format("Page: %s" /* of %s */, indexedContent.getPage(), indexedContent.getTotalPages())),
+                                        iffElse(
+                                                indexedContent.isNext(),
+                                                a()
+                                                        .withHref(Utils.relativeUrl(indexedContent.getNextPagePath()))
+                                                        .withRel("next")
+                                                        .withClass("next")
+                                                        .withText("Next"),
+                                                span()
+                                                        .withClass("next")
+                                                        .withText("Next")
+                                        )
+
+                                )
+
+
                 );
 
     }

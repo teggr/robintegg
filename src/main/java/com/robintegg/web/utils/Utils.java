@@ -52,4 +52,12 @@ public class Utils {
         if(date == null) return "";
         return date.atStartOfDay().format(DateTimeFormatter.ISO_DATE_TIME);
     }
+
+    public static String getPathForPage(int pageForPath) {
+        if (pageForPath == 1) {
+            return "/index.html";
+        } else {
+            return "/page/" + pageForPath + "/index.html";
+        }
+    }
 }
