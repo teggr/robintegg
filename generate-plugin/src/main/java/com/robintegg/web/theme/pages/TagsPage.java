@@ -1,7 +1,7 @@
 package com.robintegg.web.theme.pages;
 
-import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Page;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.tags.TagPlugin;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
@@ -27,15 +27,15 @@ public class TagsPage {
                 .build();
     }
 
-    public static DomContent render(ContentModel contentModel) {
+    public static DomContent render(RenderModel renderModel) {
         return div()
                 .withClass("home")
                 .with(
                         iff(
-                                contentModel.getPage().getTitle() != null,
+                                renderModel.getPage().getTitle() != null,
                                 h1()
                                         .withClass("page-heading")
-                                        .withText(contentModel.getPage().getTitle())
+                                        .withText(renderModel.getPage().getTitle())
                         ),
                         ul()
                                 .withClass("post-list")

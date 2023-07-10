@@ -5,6 +5,7 @@ import com.robintegg.web.content.IndexedContent;
 import com.robintegg.web.content.TaggedContent;
 import com.robintegg.web.engine.ContentItem;
 import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.ToString;
@@ -59,11 +60,11 @@ public class Book implements ContentItem, TaggedContent, IndexedContent {
     );
   }
 
-  public DomContent getExcerpt(ContentModel contentModel) {
+  public DomContent getExcerpt(RenderModel renderModel) {
     return TagCreator.each();
   }
 
-  public DomContent getContent(ContentModel contentModel) {
+  public DomContent getContent(RenderModel renderModel) {
     return each(); //BookLayout.render(contentModel);
   }
 

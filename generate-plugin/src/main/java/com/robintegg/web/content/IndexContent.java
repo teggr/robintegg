@@ -2,6 +2,7 @@ package com.robintegg.web.content;
 
 import com.robintegg.web.engine.ContentItem;
 import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import j2html.tags.DomContent;
 
 import java.time.LocalDate;
@@ -15,11 +16,11 @@ public interface IndexContent {
 
   String getTitle();
 
-  DomContent getExcerpt(ContentModel contentModel);
+  DomContent getExcerpt(RenderModel renderModel);
 
   String getCategory();
 
-  DomContent getContent(ContentModel contentModel);
+  DomContent getContent(RenderModel renderModel);
 
   List<String> getTags();
 

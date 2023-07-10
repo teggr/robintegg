@@ -13,6 +13,6 @@ import java.util.function.Function;
 public class Layout {
 
   private final Map<String, List<String>> data;
-  private final Function<ContentModel, DomContent> renderFunction;
+  private final Function<RenderModel, DomContent> renderFunction;
 
 }

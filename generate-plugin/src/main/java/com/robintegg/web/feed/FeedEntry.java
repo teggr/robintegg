@@ -1,6 +1,6 @@
 package com.robintegg.web.feed;
 
-import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import j2html.tags.DomContent;
 import lombok.Builder;
 import lombok.Data;
@@ -17,10 +17,10 @@ public class FeedEntry {
   private String url;
   private LocalDate date;
   private LocalDate modifiedDate;
-  private Function<ContentModel, DomContent> content;
+  private Function<RenderModel, DomContent> content;
   private String author;
   private List<String> tags;
-  private Function<ContentModel, DomContent> excerpt;
+  private Function<RenderModel, DomContent> excerpt;
   private String imageUrl;
 
 }

@@ -1,6 +1,6 @@
 package com.robintegg.web.theme.includes;
 
-import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.feed.FeedPlugin;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
@@ -8,7 +8,7 @@ import j2html.tags.DomContent;
 import static j2html.TagCreator.*;
 
 public class Head {
-  public static DomContent create(ContentModel contentModel) {
+  public static DomContent create(RenderModel renderModel) {
     return head(
         meta()
             .withCharset("utf-8"),
@@ -18,7 +18,7 @@ public class Head {
         meta().
             withName("viewport")
             .withContent("width=device-width, initial-scale=1"),
-        SEO.render(contentModel),
+        SEO.render(renderModel),
         link().
             withRel("stylesheet")
             .withHref(Utils.relativeUrl("/css/main.css")),
@@ -29,7 +29,7 @@ public class Head {
             .withType("application/atom+xml")
             .withRel("alternate")
             .withHref(FeedPlugin.INSTANCE.getFeed().getPath()) // TODO: need to make available via the theme and plugins
-            .withTitle(contentModel.getSite().getTitle())
+            .withTitle(renderModel.getContext().getSite().getTitle())
     );
   }
 }

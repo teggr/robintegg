@@ -1,11 +1,12 @@
 package com.robintegg.web.theme.includes;
 
 import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 
 public class PiwikPro {
-  public static DomContent create(ContentModel contentModel) {
+  public static DomContent create(RenderModel renderModel) {
 
     return TagCreator.rawHtml("""
         <script type="text/javascript">

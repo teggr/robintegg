@@ -23,7 +23,7 @@ public class Page {
     private boolean includeMenu;
     @ToString.Include
     private final Map<String, List<String>> data;
-    private final Function<ContentModel, DomContent> renderFunction;
+    private final Function<RenderModel, DomContent> renderFunction;
     @Builder.Default
     private final Pageable pageable = new Pageable(1,-1);
 

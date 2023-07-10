@@ -1,9 +1,8 @@
 package com.robintegg.web.theme.layouts;
 
 import com.robintegg.web.categories.CategoriesPlugin;
-import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
-import com.robintegg.web.tags.TagPlugin;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
@@ -21,19 +20,19 @@ public class CategoryLayout {
                 .build();
     }
 
-    public static DomContent render(ContentModel contentModel) {
+    public static DomContent render(RenderModel renderModel) {
 
         return div()
                 .withClass("home")
                 .with(
                         h2()
                                 .withClass("post-list-heading")
-                                .withId(contentModel.getPage().getCategory())
-                                .withText(Utils.capitalize(contentModel.getPage().getCategory())),
+                                .withId(renderModel.getPage().getCategory())
+                                .withText(Utils.capitalize(renderModel.getPage().getCategory())),
                         ul()
                                 .withClass("post-list")
                                 .with(
-                                        each(CategoriesPlugin.INSTANCE.getPostsInCategory(contentModel.getPage().getCategory()), taggedContent -> {
+                                        each(CategoriesPlugin.INSTANCE.getPostsInCategory(renderModel.getPage().getCategory()), taggedContent -> {
                                             return each(
                                                     span()
                                                             .withClass("post-meta")
@@ -46,8 +45,8 @@ public class CategoryLayout {
                                                                             .withText(Utils.escape(taggedContent.getTitle()))
                                                             ),
                                                     iff(
-                                                            contentModel.getSite().showExcerpts(),
-                                                            taggedContent.getExcerpt(contentModel)
+                                                            renderModel.getContext().getSite().showExcerpts(),
+                                                            taggedContent.getExcerpt(renderModel)
                                                     )
                                             );
                                         })

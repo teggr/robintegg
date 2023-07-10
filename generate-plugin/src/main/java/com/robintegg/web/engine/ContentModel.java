@@ -2,11 +2,6 @@ package com.robintegg.web.engine;
 
 import com.robintegg.web.content.staticfiles.StaticFile;
 import com.robintegg.web.plugins.Plugins;
-import com.robintegg.web.site.Site;
-import j2html.TagCreator;
-import j2html.tags.DomContent;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,14 +11,6 @@ import java.util.List;
 @Slf4j
 @ToString
 public class ContentModel {
-
-  // TODO: these values are more in scope of render time
-  private DomContent content = TagCreator.text("");
-  @Getter
-  @Setter
-  private Site site = new Site();
-  private Page page;
-  private String environment = "local";
 
   // TODO: these should be streamed to the rendering engine
   private final List<Page> pages = new ArrayList<>();
@@ -37,6 +24,14 @@ public class ContentModel {
     this.items.add(contentItem);
     Plugins.aggregatorPlugins
         .forEach(aggregatorPlugin -> aggregatorPlugin.add(contentItem));
+  }
+
+  public void addFile(StaticFile staticFile) {
+    this.files.add(staticFile);
+  }
+
+  public void addPage(Page page) {
+    this.pages.add(page);
   }
 
   // TODO: is this entry point or the plugins? plugins would need to
@@ -78,50 +73,9 @@ public class ContentModel {
 
   }
 
-  public String getLang() {
-    // TODO: lang="{{ page.lang | default: site.lang | default: "en" }}"
-    return "en";
-  }
-
-  public DomContent getContent() {
-    return content;
-  }
-
-  public Page getPage() {
-    return page;
-  }
-
-  public void setPage(Page page) {
-    this.page = page;
-  }
-
-  public void setContent(DomContent domContent) {
-    this.content = domContent;
-  }
-
-  public void addFile(StaticFile staticFile) {
-    this.files.add(staticFile);
-  }
-
-  public void addPage(Page page) {
-    this.pages.add(page);
-  }
-
+  // TODO: replace with menu plugin?
   public List<Page> getPages() {
     return pages;
-  }
-
-  public void reset() {
-    this.content = TagCreator.text("");
-    this.page = null;
-  }
-
-  public void environment(String environment) {
-    this.environment = environment;
-  }
-
-  public String getEnvironment() {
-    return environment;
   }
 
 }

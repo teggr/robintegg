@@ -1,8 +1,8 @@
 package com.robintegg.web.theme.pages;
 
-import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Page;
 import com.robintegg.web.engine.Pageable;
+import com.robintegg.web.engine.RenderModel;
 import j2html.tags.DomContent;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class IndexPage {
                 .build();
     }
 
-    public static DomContent render(ContentModel contentModel) {
+    public static DomContent render(RenderModel renderModel) {
         return each();
     }
 

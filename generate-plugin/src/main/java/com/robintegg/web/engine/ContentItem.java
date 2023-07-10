@@ -11,6 +11,6 @@ public interface ContentItem {
 
   String getUrl();
 
-  DomContent getContent(ContentModel contentModel);
+  DomContent getContent(RenderModel renderModel);
 
 }

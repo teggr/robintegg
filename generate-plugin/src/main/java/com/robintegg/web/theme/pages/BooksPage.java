@@ -1,8 +1,8 @@
-package com.robintegg.web.content.book;
+package com.robintegg.web.theme.pages;
 
-import com.robintegg.web.content.podcast.Podcast;
-import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.content.book.Book;
 import com.robintegg.web.engine.Page;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
@@ -28,22 +28,22 @@ public class BooksPage {
         .build();
   }
 
-  public static DomContent render(ContentModel contentModel) {
+  public static DomContent render(RenderModel renderModel) {
     return div()
         .withClass("home")
         .with(
             ul()
                 .with(
                     iff(
-                        contentModel.getContentOfType(Book.class).size() > 0,
+                        renderModel.getContentModel().getContentOfType(Book.class).size() > 0,
                         each(
                             h2()
                                 .withClass("post-list-heading")
-                                .withText(contentModel.getPage().getListTitle()),
+                                .withText(renderModel.getPage().getListTitle()),
                             ul()
                                 .withClass("post-list")
                                 .with(
-                                    each(contentModel.getContentOfType(Book.class), book -> {
+                                    each(renderModel.getContentModel().getContentOfType(Book.class), book -> {
                                       return li()
                                           .with(
                                               h3()
@@ -81,6 +81,5 @@ public class BooksPage {
                 )
         );
   }
-
 
 }

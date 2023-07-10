@@ -2,6 +2,7 @@ package com.robintegg.web.content.podcast;
 
 import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import j2html.tags.DomContent;
 
 import java.time.LocalDate;
@@ -27,8 +28,8 @@ class PodcastIndexedContent {
       }
 
       @Override
-      public DomContent getExcerpt(ContentModel contentModel) {
-        return podcast.getExcerpt(contentModel);
+      public DomContent getExcerpt(RenderModel renderModel) {
+        return podcast.getExcerpt(renderModel);
       }
 
       @Override
@@ -37,8 +38,8 @@ class PodcastIndexedContent {
       }
 
       @Override
-      public DomContent getContent(ContentModel contentModel) {
-        return podcast.getContent(contentModel);
+      public DomContent getContent(RenderModel renderModel) {
+        return podcast.getContent(renderModel);
       }
 
       @Override

@@ -1,7 +1,7 @@
-package com.robintegg.web.content.post;
+package com.robintegg.web.theme.layouts;
 
-import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
@@ -19,7 +19,7 @@ public class PostLayout {
         .build();
   }
 
-  public static DomContent render(ContentModel contentModel) {
+  public static DomContent render(RenderModel renderModel) {
 
     return article()
         .withClass("post h-entry")
@@ -32,30 +32,30 @@ public class PostLayout {
                     h1()
                         .withClass("post-title p-name")
                         .attr("itemprop", "name headline")
-                        .withText(Utils.escape(contentModel.getPage().getTitle())),
+                        .withText(Utils.escape(renderModel.getPage().getTitle())),
                     p()
                         .withClass("post-meta")
                         .with(
                             time()
                                 .withClass("dt-published")
-                                .withDatetime(Utils.formatXmlSchema(contentModel.getPage().getDate()))
+                                .withDatetime(Utils.formatXmlSchema(renderModel.getPage().getDate()))
                                 .attr("itemprop", "datePublished")
-                                .withText( Utils.format(contentModel.getPage().getDate()) ),
+                                .withText( Utils.format(renderModel.getPage().getDate()) ),
                             iff(
-                                contentModel.getPage().getModifiedDate() != null,
+                                renderModel.getPage().getModifiedDate() != null,
                                 text("~")
                             ),
                             iff(
-                                contentModel.getPage().getModifiedDate() != null,
+                                renderModel.getPage().getModifiedDate() != null,
                                 time()
                                     .withClass("dt-modified")
-                                    .withDatetime(Utils.formatXmlSchema(contentModel.getPage().getModifiedDate()))
+                                    .withDatetime(Utils.formatXmlSchema(renderModel.getPage().getModifiedDate()))
                                     .attr("itemprop", "dateModified")
-                                    .withText(Utils.format(contentModel.getPage().getDate()))
+                                    .withText(Utils.format(renderModel.getPage().getDate()))
                             ),
                             iff(
-                                contentModel.getPage().getAuthor() != null,
-                                      each( contentModel.getPage().getAuthor(), author -> {
+                                renderModel.getPage().getAuthor() != null,
+                                      each( renderModel.getPage().getAuthor(), author -> {
                                         return span()
                                             .attr("itemprop", "author")
                                             .attr("itemscope")
@@ -75,11 +75,11 @@ public class PostLayout {
                 .withClass("post-content e-content")
                 .attr("itemprop", "articleBody" )
                 .with(
-                    contentModel.getContent()
+                    renderModel.getContent()
                 ),
             a()
                 .withClass("u-url")
-                .withHref(contentModel.getPage().getUrl())
+                .withHref(renderModel.getPage().getUrl())
                 .attr("hidden")
         );
 

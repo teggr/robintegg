@@ -2,6 +2,7 @@ package com.robintegg.web.content.post;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.content.IndexContent;
+import com.robintegg.web.engine.RenderModel;
 import j2html.tags.DomContent;
 
 import java.time.LocalDate;
@@ -27,8 +28,8 @@ class PostIndexedContent {
       }
 
       @Override
-      public DomContent getExcerpt(ContentModel contentModel) {
-        return post.getExcerpt(contentModel);
+      public DomContent getExcerpt(RenderModel renderModel) {
+        return post.getExcerpt(renderModel);
       }
 
       @Override
@@ -37,8 +38,8 @@ class PostIndexedContent {
       }
 
       @Override
-      public DomContent getContent(ContentModel contentModel) {
-        return post.getContent(contentModel);
+      public DomContent getContent(RenderModel renderModel) {
+        return post.getContent(renderModel);
       }
 
       @Override

@@ -1,4 +1,4 @@
-package com.robintegg.web.builder;
+package com.robintegg.web.engine;
 
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.ContentRenderer;
@@ -33,20 +33,24 @@ public class WebSiteBuilder {
         // register plugins
         themePlugin.registerPlugins();
 
+        // define the source of content
+        var contentSource = new ContentSource(workingDirectory);
+
+        // load content into model and populate plugins
         ContentModel contentModel = new ContentModel();
+        contentSource.loadContent(contentModel);
+
+        // load rendering engine context
+        Context context = new Context();
 
         String environment = System.getProperty("environment", "local");
         log.info("environment: {}", environment);
 
-        contentModel.environment(environment);
+        context.setEnvironment(environment);
 
         Site site = SitePlugin.loadFromFile(workingDirectory);
 
-        contentModel.setSite(site);
-
-        // generate content
-        var contentSource = new ContentSource(workingDirectory);
-        contentSource.loadContent(contentModel);
+        context.setSite(site);
 
         // load layouts
         Map<String, Layout> layouts = new HashMap<>();
@@ -63,7 +67,7 @@ public class WebSiteBuilder {
         // create render engine
 
         ContentRenderer contentRenderer = new ContentRenderer();
-        contentRenderer.render(outputDirectory, layouts, contentModel);
+        contentRenderer.render(outputDirectory, layouts, contentModel, context);
 
     }
 

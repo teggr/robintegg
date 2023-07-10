@@ -1,11 +1,9 @@
 package com.robintegg.web.content.book;
 
-import com.robintegg.web.content.post.PostLayout;
 import com.robintegg.web.engine.ContentModel;
-import com.robintegg.web.engine.Layout;
-import com.robintegg.web.plugins.ContentRenderPlugin;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
+import com.robintegg.web.theme.pages.BooksPage;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -14,11 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.stream.Stream;
 
 @Slf4j
-public class BookPlugin implements ContentTypePlugin, ContentRenderPlugin {
+public class BookPlugin implements ContentTypePlugin {
 
   public static BookPlugin create() {
     return new BookPlugin();
@@ -48,8 +45,6 @@ public class BookPlugin implements ContentTypePlugin, ContentRenderPlugin {
           .map(BookPlugin::readBook)
           .forEach(contentModel::add);
     }
-
-    contentModel.addPage(BooksPage.create());
 
   }
 
@@ -82,11 +77,6 @@ public class BookPlugin implements ContentTypePlugin, ContentRenderPlugin {
 
   public void registerPlugins() {
     Plugins.contentTypePlugins.add(this);
-    Plugins.contentRenderPlugins.add(this);
   }
 
-  @Override
-  public void loadLayout(Map<String, Layout> layouts) {
-    layouts.put("book", BookLayout.create());
-  }
 }

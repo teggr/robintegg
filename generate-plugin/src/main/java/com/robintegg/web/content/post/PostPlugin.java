@@ -5,6 +5,7 @@ import com.robintegg.web.engine.Layout;
 import com.robintegg.web.plugins.ContentRenderPlugin;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
+import com.robintegg.web.theme.layouts.PostLayout;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.commonmark.Extension;
@@ -20,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @Slf4j
-public class PostPlugin implements ContentTypePlugin, ContentRenderPlugin {
+public class PostPlugin implements ContentTypePlugin {
   public static PostPlugin create() {
     return new PostPlugin();
   }
@@ -76,14 +77,8 @@ public class PostPlugin implements ContentTypePlugin, ContentRenderPlugin {
 
   }
 
-
-  @Override
-  public void loadLayout(Map<String, Layout> layouts) {
-    layouts.put("post", PostLayout.create());
-  }
-
   public void registerPlugins() {
     Plugins.contentTypePlugins.add(this);
-    Plugins.contentRenderPlugins.add(this);
   }
+
 }

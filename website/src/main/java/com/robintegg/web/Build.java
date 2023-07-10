@@ -1,6 +1,6 @@
 package com.robintegg.web;
 
-import com.robintegg.web.builder.WebSiteBuilder;
+import com.robintegg.web.engine.WebSiteBuilder;
 import com.robintegg.web.theme.DefaultThemePlugin;
 import lombok.extern.slf4j.Slf4j;
 

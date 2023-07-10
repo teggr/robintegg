@@ -1,7 +1,7 @@
 package com.robintegg.web.feed;
 
 import com.robintegg.web.content.IndexContent;
-import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.feed.atom.*;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -32,7 +32,7 @@ public class Feed {
     return "feed.xml";
   }
 
-  public String getContent(ContentModel contentModel) {
+  public String getContent(RenderModel renderModel) {
 
     feedEntries.sort(Comparator.comparing(FeedEntry::getDate).reversed());
 
@@ -44,30 +44,30 @@ public class Feed {
             .build())
         .link(List.of(
             Link.builder()
-                .href(contentModel.getSite().resolveUrl(getPath()))
+                .href(renderModel.getContext().getSite().resolveUrl(getPath()))
                 .rel("self")
                 .type("application/atom+xml")
                 .build(),
             Link.builder()
-                .href(contentModel.getSite().getUrl())
+                .href(renderModel.getContext().getSite().getUrl())
                 .rel("alternative")
                 .type("text/html")
                 .build()
         ))
         .updated(OffsetDateTime.now())
-        .id(contentModel.getSite().resolveUrl(getPath()))
+        .id(renderModel.getContext().getSite().resolveUrl(getPath()))
         .title(Title.builder()
             .type("html")
-            .value(contentModel.getSite().getTitle())
+            .value(renderModel.getContext().getSite().getTitle())
             .build())
-        .subtitle(contentModel.getSite().getDescription())
+        .subtitle(renderModel.getContext().getSite().getDescription())
         .author(List.of(
             Author.builder()
-                .name(contentModel.getSite().getAuthor().getName())
+                .name(renderModel.getContext().getSite().getAuthor().getName())
                 .build()
         ))
         .entry(feedEntries.stream()
-            .map(fe -> mapToAtomEntry(contentModel, fe))
+            .map(fe -> mapToAtomEntry(renderModel, fe))
             .toList()
         )
         .build();
@@ -91,7 +91,7 @@ public class Feed {
 
   }
 
-  private Entry mapToAtomEntry(ContentModel contentModel, FeedEntry entry) {
+  private Entry mapToAtomEntry(RenderModel renderModel, FeedEntry entry) {
     return
         Entry.builder()
             .title(Title.builder()
@@ -113,7 +113,7 @@ public class Feed {
             .content(Content.builder()
                 .type("html")
                 .xmlBase(entry.getUrl())
-                .value(entry.getContent().apply(contentModel).render())
+                .value(entry.getContent().apply(renderModel).render())
                 .build())
             .author(List.of(
                 Author.builder()
@@ -129,7 +129,7 @@ public class Feed {
             )
             .summary(Summary.builder()
                 .type("html")
-                .value(entry.getExcerpt().apply(contentModel).render())
+                .value(entry.getExcerpt().apply(renderModel).render())
                 .build())
             .mediaThumbnail(MediaThumbnail.builder()
                 .url(entry.getImageUrl())

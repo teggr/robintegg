@@ -5,6 +5,7 @@ import com.robintegg.web.content.IndexedContent;
 import com.robintegg.web.engine.ContentItem;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.content.TaggedContent;
+import com.robintegg.web.engine.RenderModel;
 import j2html.tags.DomContent;
 import lombok.ToString;
 import org.commonmark.node.Node;
@@ -62,11 +63,11 @@ public class Podcast implements ContentItem, TaggedContent, IndexedContent {
     return LocalDate.parse(dates.get(0));
   }
 
-  public DomContent getExcerpt(ContentModel contentModel) {
+  public DomContent getExcerpt(RenderModel renderModel) {
     return each();
   }
 
-  public DomContent getContent(ContentModel contentModel) {
+  public DomContent getContent(RenderModel renderModel) {
     return each();
   }
 

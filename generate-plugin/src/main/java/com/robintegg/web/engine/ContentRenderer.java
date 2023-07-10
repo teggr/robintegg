@@ -1,7 +1,6 @@
 package com.robintegg.web.engine;
 
 import com.robintegg.web.content.staticfiles.StaticFile;
-import com.robintegg.web.theme.layouts.TagLayout;
 import j2html.TagCreator;
 import j2html.rendering.FlatHtml;
 import j2html.tags.DomContent;
@@ -17,7 +16,8 @@ import java.util.Map;
 
 @Slf4j
 public class ContentRenderer {
-  public void render(Path outputDirectory, Map<String, Layout> layouts, ContentModel contentModel) {
+
+  public void render(Path outputDirectory, Map<String, Layout> layouts, ContentModel contentModel, Context context) {
 
     log.info("render=start");
 
@@ -25,6 +25,9 @@ public class ContentRenderer {
     // rendering of pre calculated resources? just resource name + function to final render?
     // where does the website come into it? writer (filesystem writer)?; external to the rendering (this knows
     // about locations and files)
+    RenderModel renderModel = new RenderModel();
+    renderModel.setContext(context);
+    renderModel.setContentModel(contentModel);
 
     contentModel.visit(new ContentModelVisitor() {
 
@@ -34,7 +37,7 @@ public class ContentRenderer {
       public void file(StaticFile file) {
         log.info("file={}", file);
 
-        byte [] fileContent = file.getRenderFunction().apply(contentModel);
+        byte [] fileContent = file.getRenderFunction().apply(renderModel);
 
         String path = file.getPath();
         if (path.startsWith("/")) {
@@ -56,21 +59,21 @@ public class ContentRenderer {
       public void page(Page page) {
         log.info("page={}", page);
 
-        contentModel.setPage(page);
+        renderModel.setPage(page);
 
         Map<String, List<String>> data = page.getData();
         String layoutName = data.getOrDefault("layout", List.of("default")).get(0);
 
         log.info("layout={}", layoutName);
 
-        DomContent domContent = page.getRenderFunction().apply(contentModel);
+        DomContent domContent = page.getRenderFunction().apply(renderModel);
 
         // do i need to add the layout? yes
         Layout layout = layouts.get(layoutName);
 
         // need to update the content for this model here
-        contentModel.setContent(domContent);
-        DomContent layoutContent = layout.getRenderFunction().apply(contentModel);
+        renderModel.setContent(domContent);
+        DomContent layoutContent = layout.getRenderFunction().apply(renderModel);
 
         Map<String, List<String>> layoutData = layout.getData();
         List<String> outLayoutName = layoutData != null ? layoutData.get("layout") : null;
@@ -78,8 +81,8 @@ public class ContentRenderer {
           layoutName = outLayoutName.get(0);
           log.info("outerlayout={}", layoutName);
           layout = layouts.get(layoutName);
-          contentModel.setContent(layoutContent);
-          layoutContent = layout.getRenderFunction().apply(contentModel);
+          renderModel.setContent(layoutContent);
+          layoutContent = layout.getRenderFunction().apply(renderModel);
         }
 
         // this is what we want to render
@@ -105,11 +108,14 @@ public class ContentRenderer {
           throw new RuntimeException(e);
         }
 
-        contentModel.reset();
+        renderModel.reset();
 
       }
 
     });
 
   }
+
+
+
 }

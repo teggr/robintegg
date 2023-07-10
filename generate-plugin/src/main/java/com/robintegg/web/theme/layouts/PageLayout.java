@@ -1,7 +1,7 @@
 package com.robintegg.web.theme.layouts;
 
-import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
+import com.robintegg.web.engine.RenderModel;
 import j2html.tags.DomContent;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class PageLayout {
         .build();
   }
 
-  public static DomContent render(ContentModel contentModel) {
+  public static DomContent render(RenderModel renderModel) {
 
     return article()
         .withClass("post")
@@ -32,7 +32,7 @@ public class PageLayout {
                     div()
                         .withClass("post-content")
                         .with(
-                            contentModel.getContent()
+                            renderModel.getContent()
                         )
                 )
         );

@@ -5,14 +5,20 @@ import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.content.IndexedContent;
 import com.robintegg.web.content.TaggedContent;
 import com.robintegg.web.engine.ContentItem;
-import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.utils.Utils;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.ToString;
-import org.commonmark.node.*;
+import org.commonmark.node.AbstractVisitor;
+import org.commonmark.node.FencedCodeBlock;
+import org.commonmark.node.Image;
+import org.commonmark.node.Node;
 import org.commonmark.renderer.NodeRenderer;
-import org.commonmark.renderer.html.*;
+import org.commonmark.renderer.html.HtmlNodeRendererContext;
+import org.commonmark.renderer.html.HtmlNodeRendererFactory;
+import org.commonmark.renderer.html.HtmlRenderer;
+import org.commonmark.renderer.html.HtmlWriter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -65,11 +71,11 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
     return data;
   }
 
-  public DomContent getContent(ContentModel contentModel) {
+  public DomContent getContent(RenderModel renderModel) {
     document.accept(new AbstractVisitor() {
       @Override
       public void visit(Image image) {
-        image.setDestination(image.getDestination().replaceAll("\\{\\{site\\.baseurl\\}\\}", contentModel.getSite().getBaseUrl()));
+        image.setDestination(image.getDestination().replaceAll("\\{\\{site\\.baseurl\\}\\}", renderModel.getContext().getSite().getBaseUrl()));
         super.visit(image);
       }
     });
@@ -85,11 +91,11 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
     );
   }
 
-  public DomContent getExcerpt(ContentModel contentModel) {
+  public DomContent getExcerpt(RenderModel renderModel) {
     document.accept(new AbstractVisitor() {
       @Override
       public void visit(Image image) {
-        image.setDestination(image.getDestination().replaceAll("\\{\\{site\\.baseurl\\}\\}", contentModel.getSite().getBaseUrl()));
+        image.setDestination(image.getDestination().replaceAll("\\{\\{site\\.baseurl\\}\\}", renderModel.getContext().getSite().getBaseUrl()));
         super.visit(image);
       }
     });
@@ -163,7 +169,7 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
           language = info.substring(0, space);
         }
         mermaid = "mermaid".equals(language);
-        if(mermaid) {
+        if (mermaid) {
           attributes.put("class", language);
         } else {
           attributes.put("class", "language-" + language);
@@ -171,9 +177,10 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
       }
       renderCodeBlock(literal, fencedCodeBlock, attributes, mermaid);
     }
+
     private void renderCodeBlock(String literal, Node node, Map<String, String> attributes, boolean mermaid) {
       html.line();
-      if(mermaid) {
+      if (mermaid) {
         html.tag("pre", getAttrs(node, "pre", attributes));
         html.text(literal);
         html.tag("/pre");
@@ -186,6 +193,7 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
       }
       html.line();
     }
+
     private Map<String, String> getAttrs(Node node, String tagName) {
       return getAttrs(node, tagName, Collections.<String, String>emptyMap());
     }
@@ -193,8 +201,6 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
     private Map<String, String> getAttrs(Node node, String tagName, Map<String, String> defaultAttributes) {
       return context.extendAttributes(node, tagName, defaultAttributes);
     }
-
-
 
   }
 

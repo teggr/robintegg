@@ -14,12 +14,12 @@ classDiagram
     theme *-- includes : has
     theme *-- layouts : has
     theme *-- pages : has
-    theme --> feed : uses
-    theme --> tags : uses
-    theme --> categories : uses
-    theme --> index : uses
+    theme --> feed : renders
 
-    pages --> contentitem : made up of
+    pages --> index : renders
+    pages --> contentitem : renders
+    pages --> tags : renders
+    pages --> categories : renders
     
     pages --> layouts : uses
     layouts --> includes : uses
@@ -43,18 +43,23 @@ classDiagram
 ```mermaid
 classDiagram
     
-    contentmodel --> contenttypeplugins : finds content\n using
+    websitebuilder --> contentsource : loads content into\ncontent model
+    websitebuilder --> contentmodel : stores content in
+    websitebuilder --> theme: uses
+
+    contentsource --> contenttypeplugins : finds content\n using
+    
     contentmodel *-- contentitems
     contentmodel --> aggregatorplugins : builds other models\n using content
     
     contentmodel --> contentmodelvisitor : exposes model via\n common types
-    contentmodelvisitor --> page : 
-    contentmodelvisitor --> files
-    contentmodelvisitor --> tags
+    contentmodelvisitor --> page
+    contentmodelvisitor --> file
     
     contentrenderer --> contentmodelvisitor : uses to find\n items to render
     contentrenderer --> contentrenderplugins : use to render content types
     
+    theme --> contentrenderplugins : loaded from theme
 ```
 
 
@@ -71,7 +76,7 @@ com.robintegg.web.Build.main();
 # Running JWebServer
 
 ```
-cd target\site
+cd .\website\target\site
 C:\Users\teggro01\.jdks\temurin-19.0.2\bin\jwebserver   
 ```
 
@@ -80,7 +85,7 @@ C:\Users\teggro01\.jdks\temurin-19.0.2\bin\jwebserver
 ## System properties
 
 ```properties
-environment=local - name of target environment for built site [local|production] 
-drafts=false - include the posts in the _drafts folder [true|false]
-workingDirectory= - directory that contains content. defaults to "" the current execution directory
+environment=local   - name of target environment for built site [local|production] 
+drafts=false        - include the posts in the _drafts folder [true|false]
+workingDirectory=   - directory that contains content. defaults to "" the current execution directory
 ```

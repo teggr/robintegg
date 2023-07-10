@@ -1,7 +1,7 @@
 package com.robintegg.web.theme.pages;
 
-import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Page;
+import com.robintegg.web.engine.RenderModel;
 import j2html.tags.DomContent;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class _404Page {
         .build();
   }
 
-  public static DomContent render(ContentModel contentModel) {
+  public static DomContent render(RenderModel renderModel) {
     return each(
         style()
             .withMedia("screen")

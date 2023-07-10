@@ -1,7 +1,7 @@
 package com.robintegg.web.theme.layouts;
 
-import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.mermaid.MermaidJsTagCreator;
 import com.robintegg.web.theme.includes.Footer;
 import com.robintegg.web.theme.includes.Head;
@@ -20,27 +20,27 @@ public class DefaultLayout {
         .build();
   }
 
-  public static DomContent render(ContentModel contentModel) {
+  public static DomContent render(RenderModel renderModel) {
 
     return html()
-        .withLang(contentModel.getLang())
+        .withLang(renderModel.getContext().getLang())
         .with(
-            Head.create(contentModel),
+            Head.create(renderModel),
             TagCreator.body(
                 TagCreator.iff(
-                    "production".equals(contentModel.getEnvironment()),
-                    PiwikPro.create(contentModel)
+                    "production".equals(renderModel.getContext().getEnvironment()),
+                    PiwikPro.create(renderModel)
                 ),
-                Header.create(contentModel),
+                Header.create(renderModel),
                 main()
                     .withClass("page-content")
                     .attr("aria-label", "Content")
                     .with(
                         div()
                             .withClass("wrapper")
-                            .with(contentModel.getContent())
+                            .with(renderModel.getContent())
                     ),
-                Footer.create(contentModel),
+                Footer.create(renderModel),
                 MermaidJsTagCreator.importAndInitializeMermaidJs()
             )
         );

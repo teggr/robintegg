@@ -17,10 +17,7 @@ import com.robintegg.web.plugins.Plugins;
 import com.robintegg.web.plugins.ThemePlugin;
 import com.robintegg.web.tags.TagPlugin;
 import com.robintegg.web.theme.layouts.*;
-import com.robintegg.web.theme.pages.CategoriesPage;
-import com.robintegg.web.theme.pages.IndexPage;
-import com.robintegg.web.theme.pages.TagsPage;
-import com.robintegg.web.theme.pages._404Page;
+import com.robintegg.web.theme.pages.*;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -36,15 +33,19 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     contentModel.addPage(_404Page.create());
     contentModel.addPage(CategoriesPage.create());
     contentModel.addPage(TagsPage.create());
+    contentModel.addPage(PodcastsPage.create());
+    contentModel.addPage(BooksPage.create());
   }
 
   @Override
   public void loadLayout(Map<String, Layout> layouts) {
-    layouts.put("categories", CategoriesLayout.create());
     layouts.put("default", DefaultLayout.create());
     layouts.put("home", HomeLayout.create());
     layouts.put("page", PageLayout.create());
     layouts.put("tag", TagLayout.create());
+    layouts.put("book", BookLayout.create());
+    layouts.put("podcast", PodcastLayout.create());
+    layouts.put("post", PostLayout.create());
   }
 
   @Override

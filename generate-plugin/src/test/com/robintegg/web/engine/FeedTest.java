@@ -46,7 +46,7 @@ class FeedTest {
             }
 
             @Override
-            public DomContent getExcerpt(ContentModel contentModel) {
+            public DomContent getExcerpt(RenderContentModel contentModel) {
                 return TagCreator.rawHtml("<div class='c'>exceprpt</div>");
             }
 
@@ -56,7 +56,7 @@ class FeedTest {
             }
 
             @Override
-            public DomContent getContent(ContentModel contentModel) {
+            public DomContent getContent(RenderContentModel contentModel) {
                 return TagCreator.rawHtml("<div class='c'>aome tezt</div>");
             }
 

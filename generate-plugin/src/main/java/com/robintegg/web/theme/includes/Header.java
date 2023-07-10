@@ -1,14 +1,13 @@
 package com.robintegg.web.theme.includes;
 
-import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.utils.Utils;
-import j2html.TagCreator;
 import j2html.tags.DomContent;
 
 import static j2html.TagCreator.*;
 
 public class Header {
-  public static DomContent create(ContentModel contentModel) {
+  public static DomContent create(RenderModel renderModel) {
     return header()
         .withClass("site-header")
         .with(
@@ -19,9 +18,9 @@ public class Header {
                         .withClass("site-title")
                         .withRel("author")
                         .withHref(Utils.relativeUrl("/"))
-                        .withText(Utils.escape(contentModel.getSite().getTitle())),
+                        .withText(Utils.escape(renderModel.getContext().getSite().getTitle())),
                     iff(
-                        contentModel.getPages().size() > 0,
+                        renderModel.getContentModel().getPages().size() > 0,
                         nav()
                             .withClass("site-nav")
                             .with(
@@ -45,7 +44,7 @@ public class Header {
                                 div()
                                     .withClass("trigger")
                                     .with(
-                                        each(contentModel.getPages(), myPage -> {
+                                        each(renderModel.getContentModel().getPages(), myPage -> {
                                           return iff(
                                               myPage.isIncludeMenu(),
                                               a()
