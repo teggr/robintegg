@@ -12,6 +12,7 @@
 
     <modules>
         <module>generate-plugin</module>
+        <module>workflows</module>
         <module>website</module>
     </modules>
 
