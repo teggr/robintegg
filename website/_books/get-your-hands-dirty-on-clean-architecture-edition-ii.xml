@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<book>
+    <details>
+        <title>Get Your Hands Dirty on Clean Architecture - Second Edition</title>
+        <subtitle>Build 'clean' applications with code examples in Java</subtitle>
+        <imageUrl>https://m.media-amazon.com/images/I/71+s+wgqByL.jpg</imageUrl>
+        <author>Tom Hombergs</author>
+        <series>Packt</series>
+        <tag>Java</tag>
+        <tag>Architecture</tag>
+    </details>
+    <bookshelf>
+        <added>2023-07-17</added>
+        <!--TODO: read-->
+        <!--TODO: review-->
+    </bookshelf>
+</book>

@@ -6,6 +6,7 @@ import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class BooksPage {
                             ul()
                                 .withClass("post-list")
                                 .with(
-                                    each(renderModel.getContentModel().getContentOfType(Book.class), book -> {
+                                    each(renderModel.getContentModel().getContentOfType(Book.class).stream().sorted(Comparator.comparing(Book::getAddedDate).reversed()).toList(), book -> {
                                       return li()
                                           .with(
                                               h3()
