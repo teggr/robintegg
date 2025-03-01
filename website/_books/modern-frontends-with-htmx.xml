@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<book>
+    <details>
+        <title>Modern frontends with htmx</title>
+        <subtitle>Use htmx with Spring Boot and Thymeleaf to build dynamic and interactive web applications.</subtitle>
+        <imageUrl>https://d2sofvawe08yqg.cloudfront.net/modern-frontends-with-htmx/s_hero?1700854457</imageUrl>
+        <author>Wim Deblauwe</author>
+        <tag>Spring Boot</tag>
+        <tag>Thymeleaf</tag>
+        <tag>Htmx</tag>
+        <tag>Java</tag>
+    </details>
+    <bookshelf>
+        <added>2025-01-22</added>
+        <!--TODO: read-->
+        <!--TODO: review-->
+    </bookshelf>
+</book>
