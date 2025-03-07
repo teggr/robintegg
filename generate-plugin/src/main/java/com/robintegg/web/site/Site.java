@@ -23,6 +23,8 @@ public class Site {
     private String twitterUsername;
     private String githubUsername;
     private String linkedinUsername;
+    private String blueskyUsername;
+    private String mastodonUsername;
     private String url;
     private String baseUrl;
 
