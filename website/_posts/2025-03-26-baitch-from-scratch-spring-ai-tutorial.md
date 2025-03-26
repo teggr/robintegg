@@ -15,7 +15,7 @@ In this tutorial we are development team who are going to be integrating an AI m
 
 The chat bot is for the Channel 4's TV show "[Batch from Scratch](https://www.channel4.com/programmes/batch-from-scratch-cooking-for-less)", where Joe Swash and 'The Batch Lady' Suzanne Mulholland dish out a proper helping of time-saving tips and easy-to-follow recipes, to show how batch cooking can turn mealtime mayhem into a dinnertime dream 🍽️. The Channel 4 product team have some great ideas to help viewers put into practice the great ideas from the show.
 
-![Batch from Scratch tv show]({{site.baseurl}}/images/batch-from-scratch.png)
+![batch-from-scratch.png]({{site.baseurl}}/images/batch-from-scratch.png)
 
 And while I can't promise the same level of entertainment as Joe and Suzanne, I can promise we'll create something useful using the power of AI 🧙.
 
@@ -80,7 +80,7 @@ Run the `BatchMealPlanApplication` in the `batch-from-scratch-chat-bot` module t
 
 It will be available on [http://localhost:8080](http://localhost:8080).
 
-![Chat bot not implemented yet]({{site.baseurl}}/images/bfs-tutorial-image-1.png)
+![bfs-tutorial-image-1.png]({{site.baseurl}}/images/bfs-tutorial-image-1.png)
 
 You can try to interact with Joe, but he’s not going to give you much right now 😬.
 
@@ -162,7 +162,7 @@ final String welcome = chatClient.prompt()
 
 Now we're talking, the AI model is now using our enhanced context to change it's output so that it can reference our user.
 
-![Chat bot with user referenced]({{site.baseurl}}/images/bfs-tutorial-image-2.png)
+![bfs-tutorial-image-2.png]({{site.baseurl}}/images/bfs-tutorial-image-2.png)
 
 ## Chat Logging - What’s happening behind the scenes
 
@@ -266,7 +266,7 @@ List<ChatMessage<?>> chatMessages = Utils.messagesForBatchMealPlan( content );
 
 Now we’ve got the AI model returning structured output, which Spring neatly converts into Java objects for us.
 
-![Chat bot with structured output]({{site.baseurl}}/images/bfs-tutorial-image-3.png)
+![bfs-tutorial-image-3.png]({{site.baseurl}}/images/bfs-tutorial-image-3.png)
 
 ## Tools - Advanced interactions
 
@@ -414,7 +414,7 @@ chatMessages.add( list( "shoppingList", shoppingList ) );
 return List.of( ChatStream.of( Profile.suzanne(), chatMessages ) );
 ```
 
-![Chat bot with shopping list]({{site.baseurl}}/images/bfs-tutorial-image-4.png)
+![bfs-tutorial-image-4.png]({{site.baseurl}}/images/bfs-tutorial-image-4.png)
 
 The product team are all go, go, go and have spoken to the commercial team and arranged a partnership with a leading grocery store to allow the user to order their shopping directly from the chat bot. So how are we going to integrate?
 
@@ -523,7 +523,7 @@ return List.of( ChatStream.of( Profile.joe(), chatMessages ) );
 
 ```
 
-![Delivery ordered confirmation]({{site.baseurl}}/images/bfs-tutorial-image-5.png)
+![bfs-tutorial-image-5.png]({{site.baseurl}}/images/bfs-tutorial-image-5.png)
 
 ## That's a (batch cooked) wrap 🌯
 
