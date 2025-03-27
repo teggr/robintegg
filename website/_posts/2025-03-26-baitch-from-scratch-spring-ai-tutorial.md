@@ -110,7 +110,9 @@ if ( state == State.starting ) {
             """ ).call().content();
 
     List<ChatMessage<?>> chatMessages = List.of(
-            text( welcome ) );
+				text( welcome ),
+				suggestion( "Try entering something like on Sunday I've got an hour free to make some evening meals for 4 people" ) 
+			);
 
     state = State.planning;
 
