@@ -13,7 +13,7 @@ Hey there, Java developers! Ever found yourself scrolling through pages of Suref
 
 Well, the [Maven Surefire JUnit 5 Tree Reporter](https://github.com/fabriciorby/maven-surefire-junit5-tree-reporter?tab=readme-ov-file) project aims to make that experience significantly better. This nifty little reporter plugin steps in to provide a more structured and readable output of your JUnit 5 test executions directly in your Maven build logs.
 
-https://github.com/fabriciorby/maven-surefire-junit5-tree-reporter?tab=readme-ov-file
+[https://github.com/fabriciorby/maven-surefire-junit5-tree-reporter?tab=readme-ov-file](https://github.com/fabriciorby/maven-surefire-junit5-tree-reporter?tab=readme-ov-file)
 
 Instead of a flat list of test results, this reporter presents your tests in a hierarchical tree view, mirroring your test class structure. This makes it instantly easier to:
 
