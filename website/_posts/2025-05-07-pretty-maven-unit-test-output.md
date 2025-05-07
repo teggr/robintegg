@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Pretty Maven unit test output
-date: "2025-04-01"
+date: "2025-05-07"
 image: /images/surefire-tests.png
 tags:
   - java

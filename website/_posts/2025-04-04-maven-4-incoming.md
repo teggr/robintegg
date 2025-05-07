@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Maven 4 incoming
-date: "2025-04-01"
+date: "2025-04-04"
 image: /images/maven-4-horizon.jpg
 tags:
   - java
