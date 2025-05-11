@@ -27,6 +27,7 @@ public class Site {
     private String mastodonUsername;
     private String url;
     private String baseUrl;
+    private String feedUrl;
 
     public boolean showExcerpts() {
         return false;

@@ -80,6 +80,20 @@ public class Social {
                                                                         .withText(Utils.escape(renderModel.getContext().getSite().getMastodonUsername()))
                                                         )
                                         )
+                        ),
+                        iff(
+                                renderModel.getContext().getSite().getFeedUrl() != null,
+                                li()
+                                        .with(
+                                                a()
+                                                        .withHref(Utils.escape(renderModel.getContext().getSite().getFeedUrl()))
+                                                        .with(
+                                                                rawHtml("<svg class=\"svg-icon\"><use xlink:href=\"/images/minima-social-icons.svg#web-awesome\"></use></svg>"),
+                                                                span()
+                                                                        .withClass("username")
+                                                                        .withText("Feed")
+                                                        )
+                                        )
                         )
 
                 );
