@@ -2,7 +2,7 @@
 layout: post
 title: Create iPhone shortcut for sharing links
 date: "2025-05-11"
-image: /images/maven-4-horizon.jpg
+image: /images/ios_automation.webp
 tags:
   - iPhone
   - automation
