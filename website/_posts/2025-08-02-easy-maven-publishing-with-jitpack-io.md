@@ -2,7 +2,7 @@
 layout: post
 title: Easy Maven Publishing with JitPack.io
 date: "2025-08-02"
-image: /images/release.png
+image: /images/publish-maven-to-jitpack.jpg
 tags:
   - java
   - maven
