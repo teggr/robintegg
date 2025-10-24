@@ -6,7 +6,6 @@ import com.robintegg.web.mermaid.MermaidJsTagCreator;
 import com.robintegg.web.theme.includes.Footer;
 import com.robintegg.web.theme.includes.Head;
 import com.robintegg.web.theme.includes.Header;
-import com.robintegg.web.theme.includes.PiwikPro;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 
@@ -27,10 +26,6 @@ public class DefaultLayout {
         .with(
             Head.create(renderModel),
             TagCreator.body(
-                TagCreator.iff(
-                    "production".equals(renderModel.getContext().getEnvironment()),
-                    PiwikPro.create(renderModel)
-                ),
                 Header.create(renderModel),
                 main()
                     .withClass("page-content")
