@@ -15,7 +15,9 @@ Chrome extensions are one of the most underrated ways to build custom developer 
 
 ## The Power of Custom Developer Tools
 
-The [Chrome Web Store developer tools category](https://chromewebstore.google.com/category/extensions/productivity/developer) is packed with powerful extensions that developers rely on daily. Many popular tools started as simple Chrome extensions—**Postman**, the REST API client used by millions of developers, began life as a Chrome extension before evolving into a standalone application.
+The [Chrome Web Store developer tools category](https://chromewebstore.google.com/category/extensions/productivity/developer) is packed with powerful extensions that developers rely on daily. 
+
+The Chrome extensions ecosystem is vibrant and diverse. There are many applications and services that have created valuable extensions such as AdBlock, 1Password, Evernote, and Grammarly which help to enhance workflows by improving readability, managing credentials, clipping research, and polishing prose, reflecting an active community building interoperable browser tooling.
 
 What makes Chrome extensions particularly powerful for developers is their multipurpose nature. They can:
 
