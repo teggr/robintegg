@@ -45,6 +45,8 @@ These are just starting points—the combination of browser access and JavaScrip
 
 Let's walk through creating a simple but functional Chrome extension. We'll build a GitHub Changelog RSS feed reader that displays the latest updates from GitHub's official changelog in a nicely formatted popup.
 
+There's an example project available on [GitHub](https://github.com/teggr/github-changelog-reader).
+
 ### Project Structure
 
 Our extension will consist of three main files:
