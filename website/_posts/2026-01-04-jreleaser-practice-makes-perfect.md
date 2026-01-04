@@ -15,7 +15,13 @@ At the start of 2026, I came across a great article by Max Andersen (creator of 
 
 ## Getting started with JReleaser
 
-To make releasing Java projects easier, I followed the excellent [Foojay 2025 guide on publishing a Java Maven project to Maven Central using JReleaser and GitHub Actions](https://foojay.io/today/how-to-publish-a-java-maven-project-to-maven-central-using-jreleaser-and-github-actions-2025-guide/). This guide walks you through the entire process of setting up JReleaser with GitHub Actions to automate releases to Maven Central.
+To make releasing Java projects easier, I followed the excellent [Foojay 2025 guide on publishing a Java Maven project to Maven Central using JReleaser and GitHub Actions](https://foojay.io/today/how-to-publish-a-java-maven-project-to-maven-central-using-jreleaser-and-github-actions-2025-guide/). 
+
+I'll be honest - when I first looked at the guide, it felt overwhelming. Setting up Sonatype accounts, generating GPG keys, configuring YAML files, managing GitHub secrets - there's a lot to take in. The documentation is comprehensive (which is great!), but that also means there's a lot of detail to digest. It's the kind of thing that can make you put it off for another day.
+
+But here's the thing: **it's worth diving in the deep end and just getting started**. Yes, the first time through feels like a slog. You'll probably need to refer back to the guide multiple times, double-check settings, and maybe hit a few bumps along the way. But that's completely normal. The important part is taking that first step.
+
+And here's the payoff - **the more you do it, the quicker you get**. By the time I was setting up my second project, I flew through the process. The third time? Even faster. What felt like an intimidating mountain of configuration the first time becomes a straightforward checklist you can knock out in minutes.
 
 The key benefits of using JReleaser include:
 
@@ -52,67 +58,7 @@ JBang handles downloading the artifact from Maven Central, caching it locally, a
 
 ### Setting up JReleaser
 
-Following the Foojay guide, I configured JReleaser in my Maven project with a `jreleaser.yml` configuration file:
-
-```yaml
-project:
-  name: deploy4j
-  description: A deployment tool for containerized applications
-  links:
-    homepage: https://deploy4j.dev
-  authors:
-    - Robin Tegg
-  license: Apache-2.0
-  inceptionYear: 2025
-
-release:
-  github:
-    overwrite: true
-    changelog:
-      formatted: ALWAYS
-      preset: conventional-commits
-      contributors:
-        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
-
-distributions:
-  deploy4j:
-    type: JAVA_BINARY
-    artifacts:
-      - path: target/{{distributionName}}-{{projectVersion}}.jar
-
-deploy:
-  maven:
-    pomchecker:
-      version: 1.10.0
-    nexus2:
-      maven-central:
-        active: ALWAYS
-        url: https://s01.oss.sonatype.org/service/local
-        closeRepository: true
-        releaseRepository: true
-        stagingRepositories:
-          - target/staging-deploy
-```
-
-The Maven Central deployment requires:
-
-- A Sonatype JIRA account and approved groupId
-- GPG keys for signing artifacts
-- GitHub secrets for credentials
-
-Once configured, the GitHub Actions workflow handles everything:
-
-```yaml
-- name: Run JReleaser
-  env:
-    JRELEASER_NEXUS2_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-    JRELEASER_NEXUS2_PASSWORD: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
-    JRELEASER_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-    JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
-    JRELEASER_GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
-    JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  run: mvn -B jreleaser:full-release
-```
+Following the Foojay guide, I worked through setting up JReleaser for deploy4j. The setup involves creating a `jreleaser.yml` configuration file, getting your Sonatype account and GPG keys sorted, and configuring a GitHub Actions workflow to handle the release process. The guide has all the details you need to work through each step.
 
 ## Working towards 1.0
 
@@ -130,11 +76,13 @@ JReleaser's ability to:
 
 ## Key takeaways
 
-1. **Start with good documentation**: The Foojay guide is comprehensive and walks you through every step
-2. **Set up your infrastructure early**: Get your Sonatype account, GPG keys, and GitHub secrets configured before you need them
-3. **JBang makes distribution easy**: For CLI tools, JBang provides an amazing user experience
-4. **Automate everything**: With JReleaser and GitHub Actions, releases become a single git tag away
-5. **Practice makes perfect**: The more you release, the smoother the process becomes
+1. **Don't let comprehensive guides intimidate you**: Yes, there's a lot of documentation. Yes, it can feel overwhelming. But that's better than having no guide at all. Take it one step at a time.
+2. **Just start**: The first time through any new process feels slow and uncertain. That's normal. Push through it.
+3. **It gets easier fast**: By your second or third time, what felt complicated becomes routine. Practice really does make perfect.
+4. **Start with good documentation**: The Foojay guide is comprehensive and walks you through every step
+5. **Set up your infrastructure early**: Get your Sonatype account, GPG keys, and GitHub secrets configured before you need them
+6. **JBang makes distribution easy**: For CLI tools, JBang provides an amazing user experience
+7. **Automate everything**: With JReleaser and GitHub Actions, releases become a single git tag away
 
 ## References
 
