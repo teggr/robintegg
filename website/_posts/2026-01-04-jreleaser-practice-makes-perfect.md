@@ -2,7 +2,7 @@
 layout: post
 title: "JReleaser - Practice makes perfect"
 date: "2026-01-04"
-image: /images/publish-maven-to-jitpack.jpg
+image: /images/practice-makes-perfect.png
 tags:
   - java
   - maven
@@ -19,9 +19,7 @@ To make releasing Java projects easier, I followed the excellent [Foojay 2025 gu
 
 I'll be honest - when I first looked at the guide, it felt overwhelming. Setting up Sonatype accounts, generating GPG keys, configuring YAML files, managing GitHub secrets - there's a lot to take in. The documentation is comprehensive (which is great!), but that also means there's a lot of detail to digest. It's the kind of thing that can make you put it off for another day.
 
-But here's the thing: **it's worth diving in the deep end and just getting started**. Yes, the first time through feels like a slog. You'll probably need to refer back to the guide multiple times, double-check settings, and maybe hit a few bumps along the way. But that's completely normal. The important part is taking that first step.
-
-And here's the payoff - **the more you do it, the quicker you get**. By the time I was setting up my second project, I flew through the process. The third time? Even faster. What felt like an intimidating mountain of configuration the first time becomes a straightforward checklist you can knock out in minutes.
+But here's the thing: **it's worth diving in the deep end and just getting started**. Yes, the first time through feels like a slog. You'll probably need to refer back to the guide multiple times, double-check settings, and maybe hit a few bumps along the way. But that's completely normal. The important part is taking that first step. And here's the payoff - **the more you do it, the quicker you get**. What feels like an intimidating mountain of configuration the first time becomes a straightforward checklist you can knock out in minutes.
 
 The key benefits of using JReleaser include:
 
@@ -48,10 +46,10 @@ The tool is hosted at [deploy4j.dev](https://deploy4j.dev) and the source code i
 
 ### JBang distribution
 
-One of the best parts about deploy4j is that it can be executed using JBang, which makes distribution a breeze. Users can run the tool without having to manually download and install anything:
+One of the best parts about deploy4j is that it can be executed using JBang, which makes distribution a breeze. Users can run the tool without having to manually download and install anything ([see docs for latest version](https://deploy4j.dev/installation/)):
 
 ```bash
-jbang deploy4j@teggr
+jbang dev.deploy4j:deploy4j-cli:0.0.3
 ```
 
 JBang handles downloading the artifact from Maven Central, caching it locally, and executing it with the correct Java version. This is perfect for CLI tools where you want users to get started immediately without friction.
