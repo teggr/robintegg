@@ -218,7 +218,7 @@ A useful mental model is to think of each SCS as a mini-product or website. AI a
 This model explains why agents perform better with SCS than with heavily layered microservices or monoliths:
 
 - Everything needed for reasoning is co-located
-- Hidden dependencies are minimized  
+- Hidden dependencies are minimized
 - Navigation and UI integration are explicit
 - Testing can be done in isolation
 
@@ -281,7 +281,7 @@ The agent working in either system has a clear understanding of the contract and
 Self-Contained Systems architecture improves AI coding agent productivity by co-locating UI, domain logic, and tests. The key success factors are:
 
 1. **Contracts** (URLs, APIs, events, HTML fragments) serve as safe boundaries
-2. **Navigation via redirects** and Referer/back patterns preserves UX without breaking autonomy  
+2. **Navigation via redirects** and Referer/back patterns preserves UX without breaking autonomy
 3. **Cross-SCS workflows** remain the main challenge but can be handled with events or sagas
 4. **SSR patterns** and server-side composition are particularly agent-friendly
 
