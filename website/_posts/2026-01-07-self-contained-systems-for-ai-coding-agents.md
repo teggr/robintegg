@@ -16,7 +16,7 @@ AI does not just change how we write code. It changes how we should structure ou
 
 Simon Martinelli's observation sparked my thinking about why AI coding agents seem to perform better when working with repositories that contain both UI and domain logic together, and how this relates to broader architectural patterns.
 
-The answer lies in the Self-Contained Systems (SCS) architecture pattern. AI coding agents—LLMs that generate or modify code—work best when they can reason about a complete, self-contained slice of functionality. SCS aligns naturally with how AI agents understand and modify code, making it an ideal architectural approach for codebases that will be maintained or extended by AI assistants.
+Perhaps it's time to revisit the Self-Contained Systems (SCS) architecture pattern through the lens of AI coding agents. SCS provides a natural fit for how AI agents work—LLMs that generate or modify code perform best when they can reason about complete, self-contained slices of functionality. The co-location of UI, domain logic, and data that SCS promotes aligns remarkably well with what AI agents need to understand and modify code effectively.
 
 ## Why SCS matters for AI agents
 
@@ -33,125 +33,23 @@ The SCS architecture pattern satisfies all of these conditions. Each system owns
 
 ### UI and domain logic together
 
-When UI components and backend logic live in the same codebase, AI agents can see the complete picture. For example, an Orders SCS containing `OrderController`, HTML templates, and database access in one repository allows an agent to:
+When UI components and backend logic live in the same codebase, AI agents can see the complete picture. An Orders SCS containing controllers, templates, and database access in one repository allows an agent to understand how user actions map to backend operations, generate UI changes that correctly call backend endpoints, and validate that data flows correctly from UI to persistence.
 
-- Understand how user actions map to backend operations
-- Generate UI changes that correctly call backend endpoints
-- Validate that data flows correctly from UI to persistence
-
-This co-location reduces hallucinations and improves the correctness of AI-generated code.
-
-```java
-@Controller
-@RequestMapping("/orders")
-public class OrderController {
-    
-    @Autowired
-    private OrderService orderService;
-    
-    @GetMapping("/{orderId}")
-    public String viewOrder(@PathVariable Long orderId, Model model) {
-        Order order = orderService.findById(orderId);
-        model.addAttribute("order", order);
-        return "order-detail";
-    }
-    
-    @PostMapping
-    public String createOrder(@RequestParam Long customerId, RedirectAttributes attrs) {
-        Order order = orderService.createOrder(customerId);
-        attrs.addFlashAttribute("message", "Order created successfully");
-        return "redirect:/orders/" + order.getId();
-    }
-}
-```
-
-An agent working with this code can see the complete flow from HTTP request to template rendering, making it easier to add new endpoints or modify existing ones correctly.
+This co-location reduces hallucinations and improves the correctness of AI-generated code. An agent can see the complete flow from HTTP request to template rendering in a single context, making it easier to add new endpoints or modify existing ones correctly.
 
 ### Explicit contracts
 
-AI agents benefit from explicit contracts between systems. These contracts can take several forms:
+AI agents thrive on explicit contracts between systems—REST APIs with clear schemas, event structures for asynchronous communication, and URL patterns for navigation. These contracts allow agents to safely generate code that integrates with other systems without needing to understand their internal implementation.
 
-**REST APIs** with clear request/response schemas:
-
-```java
-@RestController
-@RequestMapping("/api/customers")
-public class CustomerApi {
-    
-    @GetMapping("/{customerId}")
-    public CustomerDto getCustomer(@PathVariable Long customerId) {
-        return customerService.findById(customerId);
-    }
-}
-```
-
-**Event schemas** for asynchronous communication:
-
-```java
-@Data
-public class OrderCreatedEvent {
-    private Long orderId;
-    private Long customerId;
-    private LocalDateTime createdAt;
-    private BigDecimal totalAmount;
-}
-```
-
-**URL contracts** for navigation:
-
-```java
-// Orders system links to Customers system
-String customerUrl = "/customers/" + order.getCustomerId();
-```
-
-These explicit contracts allow agents to safely generate code that calls other systems without needing to understand their internal implementation.
+The key insight is that agents can work confidently within one SCS while respecting the boundaries of others through well-defined interfaces.
 
 ### Server-side rendering and HTML fragments
 
-Server-side rendering (SSR) patterns are particularly agent-friendly. When one SCS needs to embed content from another, it can request HTML fragments:
-
-```java
-@GetMapping("/customers/{customerId}/orders-summary")
-public String getOrdersSummary(@PathVariable Long customerId) {
-    List<Order> orders = orderService.findByCustomerId(customerId);
-    return renderOrdersSummaryFragment(orders);
-}
-```
-
-The consuming system can embed this fragment without understanding the Orders system's internal logic:
-
-```html
-<div id="customer-orders">
-    <!-- Fragment from Orders SCS -->
-    <div th:replace="~{ordersFragment}"></div>
-</div>
-```
-
-AI agents can reason about these fragment contracts without needing to understand the full implementation details of each system.
+Server-side rendering (SSR) patterns are particularly agent-friendly. When one SCS needs to embed content from another, it can request HTML fragments as opaque contracts. AI agents can reason about embedding these fragments without needing to understand the full implementation details of each system—they simply need to know the fragment endpoint and how to include it.
 
 ### Navigation patterns
 
-Navigation between systems can be handled through simple URL patterns, redirects, and HTTP headers. This maintains autonomy while preserving user experience:
-
-```java
-@PostMapping("/customers/{customerId}/orders/new")
-public String createOrderForCustomer(
-        @PathVariable Long customerId,
-        @RequestParam(required = false) String returnTo,
-        HttpServletRequest request) {
-    
-    Order order = orderService.createOrder(customerId);
-    
-    // Use explicit returnTo or fall back to Referer
-    String redirectUrl = returnTo != null 
-        ? returnTo 
-        : request.getHeader("Referer");
-    
-    return "redirect:" + redirectUrl;
-}
-```
-
-This pattern allows AI agents to maintain proper navigation flows without complex cross-system coordination.
+Navigation between systems can be handled through simple URL patterns, redirects, and HTTP headers. This maintains system autonomy while preserving user experience. AI agents can maintain proper navigation flows using explicit `returnTo` parameters or standard HTTP `Referer` headers without requiring complex cross-system coordination.
 
 ## Advantages for AI-assisted development
 
@@ -163,70 +61,30 @@ When working with SCS architecture, AI agents gain several advantages:
 4. **Safe deployment** — agents can generate changes in one SCS independently
 5. **Reduced coupling** — agents don't need to understand global state or shared databases
 
-Consider how an agent might add a new feature to display customer order history:
-
-```java
-// Agent can work entirely within the Orders SCS
-@GetMapping("/orders/customer/{customerId}")
-public String customerOrderHistory(
-        @PathVariable @Positive Long customerId,
-        Model model) {
-    List<Order> orders = orderService.findByCustomerId(customerId);
-    model.addAttribute("orders", orders);
-    model.addAttribute("customerId", customerId);
-    return "customer-orders";
-}
-```
-
-The agent doesn't need to coordinate with the Customers SCS or understand its internal structure. It simply uses the customer ID as a contract.
+The synergy becomes clear: an agent can add a new feature entirely within a single SCS context, using only customer IDs or other identifiers as contracts to other systems, without needing to coordinate across multiple repositories or understand complex dependency chains.
 
 ## Challenges to consider
 
 While SCS architecture works well with AI agents, there are some challenges:
 
-**Cross-system workflows** require careful design. When a business process spans multiple systems, agents need clear guidance about event ordering and eventual consistency:
+**Cross-system workflows** require careful design. When a business process spans multiple systems, agents need clear guidance about event ordering and eventual consistency. Publishing events to notify other systems becomes a key pattern.
 
-```java
-// Publishing an event for other systems
-@Transactional
-public Order createOrder(Long customerId, List<OrderItem> items) {
-    Order order = orderRepository.save(new Order(customerId, items));
-    eventPublisher.publish(new OrderCreatedEvent(order));
-    return order;
-}
-```
+**Data duplication** means agents must understand when data is cached versus authoritative. For example, caching a customer name in an Order entity for display purposes requires the agent to understand this is read-only cached data.
 
-**Data duplication** means agents must understand when data is cached versus authoritative:
+**Contract evolution** requires versioning strategies that agents can follow. API versioning (e.g., `/api/v2/orders`) provides a clear signal to agents about compatibility and changes.
 
-```java
-// Customer name cached in Order for display
-@Entity
-public class Order {
-    private Long customerId;
-    private String customerName; // cached from Customer system
-    // ...
-}
-```
+## The synergy between AI agents and SCS
 
-**Contract evolution** requires versioning strategies that agents can follow:
+A useful mental model is to think of each SCS as a mini-product or website, with AI agents as fast junior developers working inside it. Contracts and fragments are the only bridges to other systems.
 
-```java
-@GetMapping("/api/v2/orders/{orderId}")
-public OrderDtoV2 getOrderV2(@PathVariable Long orderId) {
-    // New version with additional fields
-}
-```
+This explains why agents perform better with SCS than with heavily layered microservices or monoliths:
 
-## Mental model for AI-assisted SCS development
+- **Everything needed for reasoning is co-located** — UI, logic, data, and tests are all visible
+- **Hidden dependencies are minimized** — only explicit contracts connect systems
+- **Navigation and UI integration are explicit** — no magic or framework conventions to learn
+- **Testing can be done in isolation** — each SCS is independently testable
 
-A useful mental model is to think of each SCS as a mini-product or website. AI agents are like fast junior developers working inside it. Contracts and fragments are the only bridges to other systems.
-
-This model explains why agents perform better with SCS than with heavily layered microservices or monoliths:
-
-- Everything needed for reasoning is co-located
-- Hidden dependencies are minimized
-- Navigation and UI integration are explicit
-- Testing can be done in isolation
+The architectural boundaries of SCS naturally align with the cognitive boundaries that AI agents work best within.
 
 ## Recommended patterns
 
@@ -238,49 +96,7 @@ This model explains why agents perform better with SCS than with heavily layered
 | Redirection with Referer / returnTo | Agents maintain navigation autonomously |
 | Event-driven integration | Agents don't need consumer details, only event structure |
 
-## Practical example
-
-Here's how an agent might add a "recent orders" widget to the customer page:
-
-**In the Orders SCS:**
-
-```java
-@RestController
-@RequestMapping("/api/fragments")
-public class OrderFragmentController {
-
-    @GetMapping("/recent-orders")
-    public String recentOrders(@RequestParam @Positive Long customerId) {
-        // Service method already limits to recent 5 orders
-        List<Order> orders = orderService.findRecentOrdersByCustomerId(customerId, 5);
-        return renderRecentOrdersFragment(orders);
-    }
-}
-```
-
-**In the Customers SCS:**
-
-```java
-@GetMapping("/customers/{customerId}")
-public String viewCustomer(@PathVariable Long customerId, Model model) {
-    Customer customer = customerService.findById(customerId);
-    model.addAttribute("customer", customer);
-
-    // Fetch orders fragment using proper URL encoding
-    String ordersUrl = UriComponentsBuilder
-        .fromHttpUrl("http://orders-service/api/fragments/recent-orders")
-        .queryParam("customerId", customerId)
-        .toUriString();
-    String ordersHtml = restTemplate.getForObject(ordersUrl, String.class);
-    model.addAttribute("ordersFragment", ordersHtml);
-
-    return "customer-detail";
-}
-```
-
-The agent working in either system has a clear understanding of the contract and can make changes safely.
-
-## Takeaways
+## Key takeaways
 
 Self-Contained Systems architecture improves AI coding agent productivity by co-locating UI, domain logic, and tests. The key success factors are:
 
