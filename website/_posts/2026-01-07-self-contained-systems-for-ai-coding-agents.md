@@ -164,7 +164,9 @@ Consider how an agent might add a new feature to display customer order history:
 ```java
 // Agent can work entirely within the Orders SCS
 @GetMapping("/orders/customer/{customerId}")
-public String customerOrderHistory(@PathVariable Long customerId, Model model) {
+public String customerOrderHistory(
+        @PathVariable @Positive Long customerId,
+        Model model) {
     List<Order> orders = orderService.findByCustomerId(customerId);
     model.addAttribute("orders", orders);
     model.addAttribute("customerId", customerId);
@@ -242,14 +244,11 @@ Here's how an agent might add a "recent orders" widget to the customer page:
 @RestController
 @RequestMapping("/api/fragments")
 public class OrderFragmentController {
-    
+
     @GetMapping("/recent-orders")
-    public String recentOrders(@RequestParam Long customerId) {
-        List<Order> orders = orderService
-            .findByCustomerId(customerId)
-            .stream()
-            .limit(5)
-            .collect(Collectors.toList());
+    public String recentOrders(@RequestParam @Positive Long customerId) {
+        // Service method already limits to recent 5 orders
+        List<Order> orders = orderService.findRecentOrdersByCustomerId(customerId, 5);
         return renderRecentOrdersFragment(orders);
     }
 }
@@ -262,14 +261,15 @@ public class OrderFragmentController {
 public String viewCustomer(@PathVariable Long customerId, Model model) {
     Customer customer = customerService.findById(customerId);
     model.addAttribute("customer", customer);
-    
-    // Fetch orders fragment
-    String ordersHtml = restTemplate.getForObject(
-        "http://orders-service/api/fragments/recent-orders?customerId=" + customerId,
-        String.class
-    );
+
+    // Fetch orders fragment using proper URL encoding
+    String ordersUrl = UriComponentsBuilder
+        .fromHttpUrl("http://orders-service/api/fragments/recent-orders")
+        .queryParam("customerId", customerId)
+        .toUriString();
+    String ordersHtml = restTemplate.getForObject(ordersUrl, String.class);
     model.addAttribute("ordersFragment", ordersHtml);
-    
+
     return "customer-detail";
 }
 ```
