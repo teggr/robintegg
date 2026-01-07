@@ -10,7 +10,11 @@ tags:
   - microservices
 ---
 
-Martin Simonellis recently shared an interesting observation on Bluesky: there's anecdotal evidence that AI coding agents seem to perform better when working with repositories that contain both UI and domain logic together. This observation sparked my thinking about why this might be the case and how it relates to broader architectural patterns.
+<blockquote class="bluesky-embed" data-bluesky-uri="at://did:plc:detb4ybuqm4rx75degde6pcq/app.bsky.feed.post/3ma4gvcm7wc2v" data-bluesky-cid="bafyreie7hf7p6nni5rgoytrp2aryrcsq45zakr7mw4cgghawvnmrqgbree" data-bluesky-embed-color-mode="system"><p lang="en">I believe that with AI agents, separated frontend and backend development is slowly coming to an end.
+One language, one model, one flow. Less coordination, less friction, more focus on business logic.
+AI does not just change how we write code. It changes how we should structure our systems.<br><br><a href="https://bsky.app/profile/did:plc:detb4ybuqm4rx75degde6pcq/post/3ma4gvcm7wc2v?ref_src=embed">[image or embed]</a></p>&mdash; Simon Martinelli (<a href="https://bsky.app/profile/did:plc:detb4ybuqm4rx75degde6pcq?ref_src=embed">@martinelli.ch</a>) <a href="https://bsky.app/profile/did:plc:detb4ybuqm4rx75degde6pcq/post/3ma4gvcm7wc2v?ref_src=embed">December 16, 2025 at 3:16 PM</a></blockquote><script async src="https://embed.bsky.app/static/embed.js" charset="utf-8"></script>
+
+Simon Martinelli's observation sparked my thinking about why AI coding agents seem to perform better when working with repositories that contain both UI and domain logic together, and how this relates to broader architectural patterns.
 
 The answer lies in the Self-Contained Systems (SCS) architecture pattern. AI coding agents—LLMs that generate or modify code—work best when they can reason about a complete, self-contained slice of functionality. SCS aligns naturally with how AI agents understand and modify code, making it an ideal architectural approach for codebases that will be maintained or extended by AI assistants.
 
@@ -289,7 +293,7 @@ When building systems that will be maintained or extended by AI coding agents, t
 
 ## References
 
-- [Martin Simonellis' Bluesky post on AI agents and repository structure](https://bsky.app/profile/martinsimonellis.bsky.social)
+- [Simon Martinelli's Bluesky post on AI agents and system structure](https://bsky.app/profile/did:plc:detb4ybuqm4rx75degde6pcq/post/3ma4gvcm7wc2v)
 - [Self-Contained Systems](https://scs-architecture.org/)
 - [Microservices patterns](https://microservices.io/patterns/index.html)
 - [Spring Boot documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/)
