@@ -12,11 +12,11 @@ tags:
 
 <blockquote class="bluesky-embed" data-bluesky-uri="at://did:plc:detb4ybuqm4rx75degde6pcq/app.bsky.feed.post/3ma4gvcm7wc2v" data-bluesky-cid="bafyreie7hf7p6nni5rgoytrp2aryrcsq45zakr7mw4cgghawvnmrqgbree" data-bluesky-embed-color-mode="system"><p lang="en">I believe that with AI agents, separated frontend and backend development is slowly coming to an end.
 One language, one model, one flow. Less coordination, less friction, more focus on business logic.
-AI does not just change how we write code. It changes how we should structure our systems.<br><br><a href="https://bsky.app/profile/did:plc:detb4ybuqm4rx75degde6pcq/post/3ma4gvcm7wc2v?ref_src=embed">[image or embed]</a></p>&mdash; Simon Martinelli (<a href="https://bsky.app/profile/did:plc:detb4ybuqm4rx75degde6pcq?ref_src=embed">@martinelli.ch</a>) <a href="https://bsky.app/profile/did:plc:detb4ybuqm4rx75degde6pcq/post/3ma4gvcm7wc2v?ref_src=embed">December 16, 2025 at 3:16 PM</a></blockquote><script async src="https://embed.bsky.app/static/embed.js" charset="utf-8"></script>
+AI does not just change how we write code. It changes how we should structure our systems.</p>&mdash; Simon Martinelli (<a href="https://bsky.app/profile/did:plc:detb4ybuqm4rx75degde6pcq?ref_src=embed">@martinelli.ch</a>) <a href="https://bsky.app/profile/did:plc:detb4ybuqm4rx75degde6pcq/post/3ma4gvcm7wc2v?ref_src=embed">December 16, 2025 at 3:16 PM</a></blockquote><script async src="https://embed.bsky.app/static/embed.js" charset="utf-8"></script>
 
-Simon Martinelli's observation sparked my thinking about why AI coding agents seem to perform better when working with repositories that contain both UI and domain logic together, and how this relates to broader architectural patterns.
+Simon Martinelli's observation and my own experience sparked some further thinking about taking advantage of AI coding agents' potential better performance when working with repositories that contain both UI and domain logic together, and how this relates to broader architectural patterns.
 
-Perhaps it's time to revisit the Self-Contained Systems (SCS) architecture pattern through the lens of AI coding agents. SCS provides a natural fit for how AI agents work—LLMs that generate or modify code perform best when they can reason about complete, self-contained slices of functionality. The co-location of UI, domain logic, and data that SCS promotes aligns remarkably well with what AI agents need to understand and modify code effectively.
+Perhaps it's time to revisit the [Self-Contained Systems (SCS) architecture](https://scs-architecture.org/) pattern through the lens of AI coding agents. SCS provides a natural fit for how AI agents work—LLMs that generate or modify code perform best when they can reason about complete, self-contained slices of functionality. The co-location of UI, domain logic, and data that SCS promotes aligns remarkably well with what AI agents need to understand and modify code effectively.
 
 ## Why SCS matters for AI agents
 
@@ -47,10 +47,6 @@ The key insight is that agents can work confidently within one SCS while respect
 
 Server-side rendering (SSR) patterns are particularly agent-friendly. When one SCS needs to embed content from another, it can request HTML fragments as opaque contracts. AI agents can reason about embedding these fragments without needing to understand the full implementation details of each system—they simply need to know the fragment endpoint and how to include it.
 
-### Navigation patterns
-
-Navigation between systems can be handled through simple URL patterns, redirects, and HTTP headers. This maintains system autonomy while preserving user experience. AI agents can maintain proper navigation flows using explicit `returnTo` parameters or standard HTTP `Referer` headers without requiring complex cross-system coordination.
-
 ## Advantages for AI-assisted development
 
 When working with SCS architecture, AI agents gain several advantages:
@@ -77,7 +73,7 @@ While SCS architecture works well with AI agents, there are some challenges:
 
 A useful mental model is to think of each SCS as a mini-product or website, with AI agents as fast junior developers working inside it. Contracts and fragments are the only bridges to other systems.
 
-This explains why agents perform better with SCS than with heavily layered microservices or monoliths:
+This explains why agents could perform better with SCS than with heavily layered microservices or monoliths:
 
 - **Everything needed for reasoning is co-located** — UI, logic, data, and tests are all visible
 - **Hidden dependencies are minimized** — only explicit contracts connect systems
@@ -86,30 +82,9 @@ This explains why agents perform better with SCS than with heavily layered micro
 
 The architectural boundaries of SCS naturally align with the cognitive boundaries that AI agents work best within.
 
-## Recommended patterns
-
-| Pattern | Why it helps AI agents |
-|---------|----------------------|
-| Vertical slices with UI + domain | Agents see full behavior in one codebase |
-| Contracts for URLs / APIs / events | Agents can safely generate calls or links |
-| SSR / HTML fragments for cross-SCS UI | Agents reason about embedding without internal logic |
-| Redirection with Referer / returnTo | Agents maintain navigation autonomously |
-| Event-driven integration | Agents don't need consumer details, only event structure |
-
-## Key takeaways
-
-Self-Contained Systems architecture improves AI coding agent productivity by co-locating UI, domain logic, and tests. The key success factors are:
-
-1. **Contracts** (URLs, APIs, events, HTML fragments) serve as safe boundaries
-2. **Navigation via redirects** and Referer/back patterns preserves UX without breaking autonomy
-3. **Cross-SCS workflows** remain the main challenge but can be handled with events or sagas
-4. **SSR patterns** and server-side composition are particularly agent-friendly
-
 When building systems that will be maintained or extended by AI coding agents, the SCS architecture pattern provides a natural fit. It creates clear boundaries, explicit contracts, and localized reasoning—exactly what AI agents need to generate correct, maintainable code.
 
 ## References
 
 - [Simon Martinelli's Bluesky post on AI agents and system structure](https://bsky.app/profile/did:plc:detb4ybuqm4rx75degde6pcq/post/3ma4gvcm7wc2v)
 - [Self-Contained Systems](https://scs-architecture.org/)
-- [Microservices patterns](https://microservices.io/patterns/index.html)
-- [Spring Boot documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/)
