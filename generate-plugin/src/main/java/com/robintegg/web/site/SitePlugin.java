@@ -1,5 +1,7 @@
 package com.robintegg.web.site;
 
+import com.robintegg.web.github.GitHubClient;
+import com.robintegg.web.github.GitHubRepository;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -8,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class SitePlugin {
@@ -31,9 +35,36 @@ public class SitePlugin {
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
         Site site = (Site) unmarshaller.unmarshal(Files.newInputStream(siteConfigFile));
+        
+        // Fetch GitHub activity for the site
+        if (site.getGithubUsername() != null && !site.getGithubUsername().isEmpty()) {
+            fetchGitHubActivity(site);
+        }
 
         return site;
 
+    }
+    
+    private static void fetchGitHubActivity(Site site) {
+        try {
+            GitHubClient gitHubClient = new GitHubClient();
+            
+            // Exclude personal website and specific repositories
+            Set<String> excludedRepos = Set.of("robintegg", "yorkshiregolf");
+            
+            List<GitHubRepository> activeRepos = gitHubClient.getActiveRepositories(
+                    site.getGithubUsername(),
+                    excludedRepos,
+                    3  // Max 3 repositories
+            );
+            
+            site.setActiveRepositories(activeRepos);
+            log.info("Loaded {} active GitHub repositories", activeRepos.size());
+            
+        } catch (Exception e) {
+            log.error("Failed to fetch GitHub activity, continuing without it", e);
+            // Don't fail the build if GitHub API is unavailable
+        }
     }
 
 }

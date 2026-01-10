@@ -3,6 +3,7 @@ package com.robintegg.web.theme.layouts;
 import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.engine.RenderModel;
+import com.robintegg.web.github.GitHubRepository;
 import com.robintegg.web.index.IndexPlugin;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
@@ -25,6 +26,8 @@ public class HomeLayout {
     // TODO: render the pagination
 
     PagedContent<IndexContent> indexedContent = IndexPlugin.INSTANCE.getIndexedContent(renderModel.getPage().getPageable());
+    
+    List<GitHubRepository> activeRepos = renderModel.getContext().getSite().getActiveRepositories();
 
     return div()
         .withClass("home")
@@ -36,6 +39,40 @@ public class HomeLayout {
                     .withText(renderModel.getPage().getTitle())
             ),
             renderModel.getContent(),
+            // GitHub Activity Section
+            iff(
+                activeRepos != null && !activeRepos.isEmpty(),
+                each(
+                    h2()
+                        .withClass("github-activity-heading")
+                        .withText("Latest GitHub Activity"),
+                    div()
+                        .withClass("github-activity-container")
+                        .with(
+                            each(activeRepos, repo ->
+                                div()
+                                    .withClass("github-activity-box")
+                                    .with(
+                                        h3()
+                                            .withClass("github-repo-name")
+                                            .with(
+                                                a()
+                                                    .withHref(repo.getHtmlUrl())
+                                                    .withTarget("_blank")
+                                                    .withRel("noopener noreferrer")
+                                                    .withText(repo.getName())
+                                            ),
+                                        iff(
+                                            repo.getDescription() != null && !repo.getDescription().isEmpty(),
+                                            p()
+                                                .withClass("github-repo-description")
+                                                .withText(repo.getDescription())
+                                        )
+                                    )
+                            )
+                        )
+                )
+            ),
             iff(
                 indexedContent.getContent().size() > 0,
                 each(
