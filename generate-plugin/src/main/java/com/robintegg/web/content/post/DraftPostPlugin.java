@@ -3,6 +3,7 @@ package com.robintegg.web.content.post;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
+import com.robintegg.web.site.Site;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +29,7 @@ public class DraftPostPlugin implements ContentTypePlugin {
 
   @SneakyThrows
   @Override
-  public void loadContent(Path sourceDirectory, ContentModel contentModel) {
+  public void loadContent(Path sourceDirectory, Site site, ContentModel contentModel) {
 
     if (!includeDrafts) {
       log.info("not including drafts");

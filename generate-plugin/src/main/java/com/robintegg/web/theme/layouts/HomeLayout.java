@@ -4,6 +4,7 @@ import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.github.GitHubRepository;
+import com.robintegg.web.github.GithubActivityPlugin;
 import com.robintegg.web.index.IndexPlugin;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
@@ -27,7 +28,7 @@ public class HomeLayout {
 
     PagedContent<IndexContent> indexedContent = IndexPlugin.INSTANCE.getIndexedContent(renderModel.getPage().getPageable());
     
-    List<GitHubRepository> activeRepos = renderModel.getContext().getSite().getActiveRepositories();
+    List<GitHubRepository> activeRepos = GithubActivityPlugin.INSTANCE.getActiveRepositories();
 
     return div()
         .withClass("home")

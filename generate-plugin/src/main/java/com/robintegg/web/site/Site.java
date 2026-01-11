@@ -1,17 +1,12 @@
 package com.robintegg.web.site;
 
-import com.robintegg.web.github.GitHubRepository;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Slf4j
@@ -33,9 +28,6 @@ public class Site {
     private String url;
     private String baseUrl;
     private String feedUrl;
-    
-    @XmlTransient
-    private List<GitHubRepository> activeRepositories = new ArrayList<>();
 
     public boolean showExcerpts() {
         return false;
