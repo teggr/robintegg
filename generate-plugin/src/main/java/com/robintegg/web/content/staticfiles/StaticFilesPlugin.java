@@ -3,6 +3,7 @@ package com.robintegg.web.content.staticfiles;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
+import com.robintegg.web.site.Site;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +27,7 @@ public class StaticFilesPlugin implements ContentTypePlugin {
 
   @SneakyThrows
   @Override
-  public void loadContent(Path sourceDirectory, ContentModel contentModel) {
+  public void loadContent(Path sourceDirectory, Site site, ContentModel contentModel) {
 // load filers from all none special folders
     var staticDirectory = sourceDirectory.resolve(assetDirectory);
     log.info("static directory: " + staticDirectory.toAbsolutePath());

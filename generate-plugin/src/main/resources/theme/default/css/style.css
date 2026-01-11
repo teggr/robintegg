@@ -19,3 +19,52 @@
 .pagination a, .pagination .page_number {
     padding: 8px 16px;
 }
+
+/* GitHub Activity Section */
+.github-activity-heading {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.github-activity-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.github-activity-box {
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 1rem;
+    background-color: #ffffff;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.github-activity-box:hover {
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+}
+
+.github-repo-name {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+}
+
+.github-repo-name a {
+    color: #2a7ae2;
+    text-decoration: none;
+}
+
+.github-repo-name a:hover {
+    text-decoration: underline;
+}
+
+.github-repo-description {
+    margin: 0;
+    color: #586069;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}

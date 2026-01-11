@@ -33,8 +33,11 @@ public class WebSiteBuilder {
         // register plugins
         themePlugin.registerPlugins();
 
+        // load site configuration
+        Site site = SitePlugin.loadFromFile(workingDirectory);
+
         // define the source of content
-        var contentSource = new ContentSource(workingDirectory);
+        var contentSource = new ContentSource(site, workingDirectory);
 
         // load content into model and populate plugins
         ContentModel contentModel = new ContentModel();
@@ -47,9 +50,6 @@ public class WebSiteBuilder {
         log.info("environment: {}", environment);
 
         context.setEnvironment(environment);
-
-        Site site = SitePlugin.loadFromFile(workingDirectory);
-
         context.setSite(site);
 
         // load layouts

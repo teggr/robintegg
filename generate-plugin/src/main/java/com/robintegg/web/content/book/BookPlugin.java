@@ -3,7 +3,7 @@ package com.robintegg.web.content.book;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
-import com.robintegg.web.theme.pages.BooksPage;
+import com.robintegg.web.site.Site;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -33,7 +33,7 @@ public class BookPlugin implements ContentTypePlugin {
 
   @SneakyThrows
   @Override
-  public void loadContent(Path sourceDirectory, ContentModel contentModel) {
+  public void loadContent(Path sourceDirectory, Site site, ContentModel contentModel) {
     // load books from folder with xml
     var booksDirectory = sourceDirectory.resolve("_books");
     log.info("books directory: " + booksDirectory.toAbsolutePath());
