@@ -101,6 +101,46 @@ public class Page {
       return stringList.get(0);
   }
 
+  public String getWebsite() {
+      List<String> stringList = data.get("website");
+      if (stringList == null) {
+          return null;
+      }
+      return stringList.get(0);
+  }
+
+  public String getIcon() {
+      List<String> stringList = data.get("icon");
+      if (stringList == null) {
+          return null;
+      }
+      return stringList.get(0);
+  }
+
+  public String getItunesUrl() {
+      List<String> stringList = data.get("itunes_url");
+      if (stringList == null) {
+          return null;
+      }
+      return stringList.get(0);
+  }
+
+  public String getRssUrl() {
+      List<String> stringList = data.get("rss_url");
+      if (stringList == null) {
+          return null;
+      }
+      return stringList.get(0);
+  }
+
+  public String getPocketcastsUrl() {
+      List<String> stringList = data.get("pocketcasts_url");
+      if (stringList == null) {
+          return null;
+      }
+      return stringList.get(0);
+  }
+
     public String getCategory() {
         List<String> stringList = data.get("category");
         if (stringList == null) {

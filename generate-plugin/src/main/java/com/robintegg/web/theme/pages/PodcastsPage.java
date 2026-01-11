@@ -57,8 +57,14 @@ public class PodcastsPage {
                                       return li()
                                           .with(
                                               h3()
-                                                  .with(
-                                                      a()
+                                                  .with(                                                      iff(
+                                                              podcast.getIcon() != null,
+                                                              img()
+                                                                      .withSrc(podcast.getIcon())
+                                                                      .withAlt("Podcast Icon")
+                                                                      .withClass("podcast-icon-small")
+                                                                      .withStyle("width: 32px; height: 32px; margin-right: 10px;")
+                                                      ),                                                      a()
                                                           .withClass("post-link")
                                                           .withHref(Utils.relativeUrl(podcast.getUrl()))
                                                           .withText(Utils.relativeUrl(podcast.getTitle()))
