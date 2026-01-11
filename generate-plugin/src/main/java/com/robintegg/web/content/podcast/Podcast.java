@@ -3,7 +3,6 @@ package com.robintegg.web.content.podcast;
 import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.content.IndexedContent;
 import com.robintegg.web.engine.ContentItem;
-import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.content.TaggedContent;
 import com.robintegg.web.engine.RenderModel;
 import j2html.tags.DomContent;
@@ -69,6 +68,46 @@ public class Podcast implements ContentItem, TaggedContent, IndexedContent {
 
   public DomContent getContent(RenderModel renderModel) {
     return each();
+  }
+
+  public String getWebsite() {
+    List<String> stringList = data.get("website");
+    if (stringList == null) {
+      return null;
+    }
+    return stringList.get(0);
+  }
+
+  public String getIcon() {
+    List<String> stringList = data.get("icon");
+    if (stringList == null) {
+      return null;
+    }
+    return stringList.get(0);
+  }
+
+  public String getItunesUrl() {
+    List<String> stringList = data.get("itunes_url");
+    if (stringList == null) {
+      return null;
+    }
+    return stringList.get(0);
+  }
+
+  public String getRssUrl() {
+    List<String> stringList = data.get("rss_url");
+    if (stringList == null) {
+      return null;
+    }
+    return stringList.get(0);
+  }
+
+  public String getPocketcastsUrl() {
+    List<String> stringList = data.get("pocketcasts_url");
+    if (stringList == null) {
+      return null;
+    }
+    return stringList.get(0);
   }
 
   @Override

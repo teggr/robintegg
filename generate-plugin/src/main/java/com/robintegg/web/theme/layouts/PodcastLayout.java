@@ -78,13 +78,80 @@ public class PodcastLayout {
                         div()
                                 .withClass("post-content e-content")
                                 .attr("itemprop", "articleBody")
-                                .withText(
-                                        renderModel.getPage().getSubtitle()
+                                .with(
+                                        div()
+                                                .withClass("podcast-info")
+                                                .withStyle("display: flex; align-items: center; gap: 10px;")
+                                                .with(
+                                                        iff(
+                                                                renderModel.getPage().getIcon() != null,
+                                                                img()
+                                                                        .withSrc(renderModel.getPage().getIcon())
+                                                                        .withAlt("Podcast Icon")
+                                                                        .withClass("podcast-icon")
+                                                                        .withWidth("64")
+                                                                        .withHeight("64")
+                                                        ),
+                                                        text(
+                                                                renderModel.getPage().getSubtitle()
+                                                        )
+                                                ),
+                                        iff(
+                                                renderModel.getPage().getWebsite() != null,
+                                                div()
+                                                        .withClass("podcast-website")
+                                                        .with(
+                                                                text("Website: "),
+                                                                a()
+                                                                        .withHref(renderModel.getPage().getWebsite())
+                                                                        .withTarget("_blank")
+                                                                        .withRel("noopener noreferrer")
+                                                                        .withText(renderModel.getPage().getWebsite())
+                                                        )
+                                        ),
+                                        div()
+                                                .withClass("podcast-subscribe")
+                                                .with(
+                                                        text("Subscribe: "),
+                                                        iff(
+                                                                renderModel.getPage().getItunesUrl() != null,
+                                                                a()
+                                                                        .withHref(renderModel.getPage().getItunesUrl())
+                                                                        .withTarget("_blank")
+                                                                        .withRel("noopener noreferrer")
+                                                                        .withText("iTunes")
+                                                        ),
+                                                        iff(
+                                                                renderModel.getPage().getRssUrl() != null,
+                                                                each(
+                                                                        iff(
+                                                                                renderModel.getPage().getRssUrl() != null,
+                                                                                text(" | ")
+                                                                        ),
+                                                                        a()
+                                                                                .withHref(renderModel.getPage().getRssUrl())
+                                                                                .withTarget("_blank")
+                                                                                .withRel("noopener noreferrer")
+                                                                                .withText("RSS")
+                                                                )
+                                                        ),
+                                                        iff(
+                                                               
+                                                                renderModel.getPage().getPocketcastsUrl() != null,
+                                                                 each(
+                                                                        iff(
+                                                                                renderModel.getPage().getItunesUrl() != null || renderModel.getPage().getRssUrl() != null,
+                                                                                text(" | ")
+                                                                        ),
+                                                                        a()
+                                                                                .withHref(renderModel.getPage().getPocketcastsUrl())
+                                                                                .withTarget("_blank")
+                                                                                .withRel("noopener noreferrer")
+                                                                                .withText("Pocket Casts")
+                                                                )
+                                                        )
+                                                )
                                 ),
-                        a()
-                                .withClass("u-url")
-                                .withHref(renderModel.getPage().getPodnewsUrl())
-                                .withText("Find out more and subscribe to the Podcast on Podnews"),
                         a()
                                 .withClass("u-url")
                                 .withHref(Utils.relativeUrl(renderModel.getPage().getUrl()))
