@@ -2,6 +2,7 @@
 layout: post
 title: "Podcast List Update for 2026"
 date: "2026-01-10"
+image: /images/podcasts-2026.png
 tags:
   - podcasts
   - updates
