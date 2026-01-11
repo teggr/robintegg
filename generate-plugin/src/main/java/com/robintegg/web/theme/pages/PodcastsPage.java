@@ -40,6 +40,16 @@ public class PodcastsPage {
                             h2()
                                 .withClass("post-list-heading")
                                 .withText(renderModel.getPage().getListTitle()),
+                            p()
+                                .with(
+                                    text("You can also view this list on "),
+                                    a()
+                                        .withHref("https://lists.pocketcasts.com/60ff4a25-0374-40f6-906d-92a8ea884b10")
+                                        .withTarget("_blank")
+                                        .withRel("noopener noreferrer")
+                                        .withText("Pocket Casts"),
+                                    text(".")
+                                ),
                             ul()
                                 .withClass("post-list")
                                 .with(
