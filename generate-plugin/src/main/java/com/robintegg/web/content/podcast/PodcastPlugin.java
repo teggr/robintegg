@@ -3,7 +3,7 @@ package com.robintegg.web.content.podcast;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
-import com.robintegg.web.theme.pages.PodcastsPage;
+import com.robintegg.web.site.Site;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.commonmark.Extension;
@@ -25,7 +25,7 @@ public class PodcastPlugin implements ContentTypePlugin {
 
   @SneakyThrows
   @Override
-  public void loadContent(Path sourceDirectory, ContentModel contentModel) {
+  public void loadContent(Path sourceDirectory, Site site, ContentModel contentModel) {
     // load podcasts from folder with markdown
     var podcastDirectory = sourceDirectory.resolve("_podcasts");
     log.info("podcasts directory: " + podcastDirectory.toAbsolutePath());

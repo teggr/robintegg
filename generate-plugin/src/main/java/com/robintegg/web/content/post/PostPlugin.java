@@ -1,11 +1,9 @@
 package com.robintegg.web.content.post;
 
 import com.robintegg.web.engine.ContentModel;
-import com.robintegg.web.engine.Layout;
-import com.robintegg.web.plugins.ContentRenderPlugin;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
-import com.robintegg.web.theme.layouts.PostLayout;
+import com.robintegg.web.site.Site;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.commonmark.Extension;
@@ -17,7 +15,6 @@ import org.commonmark.parser.Parser;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -28,7 +25,7 @@ public class PostPlugin implements ContentTypePlugin {
 
   @SneakyThrows
   @Override
-  public void loadContent(Path sourceDirectory, ContentModel contentModel) {
+  public void loadContent(Path sourceDirectory, Site site, ContentModel contentModel) {
 
     // load posts from folder with markdown
     var postsDirectory = sourceDirectory.resolve("_posts");

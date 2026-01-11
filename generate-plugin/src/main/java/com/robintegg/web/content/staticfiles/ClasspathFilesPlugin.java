@@ -3,6 +3,7 @@ package com.robintegg.web.content.staticfiles;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
+import com.robintegg.web.site.Site;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
@@ -28,7 +29,7 @@ public class ClasspathFilesPlugin implements ContentTypePlugin {
   }
 
   @Override
-  public void loadContent(Path sourceDirectory, ContentModel contentModel) {
+  public void loadContent(Path sourceDirectory, Site site, ContentModel contentModel) {
 
     // list of classpath resources
     resourcePaths.stream()

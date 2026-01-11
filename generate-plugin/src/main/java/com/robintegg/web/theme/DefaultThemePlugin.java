@@ -10,11 +10,13 @@ import com.robintegg.web.content.staticfiles.StaticFilesPlugin;
 import com.robintegg.web.engine.ContentModel;
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.feed.FeedPlugin;
+import com.robintegg.web.github.GithubActivityPlugin;
 import com.robintegg.web.index.IndexPlugin;
 import com.robintegg.web.plugins.ContentRenderPlugin;
 import com.robintegg.web.plugins.ContentTypePlugin;
 import com.robintegg.web.plugins.Plugins;
 import com.robintegg.web.plugins.ThemePlugin;
+import com.robintegg.web.site.Site;
 import com.robintegg.web.tags.TagPlugin;
 import com.robintegg.web.theme.layouts.*;
 import com.robintegg.web.theme.pages.*;
@@ -29,7 +31,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
   }
 
   @Override
-  public void loadContent(Path sourceDirectory, ContentModel contentModel) {
+  public void loadContent(Path sourceDirectory, Site site, ContentModel contentModel) {
     contentModel.addPage(_404Page.create());
     contentModel.addPage(CategoriesPage.create());
     contentModel.addPage(TagsPage.create());
@@ -58,6 +60,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     PodcastPlugin.create().registerPlugins();
     PostPlugin.create().registerPlugins();
     StaticFilesPlugin.create("_static").registerPlugins();
+    GithubActivityPlugin.create().registerPlugins();
 
     FeedPlugin.create().registerPlugins();
     DraftPostPlugin.create().registerPlugins();
