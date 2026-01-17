@@ -52,7 +52,11 @@ public class Header {
                                                   .withHref(Utils.relativeUrl(myPage.getUrl()))
                                                   .withText(Utils.escape(myPage.getTitle()))
                                           );
-                                        })
+                                        }),
+                                        a()
+                                            .withClass("page-link")
+                                            .withHref("#follow-me")
+                                            .withText("Follow me")
                                     )
                             )
                     )
