@@ -53,6 +53,7 @@ public class Footer {
                                 .with(
                                     div()
                                         .withClass("social-links")
+                                        .withId("follow-me")
                                         .with(
                                             Social.create(renderModel))
                                 ),
