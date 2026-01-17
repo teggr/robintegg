@@ -42,12 +42,16 @@ public class FeedSubscription implements ContentItem, TaggedContent {
   }
 
   public String getTitle() {
-    return data.get("title").get(0);
+    List<String> stringList = data.get("title");
+    if (stringList == null || stringList.isEmpty()) {
+      return "";
+    }
+    return stringList.get(0);
   }
 
   public String getDescription() {
     List<String> stringList = data.get("description");
-    if (stringList == null) {
+    if (stringList == null || stringList.isEmpty()) {
       return "";
     }
     return stringList.get(0);
@@ -55,7 +59,7 @@ public class FeedSubscription implements ContentItem, TaggedContent {
 
   public String getThumbnail() {
     List<String> stringList = data.get("thumbnail");
-    if (stringList == null) {
+    if (stringList == null || stringList.isEmpty()) {
       return null;
     }
     return stringList.get(0);
@@ -63,7 +67,7 @@ public class FeedSubscription implements ContentItem, TaggedContent {
 
   public String getSiteUrl() {
     List<String> stringList = data.get("site_url");
-    if (stringList == null) {
+    if (stringList == null || stringList.isEmpty()) {
       return null;
     }
     return stringList.get(0);
@@ -71,7 +75,7 @@ public class FeedSubscription implements ContentItem, TaggedContent {
 
   public String getRssUrl() {
     List<String> stringList = data.get("rss_url");
-    if (stringList == null) {
+    if (stringList == null || stringList.isEmpty()) {
       return null;
     }
     return stringList.get(0);
@@ -79,7 +83,7 @@ public class FeedSubscription implements ContentItem, TaggedContent {
 
   public LocalDate getDate() {
     List<String> dates = data.get("date");
-    if (dates == null) {
+    if (dates == null || dates.isEmpty()) {
       return LocalDate.MAX;
     }
     return LocalDate.parse(dates.get(0));

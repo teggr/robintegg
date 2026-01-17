@@ -69,10 +69,14 @@ public class FeedsPage {
                               .with(
                                   iff(
                                       feed.getThumbnail() != null,
-                                      img()
-                                          .withSrc(feed.getThumbnail())
-                                          .withAlt(feed.getTitle())
-                                          .withStyle("width: 100%; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;")
+                                      div()
+                                          .withStyle("width: 100%; height: 150px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 4px; margin-bottom: 10px; overflow: hidden;")
+                                          .with(
+                                              img()
+                                                  .withSrc(feed.getThumbnail())
+                                                  .withAlt(feed.getTitle())
+                                                  .withStyle("max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;")
+                                          )
                                   ),
                                   h3()
                                       .withStyle("margin-top: 0; margin-bottom: 10px;")
