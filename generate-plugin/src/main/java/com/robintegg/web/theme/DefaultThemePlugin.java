@@ -2,6 +2,7 @@ package com.robintegg.web.theme;
 
 import com.robintegg.web.categories.CategoriesPlugin;
 import com.robintegg.web.content.book.BookPlugin;
+import com.robintegg.web.content.feed.FeedSubscriptionPlugin;
 import com.robintegg.web.content.podcast.PodcastPlugin;
 import com.robintegg.web.content.post.DraftPostPlugin;
 import com.robintegg.web.content.post.PostPlugin;
@@ -37,6 +38,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     contentModel.addPage(TagsPage.create());
     contentModel.addPage(PodcastsPage.create());
     contentModel.addPage(BooksPage.create());
+    contentModel.addPage(FeedsPage.create());
   }
 
   @Override
@@ -59,6 +61,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     BookPlugin.create().registerPlugins();
     PodcastPlugin.create().registerPlugins();
     PostPlugin.create().registerPlugins();
+    FeedSubscriptionPlugin.create().registerPlugins();
     StaticFilesPlugin.create("_static").registerPlugins();
     GithubActivityPlugin.create().registerPlugins();
 
