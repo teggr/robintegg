@@ -68,3 +68,76 @@
     font-size: 0.875rem;
     line-height: 1.5;
 }
+
+/* Share Buttons */
+.share-buttons {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e1e4e8;
+}
+
+.share-buttons h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #424242;
+}
+
+.share-buttons-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.share-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+}
+
+.share-x {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.share-x:hover {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.share-mastodon {
+    background-color: #6364FF;
+    color: #ffffff;
+}
+
+.share-mastodon:hover {
+    background-color: #5253e6;
+    color: #ffffff;
+}
+
+.share-bluesky {
+    background-color: #0085ff;
+    color: #ffffff;
+}
+
+.share-bluesky:hover {
+    background-color: #0070d9;
+    color: #ffffff;
+}
+
+.share-native {
+    background-color: #f0f0f0;
+    color: #424242;
+    border: 1px solid #d0d0d0;
+    cursor: pointer;
+}
+
+.share-native:hover {
+    background-color: #e0e0e0;
+}

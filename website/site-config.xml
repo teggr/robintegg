@@ -12,8 +12,9 @@
     <linkedinUsername>robintegg</linkedinUsername>
     <blueskyUsername>robintegg.bsky.social</blueskyUsername>
     <mastodonUsername>robintegg</mastodonUsername>
-    <feedUrl>https://robintegg.com/feed.xml</feedUrl>
+    <url>https://robintegg.com</url>
     <baseUrl></baseUrl>
+    <feedUrl>https://robintegg.com/feed.xml</feedUrl>
     <socialLink>
         <icon>github</icon>
         <username>teggr</username>

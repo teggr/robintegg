@@ -2,6 +2,7 @@ package com.robintegg.web.theme.layouts;
 
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.engine.RenderModel;
+import com.robintegg.web.theme.includes.ShareButtons;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
@@ -77,6 +78,7 @@ public class PostLayout {
                 .with(
                     renderModel.getContent()
                 ),
+            ShareButtons.create(renderModel),
             a()
                 .withClass("u-url")
                 .withHref(renderModel.getPage().getUrl())

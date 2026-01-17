@@ -2,6 +2,7 @@ package com.robintegg.web.theme.layouts;
 
 import com.robintegg.web.engine.Layout;
 import com.robintegg.web.engine.RenderModel;
+import com.robintegg.web.theme.includes.ShareButtons;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
@@ -84,6 +85,7 @@ public class BookLayout {
                                         .withWidth("150px")
                                         .withSrc(renderModel.getPage().getImageUrl())
                                 ),
+                        ShareButtons.create(renderModel),
                         a()
                                 .withClass("u-url")
                                 .withHref(Utils.relativeUrl(renderModel.getPage().getUrl()))
