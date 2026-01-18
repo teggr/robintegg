@@ -1,7 +1,6 @@
 ---
 title: Reading list for May 2022
 layout: default
-category: reading-list
 date: "2022-05-05"
 ---
 * [ErrorProne](https://errorprone.info/docs/installation)

@@ -1,7 +1,6 @@
 ---
 title: Reading list for December 2021
 layout: default
-category: reading-list
 date: "2021-12-05"
 ---
 * [Event handling](https://cadenceworkflow.io/docs/concepts/events/#event-aggregation-and-correlation)

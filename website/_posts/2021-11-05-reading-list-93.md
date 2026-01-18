@@ -1,7 +1,6 @@
 ---
 title: Reading list for November 2021
 layout: default
-category: reading-list
 date: "2021-11-05"
 ---
 * [Examples - Apache ECharts](https://echarts.apache.org/examples/en/index.html)

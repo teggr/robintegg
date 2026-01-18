@@ -1,7 +1,6 @@
 ---
 title: Reading list for week 27 of 2023
 layout: default
-category: reading-list
 date: "2023-07-04"
 ---
 * [GitHub - alyssaxuu/flowy: The minimal javascript library to create flowcharts ✨](https://github.com/alyssaxuu/flowy)
