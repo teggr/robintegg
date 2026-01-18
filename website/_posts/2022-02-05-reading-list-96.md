@@ -1,7 +1,6 @@
 ---
 title: Reading list for February 2022
 layout: default
-category: reading-list
 date: "2022-02-05"
 ---
 * [Top 10 Java Language Features](https://foojay.io/today/top-10-java-language-features/)

@@ -1,7 +1,6 @@
 ---
 title: Reading list for July 2021
 layout: default
-category: reading-list
 date: "2021-07-05"
 ---
 * [Oliver Drotbohm - Architecturally evident code with jMolecules](http://odrotbohm.de/2021/02/Architecturally-evident-code-with-jMolecules/)

@@ -34,7 +34,6 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
   @Override
   public void loadContent(Path sourceDirectory, Site site, ContentModel contentModel) {
     contentModel.addPage(_404Page.create());
-    contentModel.addPage(CategoriesPage.create());
     contentModel.addPage(TagsPage.create());
     contentModel.addPage(PodcastsPage.create());
     contentModel.addPage(BooksPage.create());
@@ -68,7 +67,6 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     FeedPlugin.create().registerPlugins();
     DraftPostPlugin.create().registerPlugins();
     TagPlugin.create().registerPlugins();
-    CategoriesPlugin.create().registerPlugins();
     IndexPlugin.create().registerPlugins();
 
     // TODO: jsass for sass compiling or move to ph-css or alternative

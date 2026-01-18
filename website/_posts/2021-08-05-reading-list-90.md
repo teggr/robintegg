@@ -1,7 +1,6 @@
 ---
 title: Reading list for August 2021
 layout: default
-category: reading-list
 date: "2021-08-05"
 ---
 * [How to store date, time, and timestamps in UTC time zone with JDBC and Hibernate](https://vladmihalcea.com/how-to-store-date-time-and-timestamps-in-utc-time-zone-with-jdbc-and-hibernate/)

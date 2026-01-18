@@ -1,7 +1,6 @@
 ---
 title: Reading list for March 2022
 layout: default
-category: reading-list
 date: "2022-03-05"
 ---
 * [GitHub - VerbalExpressions/JavaVerbalExpressions: Java regular expressions made easy.](https://github.com/VerbalExpressions/JavaVerbalExpressions)

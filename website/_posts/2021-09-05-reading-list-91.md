@@ -1,7 +1,6 @@
 ---
 title: Reading list for September 2021
 layout: default
-category: reading-list
 date: "2021-09-05"
 ---
 * [Implementing Bulk Updates with Spring Data JPA](https://thorben-janssen.com/implementing-bulk-updates-with-spring-data-jpa/)
