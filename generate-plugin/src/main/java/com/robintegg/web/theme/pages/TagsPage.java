@@ -35,6 +35,7 @@ public class TagsPage {
     public static DomContent render(RenderModel renderModel) {
         // Group tags alphabetically
         Map<Character, List<String>> tagsByLetter = TagPlugin.INSTANCE.getTags().stream()
+                .filter(tag -> tag != null && !tag.isEmpty())
                 .sorted(String.CASE_INSENSITIVE_ORDER)
                 .collect(Collectors.groupingBy(
                         tag -> Character.toUpperCase(tag.charAt(0)),
