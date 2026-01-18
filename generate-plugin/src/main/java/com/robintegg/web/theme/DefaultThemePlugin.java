@@ -37,6 +37,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     contentModel.addPage(PodcastsPage.create());
     contentModel.addPage(BooksPage.create());
     contentModel.addPage(FeedsPage.create());
+    contentModel.addPage(PostsPage.create("/posts/index.html", new com.robintegg.web.engine.Pageable(1, 10)));
   }
 
   @Override
@@ -48,6 +49,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     layouts.put("book", BookLayout.create());
     layouts.put("podcast", PodcastLayout.create());
     layouts.put("post", PostLayout.create());
+    layouts.put("posts", PostsLayout.create());
   }
 
   @Override
@@ -67,6 +69,7 @@ public class DefaultThemePlugin implements ContentTypePlugin, ContentRenderPlugi
     DraftPostPlugin.create().registerPlugins();
     TagPlugin.create().registerPlugins();
     IndexPlugin.create().registerPlugins();
+    com.robintegg.web.posts.PostsPlugin.create().registerPlugins();
 
     // TODO: jsass for sass compiling or move to ph-css or alternative
     ClasspathFilesPlugin.create(List.of(
