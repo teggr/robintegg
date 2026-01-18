@@ -1,6 +1,5 @@
 package com.robintegg.web.theme;
 
-import com.robintegg.web.categories.CategoriesPlugin;
 import com.robintegg.web.content.book.BookPlugin;
 import com.robintegg.web.content.feed.FeedSubscriptionPlugin;
 import com.robintegg.web.content.podcast.PodcastPlugin;
