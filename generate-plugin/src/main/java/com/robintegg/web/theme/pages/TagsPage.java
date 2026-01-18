@@ -6,12 +6,17 @@ import com.robintegg.web.tags.TagPlugin;
 import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static j2html.TagCreator.*;
 
 public class TagsPage {
+
+    private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public static Page create() {
 
@@ -53,7 +58,7 @@ public class TagsPage {
                         nav()
                                 .withClass("tags-alphabet-nav")
                                 .with(
-                                        each("ABCDEFGHIJKLMNOPQRSTUVWXYZ".chars()
+                                        each(ALPHABET.chars()
                                                 .mapToObj(c -> (char) c)
                                                 .toList(), letter -> {
                                             if (availableLetters.contains(letter)) {
