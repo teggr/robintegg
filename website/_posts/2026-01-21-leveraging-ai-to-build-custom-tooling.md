@@ -11,26 +11,17 @@ tags:
   - scripting
 ---
 
-The software landscape is exploding. Every day brings a flood of new SaaS products, frameworks, and platforms promising to solve your problems. Yet despite this abundance—or perhaps because of it—developers and technical professionals often find themselves stuck between tools that don't quite fit their needs.
+Every workflow has gaps. Those repetitive tasks you do manually because no existing tool handles them quite right. The data transformation you copy-paste through three different applications. The five-click process you repeat dozens of times a day. The script you wish existed to connect two systems that don't talk to each other.
 
-Here's the paradox: we have more software than ever, but less flexibility. The age-old advice to "not reinvent the wheel" has led us to accept generic solutions for unique problems, waiting for vendors to build features we need, or cobbling together complex integrations between tools that weren't designed to work together.
+These gaps are where custom tooling shines. Not massive applications or enterprise platforms—just small, focused utilities that plug the holes in your daily workflow. And AI has made creating these tools remarkably accessible.
 
-But there's a fundamental shift happening. AI has made it easier than ever to build exactly what you need, when you need it. The wheel is worth reinventing when AI can help you build a better one in minutes instead of days.
+You're not reinventing the wheel. You're asking AI to generate patterns it has seen thousands of times before, tweaked to fit your specific needs. The result? Just-in-time tooling that eliminates friction from your work.
 
-## The Challenge: Too Many Solutions, Not Enough Personalization
+## The Opportunity: Filling the Gaps in Your Workflow
 
-Let's be honest about where we are. The modern developer's toolkit is a maze of:
+The beauty of custom tooling is that it addresses the problems only you can see. Your specific workflow quirks. Your team's unique processes. The repetitive actions that take seconds individually but consume hours cumulatively.
 
-- SaaS products with features you don't need and missing features you do
-- Subscription fatigue (how many $9/month tools can you justify?)
-- Vendor lock-in that makes switching painful
-- Privacy concerns about where your data lives
-- Integration complexity between tools that don't naturally connect
-- Workflows that almost work but require manual intervention
-
-You've probably experienced this: you find a tool that does 80% of what you need, but that missing 20% requires either upgrading to an enterprise plan, submitting feature requests that languish in a backlog, or manually working around the limitations. The promise of "one tool to rule them all" rarely delivers because your workflow is unique to you and your team.
-
-The traditional advice is to adapt your workflow to the tool. But what if we flipped that equation?
+Traditional software development made custom solutions expensive—worth it only for major pain points. AI changes this equation dramatically. What used to take days of coding can now be generated in minutes. What required deep programming knowledge now needs mainly clear problem description.
 
 ## DHH Was Right: Build the Software You Want First
 
@@ -42,30 +33,41 @@ But traditionally, building custom software meant significant investment—hirin
 
 AI changes this calculus entirely. What once took weeks can now take hours. What required a team can now be done by one person with a clear idea of what they need.
 
-## The Opportunity: AI Makes Custom Tooling Accessible
+AI-powered coding assistants excel at generating standard patterns:
 
-Here's where it gets exciting. AI-powered coding assistants can:
+- Scripts that transform data from one format to another
+- Browser extensions that automate repetitive web interactions
+- Command-line tools that chain existing utilities together
+- Automation code that eliminates manual copy-paste workflows
+- Integration scripts that connect disparate systems
 
-- Generate working scripts from natural language descriptions
-- Create browser extensions from a list of requirements
-- Write automation code for repetitive workflows
-- Build command-line tools tailored to your exact needs
-- Transform data formats with custom parsers and generators
-- Integrate disparate APIs into unified workflows
+The key insight: AI isn't creating something novel—it's applying well-known patterns to your specific situation. It has seen thousands of CSV parsers, web scrapers, and automation scripts. It can generate one for your exact use case in seconds.
 
-The key is that AI accelerates the part of software development that's often the most time-consuming: translating requirements into working code. You still need to understand what you want and how to test it, but AI handles much of the implementation detail.
+## Identifying Opportunities for Custom Tooling
 
-This democratizes custom tooling. You don't need to be a professional developer to create useful automation. If you can describe the problem clearly and verify that the solution works, AI can help you build it.
+Where should you look for tooling opportunities? Focus on these patterns:
 
-## Practical Examples: Real Problems, Real Solutions
+**Repetitive manual actions**: Anything you do more than twice a day is automation-worthy. Formatting data, copying information between systems, checking status across multiple services.
 
-Let's look at concrete examples where AI-powered custom tooling solves real problems.
+**Workflow friction**: Those moments where you stop what you're doing to perform a secondary task. Switching between applications, reformatting output, manually triggering processes.
 
-### Chrome Extensions for Everyday Tasks
+**Process gaps**: Points where your workflow isn't supported by existing tools. Custom data transformations, specific integrations, unique reporting needs.
 
-Chrome extensions are particularly powerful because they can enhance any web application you use. Here's a real workflow problem: you frequently need to extract specific data from internal dashboards and format it for reports.
+**Team-specific needs**: Processes unique to your organization that off-the-shelf tools don't address. Internal APIs, proprietary formats, company-specific workflows.
 
-Instead of manually copying and pasting, then reformatting in Excel, you can ask an AI to build a Chrome extension that:
+These aren't grand architectural challenges—they're the small frictions that add up. Custom tooling eliminates them one by one.
+
+## Practical Examples: Plugging Real Workflow Gaps
+
+Let's look at concrete examples where custom tooling eliminates friction.
+
+### Chrome Extensions for Repetitive Web Tasks
+
+You work with an internal dashboard that requires exporting data for reports, but it lacks an export function. Rather than manually selecting, copying, and reformatting data dozens of times a week, create a Chrome extension that automates it.
+
+Describe to AI: "I need a Chrome extension that finds the table with class 'dashboard-table', extracts all rows, and downloads them as a CSV file."
+
+AI generates the code:
 
 ```javascript
 // Generated by AI: Extract table data and format as CSV
@@ -82,32 +84,28 @@ document.getElementById('export-button').addEventListener('click', () => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `dashboard-export-${new Date().toISOString().split('T')[0]}.csv`;
+  a.download = `export-${new Date().toISOString().split('T')[0]}.csv`;
   a.click();
 });
 ```
 
-With AI assistance, creating this extension takes minutes. You describe what you need ("add an export button to this table that downloads as CSV"), and AI generates the manifest, popup HTML, and JavaScript. You test it, refine it, and deploy it locally.
+Time saved: ~2 minutes per export × 20 exports per week = 40 minutes weekly. The extension took 10 minutes to create and test.
 
-No waiting for the vendor to add an export feature. No monthly subscription for a generic data extraction tool. Just a small, focused extension that does exactly what you need.
+### Automating Image Preparation
 
-### Automating Image Processing Workflows
+Your blog workflow requires preparing images: resize to specific dimensions, convert formats, optimize file size. You do this manually for each post, spending 5-10 minutes per image.
 
-Here's another common scenario: you regularly need to resize, crop, and optimize images for a blog or documentation. Manual editing in an image tool is tedious and inconsistent.
+Describe to AI: "I need a Python script that processes all images in a folder, resizes them to 1200px width while maintaining aspect ratio, converts to JPEG, and optimizes quality."
 
-With AI, you can describe your workflow and get a working Python script:
+AI generates:
 
 ```python
 # Generated by AI: Batch process images with specific requirements
 from PIL import Image
-import os
 from pathlib import Path
 
 def process_image(input_path, output_path, max_width=1200, quality=85):
-    """
-    Resize image to max width while maintaining aspect ratio,
-    and optimize for web
-    """
+    """Resize image to max width while maintaining aspect ratio"""
     with Image.open(input_path) as img:
         # Convert RGBA to RGB if needed
         if img.mode in ('RGBA', 'LA'):
@@ -121,12 +119,10 @@ def process_image(input_path, output_path, max_width=1200, quality=85):
             new_height = int(img.height * ratio)
             img = img.resize((max_width, new_height), Image.Resampling.LANCZOS)
         
-        # Save with optimization
         img.save(output_path, 'JPEG', quality=quality, optimize=True)
-        print(f"Processed: {input_path.name} -> {output_path.name}")
+        print(f"Processed: {input_path.name}")
 
 def process_directory(input_dir, output_dir):
-    """Process all images in directory"""
     input_path = Path(input_dir)
     output_path = Path(output_dir)
     output_path.mkdir(exist_ok=True)
@@ -138,26 +134,18 @@ def process_directory(input_dir, output_dir):
 
 if __name__ == '__main__':
     import sys
-    if len(sys.argv) != 3:
-        print("Usage: python process_images.py <input_dir> <output_dir>")
-        sys.exit(1)
-    
     process_directory(sys.argv[1], sys.argv[2])
 ```
 
-You can run this script whenever you have a batch of images to process:
+Run it: `python process_images.py ./raw-images ./optimized`
 
-```bash
-python process_images.py ./raw-images ./optimized
-```
+Time saved: ~7 minutes per post × 4 posts per month = 28 minutes monthly. Plus consistency—every image follows the same standards.
 
-AI helped you build a tool that fits your exact specifications—image dimensions, quality settings, file formats, and naming conventions. It's reproducible, scriptable, and can be integrated into build pipelines.
+### Command-Line Tools for Repetitive DevOps Tasks
 
-### Command-Line Tools for DevOps
+You check service health across multiple environments several times daily. Each check involves opening different URLs, manually noting status, and formatting results for the team.
 
-Repetitive DevOps tasks are prime candidates for custom tooling. Let's say you frequently need to check the status of multiple services across different environments and format the output in a specific way for your team's Slack channel.
-
-With AI assistance, you can create a command-line tool:
+Describe to AI: "I need a bash script that checks health endpoints for our services across staging and production, showing status with emojis."
 
 ```bash
 #!/bin/bash
@@ -177,15 +165,11 @@ check_service() {
     fi
 }
 
-# Services to check
 services=("api" "web" "worker" "cache")
 environments=("staging" "production")
 
 echo "🔍 Service Health Check - $(date)"
-echo "=================================="
-
 for env in "${environments[@]}"; do
-    echo ""
     echo "Environment: $env"
     for service in "${services[@]}"; do
         check_service "$env" "$service"
@@ -193,139 +177,97 @@ for env in "${environments[@]}"; do
 done
 ```
 
-Run it with:
+Time saved: ~3 minutes per check × 5 checks per day = 15 minutes daily. The script took 5 minutes to create.
 
-```bash
-./health-check.sh
-```
+### Connecting Systems That Don't Talk
 
-This script is tailored to your specific services and environments. It outputs in a format your team prefers. You can extend it to send notifications, log to files, or integrate with monitoring systems—all without vendor dependencies or complex tooling.
+Your team uses an internal API that requires authentication, but you need to integrate it with a monitoring dashboard that doesn't support your auth method. Rather than requesting a feature or migrating systems, create a small bridge script.
 
-### Enterprise Custom Tools: Wrapping AI for Team Use
+Describe to AI: "I need a Python script that fetches data from our internal API using OAuth, transforms it to the format our dashboard expects, and exposes it as a simple HTTP endpoint."
 
-In enterprise settings, you can use AI to create custom wrappers around AI capabilities themselves, making them more accessible to your team with guardrails and standardization.
+AI generates a lightweight integration layer—typically 50-100 lines of code that solves your specific problem. Deploy it as a small service, and suddenly your systems integrate seamlessly.
 
-For example, a script that generates standardized API documentation from code:
+## The Pattern: From Friction to Flow
 
-```python
-# Generated by AI: Generate API docs from source code
-import anthropic
-import sys
-from pathlib import Path
+Notice the pattern across these examples:
 
-def generate_api_docs(source_file):
-    """Use AI to generate API documentation from source code"""
-    
-    with open(source_file, 'r') as f:
-        code = f.read()
-    
-    client = anthropic.Anthropic()
-    
-    prompt = f"""
-    Analyze this API code and generate clear, standardized documentation in our company format:
-    
-    For each endpoint, include:
-    - HTTP method and path
-    - Description
-    - Request parameters (with types)
-    - Response format
-    - Example request/response
-    - Error codes
-    
-    Code:
-    {code}
-    """
-    
-    response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
-        max_tokens=4096,
-        messages=[{"role": "user", "content": prompt}]
-    )
-    
-    return response.content[0].text
+1. **Identify repetitive friction**: What do you do manually multiple times per day/week?
+2. **Describe the desired outcome**: What would eliminate that friction?
+3. **Generate with AI**: Let AI produce the standard patterns adapted to your needs
+4. **Test and refine**: Verify it works, adjust as needed
+5. **Use and iterate**: Deploy it, use it, improve it over time
 
-if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("Usage: python generate_docs.py <source_file>")
-        sys.exit(1)
-    
-    source_file = sys.argv[1]
-    docs = generate_api_docs(source_file)
-    
-    # Write to docs directory
-    output_file = Path('docs') / f"{Path(source_file).stem}_api.md"
-    output_file.parent.mkdir(exist_ok=True)
-    
-    with open(output_file, 'w') as f:
-        f.write(docs)
-    
-    print(f"Generated documentation: {output_file}")
-```
+The entire cycle—from identifying a problem to having a working solution—takes minutes to hours, not days to weeks. This changes what's economically viable to automate.
 
-This tool ensures consistent documentation across your codebase by wrapping AI with your organization's standards. Team members can use it without understanding the underlying AI APIs, and you maintain control over formatting and quality.
+## Getting Started: Your First Custom Tool
 
-## Getting Started: From Idea to Working Tool
+Start small. Pick one repetitive task you did today:
 
-The pattern for building AI-powered custom tooling is straightforward:
+- Did you copy data between applications?
+- Did you manually format information?
+- Did you check multiple places to gather status?
+- Did you perform the same sequence of commands?
 
-1. **Identify the pain point**: What repetitive task wastes your time? What data transformation do you do manually? What integration is missing between your tools?
+Describe to an AI assistant what you wish existed. Be specific about inputs, outputs, and format. Most AI assistants (GitHub Copilot, Claude, ChatGPT, etc.) can generate working code from clear descriptions.
 
-2. **Describe the solution clearly**: Be specific about inputs, outputs, and behavior. "I need a script that reads CSV files from a directory, filters rows where the status column is 'active', and writes the results to a new file with today's date in the filename."
+Test the generated code with real data. Fix any issues. Save the script somewhere accessible. Use it tomorrow when you face the same task again.
 
-3. **Use AI to generate the initial implementation**: Whether using GitHub Copilot, Claude, ChatGPT, or another AI assistant, provide your description and let it generate working code.
+That's it. You've created custom tooling.
 
-4. **Test and refine**: Run the generated code with test data. Fix issues, add error handling, adjust the logic. AI can help with refinements too.
+David Heinemeier Hansson's essay "[Write software like it's '89](https://world.hey.com/dhh/write-software-like-it-s-89-1c5ec6d8)" captured an important insight: the best software comes from scratching your own itch. AI democratizes this approach. You don't need to be a framework creator or seasoned developer. If you can clearly describe a workflow problem, AI can help you build the solution.
 
-5. **Document and share**: Write a brief README explaining what the tool does and how to use it. Share with your team if it's useful to others.
+You're not reinventing the wheel—you're getting AI to assemble proven patterns into exactly the wheel shape you need.
 
-6. **Iterate**: As requirements change, ask AI to modify the tool. The key is that maintenance is lightweight—you're not locked into a vendor's release cycle.
+## Complementing, Not Replacing
 
-## When to Build vs. Buy
+Custom tooling works alongside your existing tools, not instead of them:
 
-AI-powered custom tooling doesn't mean building everything from scratch. Here's a practical framework:
+- **Use your project management system** for project tracking, but build a script that formats your daily standup report from it
+- **Use your monitoring platform** for infrastructure health, but build a custom dashboard that shows exactly the metrics your team cares about
+- **Use your documentation tool** for knowledge management, but build a script that auto-generates API docs from code
+- **Use your cloud platform** for hosting, but build deployment scripts tailored to your specific workflow
 
-**Build custom tools when:**
-- The task is specific to your workflow or domain
-- You need exact control over behavior and output
-- Privacy or data security is critical
-- The solution is relatively simple (scripts, small utilities)
-- You'll use it frequently enough to justify initial setup time
-- Vendor solutions don't quite fit or are too expensive
+Custom tools fill the gaps. They're the glue, the bridges, the converters. They make your existing ecosystem work better together.
 
-**Use existing tools when:**
-- The problem is common and well-solved by mature products
-- You need robust features, support, and reliability
-- The complexity exceeds what you can reasonably maintain
-- Collaboration features are essential
-- Compliance or certification requirements demand established vendors
+## When Custom Tooling Makes Sense
 
-The sweet spot for AI-powered custom tooling is in the middle layer—scripts, automations, integrations, and small utilities that connect your workflow. Let established tools handle complex infrastructure, but build custom glue code to make everything work together exactly as you need.
+Not everything should be custom-built. Here's a practical framework:
 
-## The Future: AI Turbocharges Personal Productivity
+**Build custom tools for:**
+- Repetitive tasks specific to your workflow (data transformations, format conversions)
+- Integration gaps between existing systems
+- Automation of manual processes you do frequently
+- Team-specific reporting or monitoring needs
+- Quick prototypes to test ideas before committing to full solutions
 
-We're entering an era where personal productivity tools can be as unique as the people who use them. AI has democratized software development to the point where technical professionals can create bespoke automation without being expert programmers.
+**Use established tools for:**
+- Core business functionality
+- Complex features requiring ongoing maintenance
+- Compliance-critical systems
+- Features requiring broad collaboration
+- Problems with mature, well-supported solutions
 
-This isn't about replacing professional software development—complex applications still require expertise, architecture, and rigorous engineering. But for the everyday tooling needs that developers face, AI provides a superpower: the ability to go from idea to working code in minutes rather than days.
+The sweet spot is small, focused utilities that connect your workflow together. Let established tools handle the hard stuff. Build custom scripts for the connective tissue.
 
-The implications are significant:
+## The Shift: From Waiting to Building
 
-- **Reduced tool sprawl**: Instead of subscribing to multiple SaaS products, build focused tools that integrate naturally into your workflow
-- **Faster iteration**: No waiting for vendor feature requests—build exactly what you need when you need it
-- **Better privacy**: Keep sensitive data and workflows on your own systems
-- **Knowledge retention**: Custom tools become team knowledge, not vendor lock-in
-- **Cost efficiency**: A few hours of AI-assisted development often costs less than months of SaaS subscriptions
+The traditional model: identify problem → search for tool → evaluate options → onboard tool → adapt workflow → discover gaps → file feature requests → wait.
 
-## Call to Action: Build the Tool You Wish Existed
+The AI-enabled model: identify problem → describe solution → generate code → test → use.
 
-Stop waiting for vendors to build the perfect tool. Stop adapting your workflow to someone else's vision of how you should work.
+The time investment difference is dramatic. What once required vendor selection, purchasing approvals, and onboarding now requires a clear problem description and 15 minutes with an AI assistant.
 
-Start with one pain point—something that annoys you every week. Describe what you wish existed. Use AI to help you build it. Test it. Refine it. Use it.
+This doesn't eliminate the need for professional software or SaaS products. But it eliminates the need to wait for them to solve your specific workflow friction.
 
-You'll be surprised how quickly you can go from frustration to solution. And you'll start seeing opportunities everywhere for small, focused tools that make your work better.
+## Call to Action: Start Today
 
-The wheel is worth reinventing when AI can help you build a better one for your exact needs. Software is no longer something that only specialized developers create—it's something anyone with a clear idea can bring to life.
+Pick one repetitive task from your day. Something that takes 2-5 minutes each time you do it. Describe to AI what would automate it. Generate the code. Test it. Use it tomorrow.
 
-Build the software you want first. AI makes it possible.
+You'll quickly see opportunities everywhere—dozens of small friction points that custom tooling can eliminate. Each one saves minutes. Together, they save hours.
+
+AI has made custom tooling accessible. The gaps in your workflow don't have to stay gaps. Build the solution you need, when you need it.
+
+Start small. Start today.
 
 ## Resources and Further Reading
 
