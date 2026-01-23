@@ -21,7 +21,7 @@ public class BooksPage {
         .includeMenu(true)
         .data(Map.of(
             "layout", List.of("default"),
-            "title", List.of("Books"),
+            "title", List.of("Bookshelf"),
             "permalink", List.of("/books"),
             "list_title", List.of("Books")
         ))

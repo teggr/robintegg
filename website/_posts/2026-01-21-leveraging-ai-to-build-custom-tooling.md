@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Leveraging AI to Build Your Own Custom Tooling"
-date: "2026-01-21"
-image: /images/spring-shell-ai.png
+date: "2026-01-23"
+image: /images/custom-tooling.jpg
 tags:
   - ai
   - tools
@@ -11,27 +11,15 @@ tags:
   - scripting
 ---
 
-Every workflow has gaps. Those repetitive tasks you do manually because no existing tool handles them quite right. The data transformation you copy-paste through three different applications. The five-click process you repeat dozens of times a day. The script you wish existed to connect two systems that don't talk to each other.
+Every workflow has the potential to be faster and more automated. Those repetitive tasks you do manually because no existing tool handles them quite right. The data transformation you copy-paste through three different applications. The five-click process you repeat dozens of times a day. The script you wish existed to connect two systems that don't talk to each other.
 
-These gaps are where custom tooling shines. Not massive applications or enterprise platforms—just small, focused utilities that plug the holes in your daily workflow. And AI has made creating these tools remarkably accessible.
+These friction points are where custom tooling shines. Not massive applications or productivity platforms — just small, focused utilities that plug the holes in your daily workflow. And AI has made creating these tools remarkably accessible.
 
-You're not reinventing the wheel. You're asking AI to generate patterns it has seen thousands of times before, tweaked to fit your specific needs. The result? Just-in-time tooling that eliminates friction from your work.
+You're not reinventing the wheel. You're not wasting time (you'll spend as much time learning other platforms before it can provide you with value). You're asking AI to generate patterns it has seen thousands of times before, tweaked to fit your specific needs. The result? Just-in-time tooling that eliminates friction from your work.
 
-## The Opportunity: Filling the Gaps in Your Workflow
+## The Opportunity: Removing the friction points in your workflow
 
-The beauty of custom tooling is that it addresses the problems only you can see. Your specific workflow quirks. Your team's unique processes. The repetitive actions that take seconds individually but consume hours cumulatively.
-
-Traditional software development made custom solutions expensive—worth it only for major pain points. AI changes this equation dramatically. What used to take days of coding can now be generated in minutes. What required deep programming knowledge now needs mainly clear problem description.
-
-## DHH Was Right: Build the Software You Want First
-
-David Heinemeier Hansson's essay "[Write software like it's '89](https://world.hey.com/dhh/write-software-like-it-s-89-1c5ec6d8)" captures something important: the best software often comes from scratching your own itch. Rails was built because Basecamp needed it. Hey was built because DHH wanted email to work differently.
-
-The core insight is this: **you know your workflow better than any vendor**. You understand the repetitive tasks that waste your time. You see the data transformations you do manually every week. You feel the friction of context switching between tools.
-
-But traditionally, building custom software meant significant investment—hiring developers, learning new frameworks, maintaining infrastructure. This kept custom tooling in the realm of large organizations with dedicated development teams.
-
-AI changes this calculus entirely. What once took weeks can now take hours. What required a team can now be done by one person with a clear idea of what they need.
+The beauty of building your own tooling is that it addresses the problems only you can see. Your specific workflow quirks. Your team's unique processes. The repetitive actions that take seconds individually but consume hours cumulatively. What required programming knowledge and time now only needs a problem description.
 
 AI-powered coding assistants excel at generating standard patterns:
 
@@ -43,25 +31,11 @@ AI-powered coding assistants excel at generating standard patterns:
 
 The key insight: AI isn't creating something novel—it's applying well-known patterns to your specific situation. It has seen thousands of CSV parsers, web scrapers, and automation scripts. It can generate one for your exact use case in seconds.
 
-## Identifying Opportunities for Custom Tooling
-
-Where should you look for tooling opportunities? Focus on these patterns:
-
-**Repetitive manual actions**: Anything you do more than twice a day is automation-worthy. Formatting data, copying information between systems, checking status across multiple services.
-
-**Workflow friction**: Those moments where you stop what you're doing to perform a secondary task. Switching between applications, reformatting output, manually triggering processes.
-
-**Process gaps**: Points where your workflow isn't supported by existing tools. Custom data transformations, specific integrations, unique reporting needs.
-
-**Team-specific needs**: Processes unique to your organization that off-the-shelf tools don't address. Internal APIs, proprietary formats, company-specific workflows.
-
-These aren't grand architectural challenges—they're the small frictions that add up. Custom tooling eliminates them one by one.
-
-## Practical Examples: Plugging Real Workflow Gaps
+## Some practical examples:
 
 Let's look at concrete examples where custom tooling eliminates friction.
 
-### Chrome Extensions for Repetitive Web Tasks
+### Chrome extensions for repetitive web tasks
 
 You work with an internal dashboard that requires exporting data for reports, but it lacks an export function. Rather than manually selecting, copying, and reformatting data dozens of times a week, create a Chrome extension that automates it.
 
@@ -91,57 +65,7 @@ document.getElementById('export-button').addEventListener('click', () => {
 
 Time saved: ~2 minutes per export × 20 exports per week = 40 minutes weekly. The extension took 10 minutes to create and test.
 
-### Automating Image Preparation
-
-Your blog workflow requires preparing images: resize to specific dimensions, convert formats, optimize file size. You do this manually for each post, spending 5-10 minutes per image.
-
-Describe to AI: "I need a Python script that processes all images in a folder, resizes them to 1200px width while maintaining aspect ratio, converts to JPEG, and optimizes quality."
-
-AI generates:
-
-```python
-# Generated by AI: Batch process images with specific requirements
-from PIL import Image
-from pathlib import Path
-
-def process_image(input_path, output_path, max_width=1200, quality=85):
-    """Resize image to max width while maintaining aspect ratio"""
-    with Image.open(input_path) as img:
-        # Convert RGBA to RGB if needed
-        if img.mode in ('RGBA', 'LA'):
-            background = Image.new('RGB', img.size, (255, 255, 255))
-            background.paste(img, mask=img.split()[-1])
-            img = background
-        
-        # Resize if needed
-        if img.width > max_width:
-            ratio = max_width / img.width
-            new_height = int(img.height * ratio)
-            img = img.resize((max_width, new_height), Image.Resampling.LANCZOS)
-        
-        img.save(output_path, 'JPEG', quality=quality, optimize=True)
-        print(f"Processed: {input_path.name}")
-
-def process_directory(input_dir, output_dir):
-    input_path = Path(input_dir)
-    output_path = Path(output_dir)
-    output_path.mkdir(exist_ok=True)
-    
-    for img_file in input_path.glob('*'):
-        if img_file.suffix.lower() in ['.jpg', '.jpeg', '.png', '.webp']:
-            output_file = output_path / f"{img_file.stem}.jpg"
-            process_image(img_file, output_file)
-
-if __name__ == '__main__':
-    import sys
-    process_directory(sys.argv[1], sys.argv[2])
-```
-
-Run it: `python process_images.py ./raw-images ./optimized`
-
-Time saved: ~7 minutes per post × 4 posts per month = 28 minutes monthly. Plus consistency—every image follows the same standards.
-
-### Command-Line Tools for Repetitive DevOps Tasks
+### Command-Line tools for repetitive DevOps tasks
 
 You check service health across multiple environments several times daily. Each check involves opening different URLs, manually noting status, and formatting results for the team.
 
@@ -179,7 +103,7 @@ done
 
 Time saved: ~3 minutes per check × 5 checks per day = 15 minutes daily. The script took 5 minutes to create.
 
-### Connecting Systems That Don't Talk
+### Connecting systems that don't talk
 
 Your team uses an internal API that requires authentication, but you need to integrate it with a monitoring dashboard that doesn't support your auth method. Rather than requesting a feature or migrating systems, create a small bridge script.
 
@@ -187,93 +111,19 @@ Describe to AI: "I need a Python script that fetches data from our internal API 
 
 AI generates a lightweight integration layer—typically 50-100 lines of code that solves your specific problem. Deploy it as a small service, and suddenly your systems integrate seamlessly.
 
-## The Pattern: From Friction to Flow
-
-Notice the pattern across these examples:
-
-1. **Identify repetitive friction**: What do you do manually multiple times per day/week?
-2. **Describe the desired outcome**: What would eliminate that friction?
-3. **Generate with AI**: Let AI produce the standard patterns adapted to your needs
-4. **Test and refine**: Verify it works, adjust as needed
-5. **Use and iterate**: Deploy it, use it, improve it over time
-
-The entire cycle—from identifying a problem to having a working solution—takes minutes to hours, not days to weeks. This changes what's economically viable to automate.
-
-## Getting Started: Your First Custom Tool
-
-Start small. Pick one repetitive task you did today:
-
-- Did you copy data between applications?
-- Did you manually format information?
-- Did you check multiple places to gather status?
-- Did you perform the same sequence of commands?
-
-Describe to an AI assistant what you wish existed. Be specific about inputs, outputs, and format. Most AI assistants (GitHub Copilot, Claude, ChatGPT, etc.) can generate working code from clear descriptions.
-
-Test the generated code with real data. Fix any issues. Save the script somewhere accessible. Use it tomorrow when you face the same task again.
-
-That's it. You've created custom tooling.
-
-David Heinemeier Hansson's essay "[Write software like it's '89](https://world.hey.com/dhh/write-software-like-it-s-89-1c5ec6d8)" captured an important insight: the best software comes from scratching your own itch. AI democratizes this approach. You don't need to be a framework creator or seasoned developer. If you can clearly describe a workflow problem, AI can help you build the solution.
-
-You're not reinventing the wheel—you're getting AI to assemble proven patterns into exactly the wheel shape you need.
-
-## Complementing, Not Replacing
-
-Custom tooling works alongside your existing tools, not instead of them:
-
-- **Use your project management system** for project tracking, but build a script that formats your daily standup report from it
-- **Use your monitoring platform** for infrastructure health, but build a custom dashboard that shows exactly the metrics your team cares about
-- **Use your documentation tool** for knowledge management, but build a script that auto-generates API docs from code
-- **Use your cloud platform** for hosting, but build deployment scripts tailored to your specific workflow
-
-Custom tools fill the gaps. They're the glue, the bridges, the converters. They make your existing ecosystem work better together.
-
-## When Custom Tooling Makes Sense
-
-Not everything should be custom-built. Here's a practical framework:
-
-**Build custom tools for:**
-- Repetitive tasks specific to your workflow (data transformations, format conversions)
-- Integration gaps between existing systems
-- Automation of manual processes you do frequently
-- Team-specific reporting or monitoring needs
-- Quick prototypes to test ideas before committing to full solutions
-
-**Use established tools for:**
-- Core business functionality
-- Complex features requiring ongoing maintenance
-- Compliance-critical systems
-- Features requiring broad collaboration
-- Problems with mature, well-supported solutions
-
-The sweet spot is small, focused utilities that connect your workflow together. Let established tools handle the hard stuff. Build custom scripts for the connective tissue.
-
-## The Shift: From Waiting to Building
-
-The traditional model: identify problem → search for tool → evaluate options → onboard tool → adapt workflow → discover gaps → file feature requests → wait.
-
-The AI-enabled model: identify problem → describe solution → generate code → test → use.
-
-The time investment difference is dramatic. What once required vendor selection, purchasing approvals, and onboarding now requires a clear problem description and 15 minutes with an AI assistant.
-
-This doesn't eliminate the need for professional software or SaaS products. But it eliminates the need to wait for them to solve your specific workflow friction.
-
-## Call to Action: Start Today
+## Start today
 
 Pick one repetitive task from your day. Something that takes 2-5 minutes each time you do it. Describe to AI what would automate it. Generate the code. Test it. Use it tomorrow.
 
 You'll quickly see opportunities everywhere—dozens of small friction points that custom tooling can eliminate. Each one saves minutes. Together, they save hours.
 
-AI has made custom tooling accessible. The gaps in your workflow don't have to stay gaps. Build the solution you need, when you need it.
+AI has made custom tooling accessible. The friction in your workflow doesn't have to hold you back anymore. Build the solution you need, when you need it.
 
 Start small. Start today.
 
-## Resources and Further Reading
+## Resources and further reading
 
-- [David Heinemeier Hansson: Write software like it's '89](https://world.hey.com/dhh/write-software-like-it-s-89-1c5ec6d8)
 - [Chrome Extension Documentation](https://developer.chrome.com/docs/extensions/)
-- [Python Pillow Documentation](https://pillow.readthedocs.io/)
 - [GitHub Copilot](https://github.com/features/copilot)
 - [Anthropic Claude](https://www.anthropic.com/claude)
 - [OpenAI ChatGPT](https://chat.openai.com/)
