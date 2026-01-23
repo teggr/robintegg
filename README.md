@@ -77,7 +77,7 @@ com.robintegg.web.Build.main();
 
 ```
 cd .\website\target\site
-C:\Users\teggro01\.jdks\temurin-19.0.2\bin\jwebserver   
+"%JAVA_HOME%"\bin\jwebserver   
 ```
 
 # Configuration
