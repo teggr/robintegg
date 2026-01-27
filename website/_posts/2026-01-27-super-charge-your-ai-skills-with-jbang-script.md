@@ -12,19 +12,28 @@ tags:
   - skills
 ---
 
-Building AI-powered workflows is getting easier, but integrating with third-party APIs still requires writing glue code. What if you could create reusable AI skills in minutes using JBang scripts? This post shows you how to create a JIRA integration skill that fetches your current sprint issues and makes them available to AI agents—all with a single Java script.
+AI agents are becoming powerful collaborators in our development workflows, but their effectiveness depends on the skills they can access. While many AI platforms offer pre-built integrations, developers often face limitations—vendor APIs that don't support certain features, authentication complexities, or simply missing integrations for niche tools. This post explores how JBang scripts empower developers to create lightweight, shareable AI skills that work around these limitations and enrich the broader developer community's ability to build AI-powered workflows.
 
 ## What are AI Skills?
 
-Skills are a standardized way to define tools that AI agents can discover and use. Think of them as function definitions that tell AI what capabilities you're offering and how to invoke them. The Model Context Protocol (MCP) community has popularized the SKILL.md format—a simple markdown specification that describes a tool's purpose, inputs, and execution method.
+AI skills are reusable, self-contained capabilities that AI agents can discover and invoke to accomplish tasks. Think of them as specialized tools that extend what an AI agent can do—fetching data from APIs, processing files, interacting with services, or executing custom logic.
+
+While skills often leverage existing APIs and tools, developers frequently encounter real-world challenges:
+
+- **Vendor limitations**: The API you need doesn't support the exact operation you want
+- **Authentication complexity**: OAuth flows, token management, or custom auth schemes that aren't supported by pre-built integrations
+- **Missing integrations**: Your internal tools or niche services don't have official AI platform plugins
+- **Customization needs**: Pre-built integrations force you into rigid workflows that don't match your team's processes
+
+**This is where custom CLI tools as skills become powerful.** Instead of being locked into what a vendor provides, you can create your own lightweight executable that does exactly what you need. The Model Context Protocol (MCP) community has popularized the SKILL.md format—a simple markdown specification that makes these custom tools discoverable and usable by AI agents.
 
 A skill typically includes:
 - **Name and description**: What the skill does
-- **Input parameters**: What data it needs
-- **Execution details**: How to run it (shell command, API call, etc.)
+- **Input parameters**: What data it needs (if any)
+- **Execution details**: How to run it (shell command, script path, etc.)
 - **Output format**: What it returns
 
-Here's a minimal example:
+Here's a minimal example using a weather API:
 
 ```markdown
 # Weather Forecast Skill
@@ -44,36 +53,45 @@ curl "https://api.weather.gov/points/${latitude},${longitude}"
 JSON weather forecast data
 ```
 
-AI agents can read this format and automatically integrate your skill into their workflow. No custom plugins or complex configurations needed.
+AI agents can read this format and automatically integrate your skill into their workflow. No custom plugins, no platform-specific code—just a standard markdown file and an executable.
 
-## Why Skills over other AI primitives?
+## Why Custom CLI Skills Matter
 
-Skills strike a balance between flexibility and simplicity. Compared to custom plugins or API integrations, skills are:
+When working with AI agents, you'll often find yourself needing capabilities that don't exist in pre-built integrations. Skills that wrap custom CLI tools offer several advantages:
 
-- **Portable**: Work across different AI platforms that support the MCP standard
-- **Self-documenting**: The SKILL.md file contains everything needed to understand and use the tool
-- **Version-controlled**: Track changes to your skills alongside your code
-- **Easy to share**: Just distribute the markdown file and the underlying script
-- **Language-agnostic**: The skill can wrap any executable—Python, Java, shell scripts, compiled binaries
+- **Bypass vendor limitations**: Don't wait for vendors to add features—implement exactly what you need
+- **Handle complex authentication**: Manage credentials, tokens, and auth flows your way
+- **Bridge internal tools**: Make proprietary or internal systems accessible to AI agents
+- **Full control over behavior**: Customize queries, transform data, add filtering—whatever your workflow requires
+- **Portable and shareable**: Distribute to your team or the broader developer community
+- **Language-agnostic**: The skill wraps any executable—Python, Java, Go, shell scripts, compiled binaries
 
-Many developers choose skills because they keep the barrier to entry low while providing production-ready capabilities.
+The key insight: **skills democratize AI capability**. Any developer can create a custom tool, wrap it with a SKILL.md, and instantly make it available to AI agents. This enriches the entire ecosystem, allowing developers to share specialized integrations that would never exist as vendor-supported features.
 
-## JBang and the GPT template
+## JBang Makes Custom Skills Lightweight
 
-JBang is a tool that lets you run Java code as easily as running a shell script—no build files, no complex setup. Version 0.123.0 (December 2024) introduced something particularly interesting for AI integration: the `gpt` template.
+Creating custom CLI tools traditionally meant setting up projects, managing build files, and dealing with dependencies. JBang changes this by letting you write executable Java scripts with minimal ceremony—no build files, no complex setup.
 
-The `gpt` template scaffolds a JBang script with built-in AI capabilities:
+Version 0.123.0 (December 2024) introduced the `gpt` template, making JBang particularly attractive for creating AI-integrated skills. This template scaffolds scripts with built-in support for OpenAI's API, but the real power is JBang's ability to create **any kind of CLI tool quickly**.
+
+Why JBang for custom skills?
+
+- **Single-file executables**: Your entire tool lives in one Java file
+- **Inline dependency declaration**: Add libraries with simple `//DEPS` comments
+- **Instant execution**: Run Java code like a shell script—no compilation step
+- **Easy distribution**: Share a single `.java` file; JBang handles the rest
+
+This lightweight approach is perfect for creating custom skills because you can go from idea to working integration in minutes, not hours. The barrier to creating and sharing skills becomes minimal, **enriching the ecosystem with specialized tools** that developers actually need.
+
+### The GPT template
+
+For skills that need direct AI integration, JBang's `gpt` template provides a quick start:
 
 ```bash
 jbang init --template=gpt my-ai-tool.java
 ```
 
-This generates a script that's ready to interact with OpenAI's GPT models. You get:
-- Automatic dependency management for OpenAI Java client
-- Environment variable support for API keys
-- Simple boilerplate to get started quickly
-
-Here's what the generated script looks like:
+This generates a script ready to interact with OpenAI's GPT models:
 
 ```java
 ///usr/bin/env jbang "$0" "$@" ; exit $?
@@ -98,13 +116,21 @@ For more details:
 - [JBang 0.123.0 release notes](https://github.com/jbangdev/jbang/releases/tag/v0.123.0)
 - [Max Andersen's YouTube demo](https://www.youtube.com/watch?v=dQw4w9WgXcQ) showing the gpt template in action
 
-## Building a JIRA integration skill
+## Building a Weather Forecast Skill
 
-Let's build something practical: a skill that fetches your current JIRA sprint issues. This demonstrates how quickly you can wrap a third-party API into a reusable AI tool.
+Let's build a practical example: a skill that fetches weather forecasts for any location. This demonstrates how you can wrap a third-party API into a reusable AI tool that works around the limitations of pre-built integrations.
+
+Many AI platforms offer weather integrations, but they often:
+- Require platform-specific setup
+- Don't support all weather services
+- Have authentication limitations
+- Can't be customized for specific data formats
+
+With a custom JBang skill, you control everything—from which API you use to what data you return.
 
 ### The JBang script
 
-Here's a complete JBang script that connects to JIRA's v3 API and retrieves issues assigned to you:
+Here's a complete JBang script that fetches weather data from the National Weather Service API:
 
 ```java
 ///usr/bin/env jbang "$0" "$@" ; exit $?
@@ -118,163 +144,130 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 
-import java.util.Base64;
-
-public class jira_issues {
+public class weather_forecast {
     
     public static void main(String... args) {
-        String jiraUrl = System.getenv("JIRA_URL"); // e.g., https://yourcompany.atlassian.net
-        String jiraToken = System.getenv("JIRA_TOKEN");
-        String jiraEmail = System.getenv("JIRA_EMAIL");
-        
-        if (jiraUrl == null || jiraToken == null || jiraEmail == null) {
-            System.err.println("Error: Please set JIRA_URL, JIRA_TOKEN, and JIRA_EMAIL environment variables");
+        if (args.length != 2) {
+            System.err.println("Usage: weather_forecast.java <latitude> <longitude>");
+            System.err.println("Example: weather_forecast.java 39.7456 -97.0892");
             System.exit(1);
         }
         
         try {
-            fetchCurrentUserIssues(jiraUrl, jiraEmail, jiraToken);
+            double latitude = Double.parseDouble(args[0]);
+            double longitude = Double.parseDouble(args[1]);
+            fetchWeatherForecast(latitude, longitude);
+        } catch (NumberFormatException e) {
+            System.err.println("Error: Latitude and longitude must be valid numbers");
+            System.exit(1);
         } catch (Exception e) {
-            System.err.println("Error fetching issues: " + e.getMessage());
+            System.err.println("Error fetching weather: " + e.getMessage());
             e.printStackTrace();
             System.exit(1);
         }
     }
     
-    private static void fetchCurrentUserIssues(String jiraUrl, String email, String token) throws Exception {
-        // Create HTTP client
+    private static void fetchWeatherForecast(double latitude, double longitude) throws Exception {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            // Build JQL query for current user's issues
-            String jql = "assignee = currentUser() AND sprint in openSprints() ORDER BY updated DESC";
-            String encodedJql = java.net.URLEncoder.encode(jql, "UTF-8");
+            // Step 1: Get the forecast URL for this location
+            String pointsUrl = String.format("https://api.weather.gov/points/%.4f,%.4f", 
+                latitude, longitude);
             
-            String apiUrl = jiraUrl + "/rest/api/3/search?jql=" + encodedJql 
-                + "&fields=summary,status,description,sprint,customfield_10020"
-                + "&maxResults=50";
+            HttpGet pointsRequest = new HttpGet(pointsUrl);
+            pointsRequest.addHeader("User-Agent", "WeatherSkill/1.0 (JBang)");
+            pointsRequest.addHeader("Accept", "application/json");
             
-            HttpGet request = new HttpGet(apiUrl);
-            
-            // Add authentication header
-            String auth = email + ":" + token;
-            String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
-            request.addHeader("Authorization", "Basic " + encodedAuth);
-            request.addHeader("Accept", "application/json");
-            
-            // Execute request
-            var response = httpClient.execute(request, httpResponse -> {
-                String json = EntityUtils.toString(httpResponse.getEntity());
+            var pointsData = httpClient.execute(pointsRequest, response -> {
+                String json = EntityUtils.toString(response.getEntity());
                 return new ObjectMapper().readTree(json);
             });
             
-            // Parse and display results
-            JsonNode issues = response.get("issues");
+            String forecastUrl = pointsData.get("properties").get("forecast").asText();
             
-            System.out.println("=== JIRA Issues in Current Sprint ===\n");
+            // Step 2: Fetch the actual forecast
+            HttpGet forecastRequest = new HttpGet(forecastUrl);
+            forecastRequest.addHeader("User-Agent", "WeatherSkill/1.0 (JBang)");
+            forecastRequest.addHeader("Accept", "application/json");
             
-            for (JsonNode issue : issues) {
-                String key = issue.get("key").asText();
-                JsonNode fields = issue.get("fields");
-                String summary = fields.get("summary").asText();
-                String status = fields.get("status").get("name").asText();
-                
-                // Description might be null
-                String description = "";
-                JsonNode descNode = fields.get("description");
-                if (descNode != null && !descNode.isNull()) {
-                    description = extractTextFromDescription(descNode);
-                }
-                
-                // Sprint info (custom field)
-                String sprint = "No sprint";
-                JsonNode sprintNode = fields.get("customfield_10020");
-                if (sprintNode != null && sprintNode.isArray() && sprintNode.size() > 0) {
-                    JsonNode sprintData = sprintNode.get(0);
-                    if (sprintData.has("name")) {
-                        sprint = sprintData.get("name").asText();
-                    }
-                }
-                
-                System.out.println("Issue: " + key);
-                System.out.println("Title: " + summary);
-                System.out.println("Status: " + status);
-                System.out.println("Sprint: " + sprint);
-                System.out.println("Description: " + (description.isEmpty() ? "(none)" : description));
-                System.out.println("---");
-            }
+            var forecastData = httpClient.execute(forecastRequest, response -> {
+                String json = EntityUtils.toString(response.getEntity());
+                return new ObjectMapper().readTree(json);
+            });
             
-            System.out.println("\nTotal issues: " + issues.size());
-        }
-    }
-    
-    private static String extractTextFromDescription(JsonNode descNode) {
-        // JIRA v3 API uses Atlassian Document Format (ADF)
-        // This is a simplified extractor for text content
-        StringBuilder text = new StringBuilder();
-        extractText(descNode, text);
-        return text.toString().trim();
-    }
-    
-    private static void extractText(JsonNode node, StringBuilder text) {
-        if (node.has("text")) {
-            text.append(node.get("text").asText()).append(" ");
-        }
-        if (node.has("content")) {
-            for (JsonNode child : node.get("content")) {
-                extractText(child, text);
+            // Step 3: Parse and display the forecast
+            JsonNode periods = forecastData.get("properties").get("periods");
+            
+            System.out.println("=== Weather Forecast ===\n");
+            System.out.println("Location: " + latitude + ", " + longitude);
+            System.out.println();
+            
+            for (int i = 0; i < Math.min(5, periods.size()); i++) {
+                JsonNode period = periods.get(i);
+                String name = period.get("name").asText();
+                int temperature = period.get("temperature").asInt();
+                String temperatureUnit = period.get("temperatureUnit").asText();
+                String windSpeed = period.get("windSpeed").asText();
+                String windDirection = period.get("windDirection").asText();
+                String shortForecast = period.get("shortForecast").asText();
+                String detailedForecast = period.get("detailedForecast").asText();
+                
+                System.out.println(name + ":");
+                System.out.println("  Temperature: " + temperature + "°" + temperatureUnit);
+                System.out.println("  Wind: " + windSpeed + " " + windDirection);
+                System.out.println("  Conditions: " + shortForecast);
+                System.out.println("  Details: " + detailedForecast);
+                System.out.println();
             }
         }
     }
 }
 ```
 
-### Setting up authentication
-
-Before running the script, set up your JIRA credentials:
-
-```bash
-# Your JIRA instance URL
-export JIRA_URL="https://yourcompany.atlassian.net"
-
-# Your JIRA email
-export JIRA_EMAIL="your.email@company.com"
-
-# Create an API token at: https://id.atlassian.com/manage-profile/security/api-tokens
-export JIRA_TOKEN="your_api_token_here"
-```
-
 ### Running the script
 
-Execute it like any shell script:
+This weather API doesn't require authentication, making it a perfect example. Execute it with latitude and longitude:
 
 ```bash
-jbang jira_issues.java
+# Get weather for San Francisco
+jbang weather_forecast.java 37.7749 -122.4194
 ```
 
 Output:
 
 ```
-=== JIRA Issues in Current Sprint ===
+=== Weather Forecast ===
 
-Issue: PROJ-123
-Title: Implement user authentication
-Status: In Progress
-Sprint: Sprint 42
-Description: Add OAuth2 authentication flow for web and mobile clients
----
-Issue: PROJ-124
-Title: Fix database migration script
-Status: To Do
-Sprint: Sprint 42
-Description: Migration fails on production due to constraint violation
----
-Issue: PROJ-125
-Title: Update API documentation
-Status: In Progress
-Sprint: Sprint 42
-Description: Document new endpoints added in v2.1 release
----
+Location: 37.7749, -122.4194
 
-Total issues: 3
+This Afternoon:
+  Temperature: 58°F
+  Wind: 10 to 15 mph W
+  Conditions: Partly Sunny
+  Details: Partly sunny, with a high near 58. West wind 10 to 15 mph.
+
+Tonight:
+  Temperature: 48°F
+  Wind: 5 to 10 mph W
+  Conditions: Mostly Clear
+  Details: Mostly clear, with a low around 48. West wind 5 to 10 mph.
+
+Wednesday:
+  Temperature: 61°F
+  Wind: 5 to 10 mph W
+  Conditions: Sunny
+  Details: Sunny, with a high near 61. West wind 5 to 10 mph.
+
+Wednesday Night:
+  Temperature: 49°F
+  Wind: 5 mph W
+  Conditions: Mostly Clear
+  Details: Mostly clear, with a low around 49.
+
+Thursday:
+  Temperature: 63°F
+  Wind: 5 mph W
+  Conditions: Sunny
+  Details: Sunny, with a high near 63.
 ```
 
 ## Wrapping it as a SKILL
@@ -282,118 +275,119 @@ Total issues: 3
 Now create a `SKILL.md` file that makes this accessible to AI agents:
 
 ```markdown
-# JIRA Current Sprint Issues
+# Weather Forecast Skill
 
-Fetch JIRA issues assigned to the current user in active sprints.
+Get detailed weather forecast for any location using latitude and longitude coordinates.
 
 ## Description
 
-This skill retrieves all JIRA tickets assigned to you that are in currently active sprints. 
-It returns the ticket number, title, status, description, and sprint details for each issue.
+This skill fetches weather forecasts from the National Weather Service API. It returns 
+temperature, wind conditions, and detailed forecasts for the next several periods.
 
 Useful for:
-- Getting an overview of current work items
-- Filtering issues by status (In Progress, To Do, etc.)
-- Planning daily standup updates
-- Identifying blocked or high-priority items
+- Planning outdoor activities based on weather
+- Getting current conditions for any US location
+- Understanding weather patterns over the next few days
+- Answering "what's the weather like in..." questions
 
 ## Prerequisites
 
-Set these environment variables:
-- `JIRA_URL`: Your JIRA instance URL (e.g., https://company.atlassian.net)
-- `JIRA_EMAIL`: Your JIRA account email
-- `JIRA_TOKEN`: API token from https://id.atlassian.com/manage-profile/security/api-tokens
+- JBang installed
+- Internet connection
+- Location coordinates (latitude/longitude)
+
+Note: This uses the US National Weather Service API, which provides free, 
+no-authentication weather data for US locations.
 
 ## Usage
 
 ```bash
-jbang jira_issues.java
+jbang weather_forecast.java <latitude> <longitude>
 ```
 
 ## Parameters
 
-None required. The script automatically:
-- Uses your credentials from environment variables
-- Filters to current user's issues
-- Limits to open sprints only
-- Returns up to 50 most recently updated issues
+- **latitude**: Decimal latitude (e.g., 37.7749 for San Francisco)
+- **longitude**: Decimal longitude (e.g., -122.4194 for San Francisco)
 
 ## Output Format
 
-Plain text output with the following fields per issue:
-- Issue key (e.g., PROJ-123)
-- Title
-- Status
-- Sprint name
-- Description
+Plain text output with forecast periods including:
+- Period name (Today, Tonight, Wednesday, etc.)
+- Temperature with unit
+- Wind speed and direction
+- Short condition summary
+- Detailed forecast description
 
 ## Example AI Prompts
 
-"Show me my JIRA issues that are still in To Do status"
-"Which of my current sprint items are In Progress?"
-"List my JIRA tickets that need attention"
+"What's the weather like in New York?" (AI converts location to coordinates)
+"Should I bring an umbrella tomorrow in Seattle?"
+"Give me the 5-day forecast for Denver"
 ```
 
 ### Using the skill with AI agents
 
-AI agents that support the Model Context Protocol can now discover and use this skill. For example, you could ask:
+AI agents that support the Model Context Protocol can discover and use this skill. For example, you could ask:
 
-> "What JIRA issues do I need to work on today?"
+> "What's the weather forecast for Austin, Texas?"
 
 The AI agent:
 1. Reads the SKILL.md file to understand capabilities
-2. Executes `jbang jira_issues.java`
-3. Parses the output
-4. Filters based on your question (e.g., shows only "To Do" or "In Progress" items)
-5. Presents a concise summary
+2. Converts "Austin, Texas" to coordinates (30.2672, -97.7431)
+3. Executes `jbang weather_forecast.java 30.2672 -97.7431`
+4. Parses the output
+5. Presents a natural language summary
 
-## The power of quick integration
+This is where custom skills shine: **you control exactly what data is fetched and how it's formatted**. If you needed precipitation probability, UV index, or wanted to call a different weather API entirely, you'd just modify your script. No waiting for vendor support.
 
-This example shows how JBang and skills combine to create AI-ready integrations fast:
+## Enriching Developer Capability
 
-**Time investment**:
-- Script development: ~30 minutes
-- SKILL.md documentation: ~10 minutes
-- Total: under an hour
+This example illustrates how JBang-based skills enrich the developer ecosystem:
 
-**What you get**:
-- A reusable tool that works with any AI agent supporting MCP
-- No need for custom plugins or platform-specific code
-- Easy to maintain and version control
-- Shareable with your team
+**Speed to capability**:
+- Script development: ~20 minutes
+- SKILL.md documentation: ~10 minutes  
+- Total: half an hour from idea to working AI skill
 
-Yes, there are existing JIRA plugins for various AI platforms. But those require:
-- Platform-specific setup
-- Authentication configuration through UI
-- Limited customization options
-- Dependency on plugin maintenance
+**What you gain**:
+- **Control**: Customize queries, output format, error handling, data transformation
+- **Portability**: Works with any AI agent supporting MCP
+- **Shareability**: Distribute a single `.java` file and `SKILL.md` to your team
+- **Independence**: Not locked into vendor API limitations or authentication schemes
+- **Community contribution**: Share skills that solve real problems others face
 
-With this approach:
-- **You control the code**: Customize the query, output format, or filtering logic
-- **It's portable**: Works with any AI system that can execute shell commands
-- **It's transparent**: You can see exactly what data is being fetched and how
-- **It's fast**: From idea to working integration in under an hour
+**The broader impact**:
+When developers can create and share skills this easily, the entire ecosystem benefits. A skill you build for weather data might inspire someone else to create one for traffic data, stock prices, or internal company APIs. Each shared skill enriches the collective capability of AI agents.
+
+This is the power of lightweight, custom CLI tools wrapped as skills: **they democratize AI integration**, letting any developer extend what AI agents can do without waiting for vendor support or dealing with platform-specific implementations.
 
 ## Next steps
 
-Try creating your own skills:
-- Wrap your company's internal APIs
-- Create custom reporting tools
-- Build integration bridges between systems
-- Automate repetitive data fetching tasks
+**Create your own skills** to enrich your AI workflows:
+- Wrap your company's internal APIs that don't have public integrations
+- Build custom reporting tools that format data exactly how your team needs it
+- Create integration bridges between systems that don't talk to each other
+- Automate specialized data fetching that vendor tools don't support
 
-The pattern is the same:
-1. Write a JBang script that does one thing well
-2. Document it with SKILL.md
-3. Make it available to AI agents
+**Share skills with the community**:
+- Publish your SKILL.md files and scripts on GitHub
+- Contribute to the growing ecosystem of MCP-compatible tools
+- Help other developers bypass vendor limitations
+- Build on skills others have shared
 
-JBang removes the friction from Java development, and skills provide a simple standard for AI integration. Together, they let you rapidly build custom tooling that enhances your AI workflows.
+The pattern is consistent:
+1. Write a JBang script that solves a real problem
+2. Document it with SKILL.md  
+3. Share it with your team or the broader community
+
+JBang removes the friction from creating Java-based CLI tools, and skills provide a simple standard for AI integration. Together, they **empower developers to rapidly build and share custom capabilities** that enrich the entire AI ecosystem. You're not just using AI—you're actively expanding what it can do.
 
 ## Resources
 
 - [JBang documentation](https://www.jbang.dev/)
 - [JBang templates](https://www.jbang.dev/documentation/guide/latest/templates.html)
-- [Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
-- [Atlassian JIRA REST API v3](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/)
-- [Creating JIRA API tokens](https://id.atlassian.com/manage-profile/security/api-tokens)
 - [JBang 0.123.0 release with gpt template](https://github.com/jbangdev/jbang/releases/tag/v0.123.0)
+- [Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
+- [National Weather Service API](https://www.weather.gov/documentation/services-web-api)
+- [Vercel: Agent Skills Explained](https://vercel.com/blog/agent-skills-explained-an-faq)
