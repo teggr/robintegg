@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Super charge your AI skills with JBang script"
+title: "Supercharge your AI skills with JBang script"
 date: "2026-01-27"
 image: /images/jbang-ai-skills.png
 tags:
@@ -114,7 +114,6 @@ public class my_ai_tool {
 
 For more details:
 - [JBang 0.123.0 release notes](https://github.com/jbangdev/jbang/releases/tag/v0.123.0)
-- [Max Andersen's YouTube demo](https://www.youtube.com/watch?v=dQw4w9WgXcQ) showing the gpt template in action
 
 ## Building a Weather Forecast Skill
 
@@ -281,8 +280,8 @@ Get detailed weather forecast for any location using latitude and longitude coor
 
 ## Description
 
-This skill fetches weather forecasts from the National Weather Service API. It returns 
-temperature, wind conditions, and detailed forecasts for the next several periods.
+This skill fetches weather forecasts from the National Weather Service API for US locations. 
+It returns temperature, wind conditions, and detailed forecasts for the next several periods.
 
 Useful for:
 - Planning outdoor activities based on weather
@@ -294,10 +293,10 @@ Useful for:
 
 - JBang installed
 - Internet connection
-- Location coordinates (latitude/longitude)
+- Location coordinates (latitude/longitude) within the United States
 
 Note: This uses the US National Weather Service API, which provides free, 
-no-authentication weather data for US locations.
+no-authentication weather data specifically for US locations.
 
 ## Usage
 
