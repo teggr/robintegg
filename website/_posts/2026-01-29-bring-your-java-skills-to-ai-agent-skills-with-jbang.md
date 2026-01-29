@@ -273,6 +273,6 @@ You can also explore JBang's other features:
 - [GitHub Copilot workspace skills documentation](https://docs.github.com/en/copilot/using-github-copilot/using-github-copilot-workspace-skills)
 - [ipapi.co API documentation](https://ipapi.co/api/)
 - [REST Countries API](https://restcountries.com/)
-- [Java HTTP Client documentation](https://docs.oracle.com/en/java/javase/21/docs/api/java.net.http/java/net/http/HttpClient.html)
+- [Java HTTP Client documentation](https://docs.oracle.com/en/java/javase/17/docs/api/java.net.http/java/net/http/HttpClient.html)
 
 With JBang and GitHub Copilot skills, Java developers can build powerful AI agent capabilities while staying in their comfort zone. The combination of Java's robustness and JBang's scripting convenience creates a compelling alternative to traditional scripting languages for AI agent skills.
