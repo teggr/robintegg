@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Bring your Java skills to AI Agent Skills with JBang"
-date: "2026-01-29"
+date: "2026-01-30"
 image: /images/jbang-ai-skills.png
 tags:
   - java
@@ -11,15 +11,16 @@ tags:
   - scripting
 ---
 
-If you're a Java developer working with GitHub Copilot or other AI coding agents, you might think you need to learn Python or JavaScript to write custom skills. Not anymore. With [JBang](https://www.jbang.dev/), you can leverage your Java knowledge and the entire Java ecosystem to build AI agent skills that integrate seamlessly with GitHub Copilot.
+If you're a Java developer working with GitHub Copilot or other AI coding agents, you might think you need to learn Python, JavaScript or Shell scripts to power your custom skills. I'm here to show you another way. With [JBang](https://www.jbang.dev/), you can leverage your Java knowledge and the entire Java ecosystem to build AI agent skills that integrate seamlessly with GitHub Copilot.
 
-This post walks through creating a complete custom GitHub Copilot skill using JBang. The skill retrieves location and country information based on IP addresses—demonstrating how Java can be your scripting language for AI agent interactions.
+This post walks through creating a custom GitHub Copilot skill powered by JBang. The skill retrieves location and country information based on IP addresses—demonstrating how Java can be your scripting language for AI agent interactions.
 
 ## Why JBang for AI skills?
 
-JBang lets you write Java scripts that run directly without the ceremony of Maven projects, build files, or IDE setup. For AI agent skills, this means:
+JBang lets you write your scripts in Java that run directly without the ceremony of Maven projects, build files, or IDE setup. For AI agent skills, this means:
 
 - Use Java as a scripting language with single-file programs
+- Use any Java library available through Maven or Jetpack
 - Leverage the JDK's built-in HTTP client and JSON handling
 - Stay in the Java ecosystem you already know
 - Let AI agents call your Java code as easily as they'd call Python scripts
@@ -40,8 +41,7 @@ The skill demonstrates GitHub Copilot calling JBang scripts to gather informatio
 Before starting, make sure you have:
 
 - [JBang](https://www.jbang.dev/download/) installed on your system
-- GitHub Copilot enabled in VS Code
-- Access to the internet for API calls
+- Github Copilot CLI installed
 
 ## Creating the skill structure
 
@@ -53,7 +53,7 @@ mkdir -p .github/skills/location-info/scripts
 
 ## Defining the skill
 
-The `SKILL.md` file tells GitHub Copilot what your skill does and how to use it. This is where you describe the workflow and when the AI should invoke your Java scripts.
+The `SKILL.md` file tells GitHub Copilot what your skill does and how to use it. This is where you describe the workflow and when the AI should invoke your Java code.
 
 Create `.github/skills/location-info/SKILL.md`:
 
@@ -90,7 +90,7 @@ This skill definition provides clear steps that GitHub Copilot can follow, with 
 
 ## Building the IP info script
 
-JBang includes an `init` command that generates Java scripts with boilerplate. Let's use it to create our IP address lookup script:
+JBang includes an `init` command that generates a JBang Java script using AI. Let's use it to create our IP address lookup script:
 
 ```bash
 cd .github/skills/location-info/scripts
@@ -238,41 +238,74 @@ When you ask GitHub Copilot a question like "What country is IP address 1.2.3.4 
 
 The skill workflow you defined in `SKILL.md` guides Copilot through each step, and your JBang scripts provide the actual data.
 
-## Why this matters
+We can see the captured output below:
 
-This approach demonstrates several important points:
+```shell
+❯ /location-info
 
-**Java as a scripting language** — JBang removes the friction of Java development for simple, single-purpose tools. No pom.xml, no project structure, just a Java file that runs.
+● I'll invoke the location-info skill for you.
 
-**Leverage existing knowledge** — Java developers don't need to learn Python or JavaScript to build AI agent skills. Use the language and ecosystem you already know.
+● skill(location-info)
 
-**Access to the Java ecosystem** — While these examples use only the JDK, you can add any Maven dependency with JBang's `//DEPS` directive, giving you access to the entire Java ecosystem.
+● Get public IP address
+  $ Invoke-RestMethod -Uri "https://api.ipify.org?format=text"
+  └ 2 lines...
 
-**Type safety and tooling** — You get Java's type safety, IDE support, and compile-time checking even in "script" mode.
+● Get IP location information
+  $ cd C:\Users\robin\IdeaProjects\skills-example\.github\skills\location-info && jbang ./scripts/ipinfo.java 81.179.66.100
+  └ 30 lines...
+
+● Get country information for GB
+  $ cd C:\Users\robin\IdeaProjects\skills-example\.github\skills\location-info && jbang ./scripts/countryinfo.java GB
+  └ 38 lines...
+
+● Location Information Summary
+
+  IP Address: 81.179.66.100
+
+  Location Details:
+
+    - City: Preston, England
+    - Country: United Kingdom (GB)
+    - Coordinates: 53.77°N, 2.72°W
+    - Timezone: Europe/London (UTC+0000)
+    - ISP: TalkTalk
+
+  Country Information:
+
+    - Official Name: United Kingdom of Great Britain and Northern Ireland
+    - Capital: London
+    - Population: ~69.3 million
+    - Area: 244,376 km²
+    - Currency: British pound (£)
+    - Language: English
+    - Region: Northern Europe
+    - Drives on: Left side
+```
 
 ## Next steps
 
-Try extending this skill:
+We've built a complete AI agent skill using JBang and Java using some new custom scripts, but wait there's more. Now that you have the basics down, consider using any library from the Java ecosystem to enhance your skills.
 
-- Add error handling for invalid IP addresses
-- Cache API responses to reduce external calls
-- Add more data sources (weather, timezone, etc.)
-- Use JBang's `//DEPS` to add JSON parsing libraries like Jackson or Gson for more sophisticated data handling
+Why not build a skill to deploy your application using [deploy4j](https://deploy4j.dev/installation/)?
 
-You can also explore JBang's other features:
+```markdown
+---
+name: deploy-application
+description: Call this skill to deploy an Java application to a server using deploy4j
+---
 
-- `//DEPS` directive to add Maven dependencies
-- `//JAVA_OPTIONS` to configure the JVM
-- `//SOURCES` to split code across multiple files
-- Aliases to install scripts globally with `jbang alias add`
+# deploy application
+
+Run this script `jbang dev.deploy4j:deploy4j-cli:0.0.6 --version 0.0.1-SNAPSHOT
+
+```
+
+With JBang and GitHub Copilot skills, Java developers can build powerful AI agent capabilities while staying in their comfort zone. The combination of Java's robustness and JBang's scripting convenience creates a compelling alternative to traditional scripting languages for AI agent skills.
 
 ## References
 
-- [JBang official website](https://www.jbang.dev/)
-- [JBang documentation](https://www.jbang.dev/documentation/)
-- [GitHub Copilot workspace skills documentation](https://docs.github.com/en/copilot/using-github-copilot/using-github-copilot-workspace-skills)
-- [ipapi.co API documentation](https://ipapi.co/api/)
-- [REST Countries API](https://restcountries.com/)
-- [Java HTTP Client documentation](https://docs.oracle.com/en/java/javase/17/docs/api/java.net.http/java/net/http/HttpClient.html)
-
-With JBang and GitHub Copilot skills, Java developers can build powerful AI agent capabilities while staying in their comfort zone. The combination of Java's robustness and JBang's scripting convenience creates a compelling alternative to traditional scripting languages for AI agent skills.
+- [JBang documentation](https://www.jbang.dev/documentation/jbang/latest/templates.html#ai-powered-code-generation)
+- [GitHub Copilot Agent Skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+- [ipapi.co API documentation](https://ipapi.co/)
+- [REST Countries API](https://restcountries.com/#endpoints-code)
