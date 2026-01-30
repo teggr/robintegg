@@ -2,7 +2,7 @@
 layout: post
 title: "Bring your Java skills to AI Agent Skills with JBang"
 date: "2026-01-30"
-image: /images/jbang-ai-skills.png
+image: /images/jbang-ai-skills.jpg
 tags:
   - java
   - jbang
