@@ -305,6 +305,7 @@ With JBang and GitHub Copilot skills, Java developers can build powerful AI agen
 
 ## References
 
+* [Vercel AI Skills FAQ](https://vercel.com/blog/agent-skills-explained-an-faq)
 - [JBang documentation](https://www.jbang.dev/documentation/jbang/latest/templates.html#ai-powered-code-generation)
 - [GitHub Copilot Agent Skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
 - [ipapi.co API documentation](https://ipapi.co/)
