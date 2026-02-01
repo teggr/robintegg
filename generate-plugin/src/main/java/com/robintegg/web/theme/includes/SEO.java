@@ -67,6 +67,10 @@ public class SEO {
             absoluteImageUrl != null,
             meta().attr(PROPERTY, "og:image").withContent(absoluteImageUrl)
         ),
+        iff(
+            absoluteImageUrl != null,
+            meta().withName("twitter:image").withContent(absoluteImageUrl)
+        ),
         meta().attr(PROPERTY, "og:type").withContent("website"),
         meta().withName("twitter:card").withContent("summary"),
         iffElse(
