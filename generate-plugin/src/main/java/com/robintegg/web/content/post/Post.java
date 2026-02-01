@@ -154,7 +154,7 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
     return this;
   }
 
-  class FirstParagraphExtractor extends AbstractVisitor {
+  static class FirstParagraphExtractor extends AbstractVisitor {
     private Node firstParagraph = null;
 
     @Override
