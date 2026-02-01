@@ -3,6 +3,7 @@ package com.robintegg.web.feed;
 import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.feed.atom.*;
+import com.robintegg.web.utils.Utils;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -92,6 +93,7 @@ public class Feed {
   }
 
   private Entry mapToAtomEntry(RenderModel renderModel, FeedEntry entry) {
+    String absoluteImageUrl = Utils.resolveImageUrl(entry.getImageUrl(), renderModel.getContext().getSite());
     return
         Entry.builder()
             .title(Title.builder()
@@ -132,11 +134,11 @@ public class Feed {
                 .value(entry.getExcerpt().apply(renderModel).render())
                 .build())
             .mediaThumbnail(MediaThumbnail.builder()
-                .url(entry.getImageUrl())
+                .url(absoluteImageUrl)
                 .build())
             .mediaContent(MediaContent.builder()
                 .medium("image")
-                .url(entry.getImageUrl())
+                .url(absoluteImageUrl)
                 .build())
             .build();
   }
