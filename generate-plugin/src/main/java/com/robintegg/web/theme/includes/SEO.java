@@ -111,7 +111,7 @@ public class SEO {
         script()
             .withType("application/ld+json")
             .with(
-                new UnescapedText(ldJson(renderModel))
+                new UnescapedText(ldJson(renderModel, absoluteImageUrl))
             )
     );
   }
@@ -144,7 +144,7 @@ public class SEO {
   }
 
   @SneakyThrows
-  private static String ldJson(RenderModel renderModel) {
+  private static String ldJson(RenderModel renderModel, String absoluteImageUrl) {
 
     ObjectNode author = objectMapper.createObjectNode();
     author.put("@type", "Person");
@@ -173,11 +173,7 @@ public class SEO {
       }
       
       // Add image if available
-      if (renderModel.getPage().getImageUrl() != null) {
-        String absoluteImageUrl = Utils.resolveImageUrl(
-            renderModel.getPage().getImageUrl(), 
-            renderModel.getContext().getSite()
-        );
+      if (absoluteImageUrl != null) {
         jsonObject.put("image", absoluteImageUrl);
       }
       
