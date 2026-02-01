@@ -30,6 +30,9 @@ public class SEO {
   }
 
   public static DomContent render(RenderModel renderModel) {
+    
+    boolean isPost = renderModel.getPage().isPost();
+    
     // Resolve absolute image URL if present
     String absoluteImageUrl = Utils.resolveImageUrl(
         renderModel.getPage().getImageUrl(), 
@@ -79,7 +82,8 @@ public class SEO {
             absoluteImageUrl != null,
             meta().withName("twitter:image").withContent(absoluteImageUrl)
         ),
-        meta().attr(PROPERTY, "og:type").withContent("website"),
+        meta().attr(PROPERTY, "og:type").withContent(isPost ? "article" : "website"),
+        renderArticleTags(renderModel, isPost),
         meta().withName("twitter:card").withContent("summary"),
         iffElse(
             renderModel.getPage().getTitle() != null,
@@ -93,6 +97,33 @@ public class SEO {
             .with(
                 new UnescapedText(ldJson(renderModel))
             )
+    );
+  }
+  
+  private static DomContent renderArticleTags(RenderModel renderModel, boolean isPost) {
+    if (!isPost) {
+      return text("");
+    }
+    
+    return each(
+        iff(renderModel.getPage().getDate() != null,
+            meta().attr(PROPERTY, "article:published_time").withContent(
+                renderModel.getPage().getDate().atStartOfDay().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME)
+            )
+        ),
+        iff(!renderModel.getPage().getAuthor().isEmpty(),
+            each(renderModel.getPage().getAuthor(), author ->
+                meta().attr(PROPERTY, "article:author").withContent(author)
+            )
+        ),
+        iff(renderModel.getPage().getCategory() != null && !renderModel.getPage().getCategory().isEmpty(),
+            meta().attr(PROPERTY, "article:section").withContent(renderModel.getPage().getCategory())
+        ),
+        iff(renderModel.getPage().getData().containsKey("tags"),
+            each(renderModel.getPage().getData().get("tags"), tag ->
+                meta().attr(PROPERTY, "article:tag").withContent(tag)
+            )
+        )
     );
   }
 
