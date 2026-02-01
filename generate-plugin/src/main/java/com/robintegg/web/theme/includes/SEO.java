@@ -33,8 +33,9 @@ public class SEO {
     String imageUrl = renderModel.getPage().getImageUrl();
     String absoluteImageUrl = null;
     if (imageUrl != null) {
-      // If already absolute, use as-is; otherwise resolve to absolute URL
-      if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+      // If already absolute or protocol-relative, use as-is; otherwise resolve to absolute URL
+      String lowerCaseUrl = imageUrl.toLowerCase();
+      if (lowerCaseUrl.startsWith("http://") || lowerCaseUrl.startsWith("https://") || imageUrl.startsWith("//")) {
         absoluteImageUrl = imageUrl;
       } else {
         absoluteImageUrl = renderModel.getContext().getSite().resolveUrl(imageUrl);
