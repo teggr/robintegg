@@ -96,7 +96,7 @@ public class SEO {
         ),
         meta().attr(PROPERTY, "og:type").withContent(isPost ? "article" : "website"),
         renderArticleTags(renderModel, isPost),
-        meta().withName("twitter:card").withContent("summary"),
+        meta().withName("twitter:card").withContent("summary_large_image"),
         iff(
             renderModel.getPage().getImageAlt() != null,
             meta().withName("twitter:image:alt").withContent(renderModel.getPage().getImageAlt())
@@ -111,7 +111,7 @@ public class SEO {
         script()
             .withType("application/ld+json")
             .with(
-                new UnescapedText(ldJson(renderModel))
+                new UnescapedText(ldJson(renderModel, absoluteImageUrl))
             )
     );
   }
@@ -144,7 +144,7 @@ public class SEO {
   }
 
   @SneakyThrows
-  private static String ldJson(RenderModel renderModel) {
+  private static String ldJson(RenderModel renderModel, String absoluteImageUrl) {
 
     ObjectNode author = objectMapper.createObjectNode();
     author.put("@type", "Person");
@@ -173,22 +173,32 @@ public class SEO {
       }
       
       // Add image if available
-      if (renderModel.getPage().getImageUrl() != null) {
-        jsonObject.put("image", renderModel.getPage().getImageUrl());
+      if (absoluteImageUrl != null) {
+        jsonObject.put("image", absoluteImageUrl);
       }
       
       // Add URL
       jsonObject.put("url", renderModel.getContext().getSite().resolveUrl(renderModel.getPage().getUrl()));
       
       // Add description/excerpt if available
-      if (renderModel.getPage().getExcerpt() != null) {
+      if (renderModel.getPage().getDescription() != null) {
+        jsonObject.put(DESCRIPTION, renderModel.getPage().getDescription());
+      } else if (renderModel.getPage().getExcerpt() != null) {
         jsonObject.put(DESCRIPTION, renderModel.getPage().getExcerpt());
+      } else {
+        jsonObject.put(DESCRIPTION, renderModel.getContext().getSite().getDescription());
       }
     } else {
       // Use WebSite type for non-blog pages
       jsonObject.put("@type", "WebSite");
       jsonObject.set("author", author);
-      jsonObject.put(DESCRIPTION, renderModel.getContext().getSite().getDescription());
+      
+      // Add description for WebSite type
+      if (renderModel.getPage().getDescription() != null) {
+        jsonObject.put(DESCRIPTION, renderModel.getPage().getDescription());
+      } else {
+        jsonObject.put(DESCRIPTION, renderModel.getContext().getSite().getDescription());
+      }
       jsonObject.put("headline", renderModel.getContext().getSite().getTitle());
       jsonObject.put("name", renderModel.getContext().getSite().getTitle());
       jsonObject.put("url", renderModel.getContext().getSite().getBaseUrl());
