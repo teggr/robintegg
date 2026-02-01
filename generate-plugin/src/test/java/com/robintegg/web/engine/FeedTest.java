@@ -28,8 +28,7 @@ class FeedTest {
         site.setAuthor(author);
         site.setTitle("my title");
         site.setDescription("description");
-        site.setBaseUrl("rt.com");
-        site.setUrl("someurl");
+        site.setBaseUrl("https://robintegg.com");
         context.setSite(site);
         renderModel.setContext(context);
 
@@ -80,7 +79,7 @@ class FeedTest {
             }
         });
 
-        String feedContent = feed.getContent(contentModel);
+        String feedContent = feed.getContent(renderModel);
         System.out.println(feedContent);
 
         // Verify that the feed contains absolute URLs

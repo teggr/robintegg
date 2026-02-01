@@ -38,40 +38,40 @@ public class Feed {
     feedEntries.sort(Comparator.comparing(FeedEntry::getDate).reversed());
 
     AtomFeed feed = AtomFeed.builder()
-        .generator(Generator.builder()
-            .uri("https://github.com/tipsy/j2html")
-            .version("v1.6.0")
-            .value("j2html")
-            .build())
-        .link(List.of(
-            Link.builder()
-                .href(renderModel.getContext().getSite().resolveUrl(getPath()))
-                .rel("self")
-                .type("application/atom+xml")
-                .build(),
-            Link.builder()
-                .href(renderModel.getContext().getSite().getUrl())
-                .rel("alternative")
-                .type("text/html")
-                .build()
-        ))
-        .updated(OffsetDateTime.now())
-        .id(renderModel.getContext().getSite().resolveUrl(getPath()))
-        .title(Title.builder()
-            .type("html")
-            .value(renderModel.getContext().getSite().getTitle())
-            .build())
-        .subtitle(renderModel.getContext().getSite().getDescription())
-        .author(List.of(
-            Author.builder()
-                .name(renderModel.getContext().getSite().getAuthor().getName())
-                .build()
-        ))
-        .entry(feedEntries.stream()
-            .map(fe -> mapToAtomEntry(renderModel, fe))
-            .toList()
-        )
-        .build();
+      .generator(Generator.builder()
+        .uri("https://github.com/tipsy/j2html")
+        .version("v1.6.0")
+        .value("j2html")
+        .build())
+      .link(List.of(
+        Link.builder()
+          .href(renderModel.getContext().getSite().resolveUrl(getPath()))
+          .rel("self")
+          .type("application/atom+xml")
+          .build(),
+        Link.builder()
+          .href(renderModel.getContext().getSite().getBaseUrl())
+          .rel("alternative")
+          .type("text/html")
+          .build()
+      ))
+      .updated(OffsetDateTime.now())
+      .id(renderModel.getContext().getSite().resolveUrl(getPath()))
+      .title(Title.builder()
+        .type("html")
+        .value(renderModel.getContext().getSite().getTitle())
+        .build())
+      .subtitle(renderModel.getContext().getSite().getDescription())
+      .author(List.of(
+        Author.builder()
+          .name(renderModel.getContext().getSite().getAuthor().getName())
+          .build()
+      ))
+      .entry(feedEntries.stream()
+        .map(fe -> mapToAtomEntry(renderModel, fe))
+        .toList()
+      )
+      .build();
 
     try {
 
@@ -100,58 +100,58 @@ public class Feed {
     // Use site's default author if entry author is null, empty, or blank
     String authorName = entry.getAuthor();
     if (authorName == null || authorName.isBlank()) {
-      if(renderModel.getContext().getSite().getAuthor() != null) {
+      if (renderModel.getContext().getSite().getAuthor() != null) {
         authorName = renderModel.getContext().getSite().getAuthor().getName();
       }
     }
 
     return
-        Entry.builder()
-            .title(Title.builder()
-                .type("html")
-                .value(entry.getTitle())
-                .build())
-            .link(List.of(
-                    Link.builder()
-                        .href(absoluteUrl)
-                        .rel("alternate")
-                        .type("text/html")
-                        .title(entry.getTitle())
-                        .build()
-                )
-            )
-            .published(entry.getDate().atStartOfDay().atOffset(ZoneOffset.UTC))
-            .updated(entry.getModifiedDate().atStartOfDay().atOffset(ZoneOffset.UTC))
-            .id(feedId(entry.getUrl()))
-            .content(Content.builder()
-                .type("html")
-                .xmlBase(absoluteUrl)
-                .value(entry.getContent().apply(renderModel).render())
-                .build())
-            .author(List.of(
-                Author.builder()
-                    .name(authorName)
-                    .build()
-            ))
-            .category(entry.getTags().stream()
-                .map(tag -> Category.builder()
-                    .term(tag)
-                    .build()
-                )
-                .toList()
-            )
-            .summary(Summary.builder()
-                .type("html")
-                .value(entry.getExcerpt().apply(renderModel).render())
-                .build())
-            .mediaThumbnail(MediaThumbnail.builder()
-                .url(absoluteImageUrl)
-                .build())
-            .mediaContent(MediaContent.builder()
-                .medium("image")
-                .url(absoluteImageUrl)
-                .build())
-            .build();
+      Entry.builder()
+        .title(Title.builder()
+          .type("html")
+          .value(entry.getTitle())
+          .build())
+        .link(List.of(
+            Link.builder()
+              .href(absoluteUrl)
+              .rel("alternate")
+              .type("text/html")
+              .title(entry.getTitle())
+              .build()
+          )
+        )
+        .published(entry.getDate().atStartOfDay().atOffset(ZoneOffset.UTC))
+        .updated(entry.getModifiedDate().atStartOfDay().atOffset(ZoneOffset.UTC))
+        .id(feedId(absoluteUrl))
+        .content(Content.builder()
+          .type("html")
+          .xmlBase(absoluteUrl)
+          .value(entry.getContent().apply(renderModel).render())
+          .build())
+        .author(List.of(
+          Author.builder()
+            .name(authorName)
+            .build()
+        ))
+        .category(entry.getTags().stream()
+          .map(tag -> Category.builder()
+            .term(tag)
+            .build()
+          )
+          .toList()
+        )
+        .summary(Summary.builder()
+          .type("html")
+          .value(entry.getExcerpt().apply(renderModel).render())
+          .build())
+        .mediaThumbnail(MediaThumbnail.builder()
+          .url(absoluteImageUrl)
+          .build())
+        .mediaContent(MediaContent.builder()
+          .medium("image")
+          .url(absoluteImageUrl)
+          .build())
+        .build();
   }
 
   private String feedId(String url) {
@@ -164,16 +164,16 @@ public class Feed {
 
   public void addContent(IndexContent post) {
     addEntry(FeedEntry.builder()
-        .title(post.getTitle())
-        .url(post.getUrl())
-        .date(post.getDate())
-        .modifiedDate(post.getDate())
-        .content(post::getContent)
-        .author(post.getAuthor())
-        .tags(post.getTags())
-        .excerpt(post::getExcerpt)
-        .imageUrl(post.getImage())
-        .build());
+      .title(post.getTitle())
+      .url(post.getUrl())
+      .date(post.getDate())
+      .modifiedDate(post.getDate())
+      .content(post::getContent)
+      .author(post.getAuthor())
+      .tags(post.getTags())
+      .excerpt(post::getExcerpt)
+      .imageUrl(post.getImage())
+      .build());
   }
 
 }

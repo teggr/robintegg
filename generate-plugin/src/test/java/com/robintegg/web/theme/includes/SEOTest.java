@@ -37,8 +37,7 @@ class SEOTest {
         Site site = new Site();
         site.setTitle("Test Site");
         site.setDescription("Test Description");
-        site.setUrl("https://example.com");
-        site.setBaseUrl("");  // Set baseUrl to empty string
+        site.setBaseUrl("https://example.com");
         site.setAuthor(author);
         site.setTwitterUsername("testuser");
 
@@ -85,8 +84,7 @@ class SEOTest {
         Site site = new Site();
         site.setTitle("Test Site");
         site.setDescription("Test Description");
-        site.setUrl("https://example.com");
-        site.setBaseUrl("");  // Set baseUrl to empty string
+        site.setBaseUrl("https://example.com");
         site.setAuthor(author);
         site.setTwitterUsername("testuser");
 

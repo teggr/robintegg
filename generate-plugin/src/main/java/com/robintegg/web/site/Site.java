@@ -25,7 +25,6 @@ public class Site {
     private String linkedinUsername;
     private String blueskyUsername;
     private String mastodonUsername;
-    private String url;
     private String baseUrl;
     private String feedUrl;
 
@@ -37,6 +36,6 @@ public class Site {
         if(!resolveUrl.startsWith("/")) {
             resolveUrl = "/" + resolveUrl;
         }
-        return url + baseUrl + resolveUrl;
+        return baseUrl + resolveUrl;
     }
 }

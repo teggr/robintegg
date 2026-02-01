@@ -191,7 +191,7 @@ public class SEO {
       jsonObject.put(DESCRIPTION, renderModel.getContext().getSite().getDescription());
       jsonObject.put("headline", renderModel.getContext().getSite().getTitle());
       jsonObject.put("name", renderModel.getContext().getSite().getTitle());
-      jsonObject.put("url", renderModel.getContext().getSite().getUrl());
+      jsonObject.put("url", renderModel.getContext().getSite().getBaseUrl());
     }
 
     return objectMapper.writeValueAsString(jsonObject);

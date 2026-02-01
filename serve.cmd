@@ -1,0 +1,1 @@
+cd .\website\target\site && "%JAVA_HOME%\bin\jwebserver"
