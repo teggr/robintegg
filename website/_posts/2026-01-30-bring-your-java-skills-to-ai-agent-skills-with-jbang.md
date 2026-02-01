@@ -2,6 +2,7 @@
 layout: post
 title: "Bring your Java skills to AI Agent Skills with JBang"
 date: "2026-01-30"
+description: "Learn how to build GitHub Copilot skills using Java and JBang instead of Python or JavaScript."
 image: /images/jbang-ai-skills.jpg
 tags:
   - java

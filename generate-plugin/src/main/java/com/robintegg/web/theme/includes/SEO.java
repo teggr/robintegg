@@ -44,14 +44,22 @@ public class SEO {
         meta().withName("author").withContent(renderModel.getContext().getSite().getAuthor().getName()),
         meta().attr(PROPERTY, "og:locale").withContent(renderModel.getContext().getLang()),
         iffElse(
-            renderModel.getPage().getExcerpt() != null,
-            meta().withName(DESCRIPTION).withContent(renderModel.getPage().getExcerpt()),
-            meta().withName(DESCRIPTION).withContent(renderModel.getContext().getSite().getDescription())
+            renderModel.getPage().getDescription() != null,
+            meta().withName(DESCRIPTION).withContent(renderModel.getPage().getDescription()),
+            iffElse(
+                renderModel.getPage().getExcerpt() != null,
+                meta().withName(DESCRIPTION).withContent(renderModel.getPage().getExcerpt()),
+                meta().withName(DESCRIPTION).withContent(renderModel.getContext().getSite().getDescription())
+            )
         ),
         iffElse(
-            renderModel.getPage().getExcerpt() != null,
-            meta().attr(PROPERTY, "og:description").withContent(renderModel.getPage().getExcerpt()),
-            meta().attr(PROPERTY, "og:description").withContent(renderModel.getContext().getSite().getDescription())
+            renderModel.getPage().getDescription() != null,
+            meta().attr(PROPERTY, "og:description").withContent(renderModel.getPage().getDescription()),
+            iffElse(
+                renderModel.getPage().getExcerpt() != null,
+                meta().attr(PROPERTY, "og:description").withContent(renderModel.getPage().getExcerpt()),
+                meta().attr(PROPERTY, "og:description").withContent(renderModel.getContext().getSite().getDescription())
+            )
         ),
         link().withRel("canonical").withHref(renderModel.getContext().getSite().resolveUrl(renderModel.getPage().getUrl())),
         meta().attr(PROPERTY, "og:url").withContent(renderModel.getContext().getSite().resolveUrl(renderModel.getPage().getUrl())),
