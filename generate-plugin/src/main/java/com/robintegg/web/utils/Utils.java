@@ -37,7 +37,7 @@ public class Utils {
         
         // If already absolute or protocol-relative, use as-is; otherwise resolve to absolute URL
         String lowerCaseUrl = imageUrl.toLowerCase();
-        if (lowerCaseUrl.startsWith("http://") || lowerCaseUrl.startsWith("https://") || imageUrl.startsWith("//")) {
+        if (lowerCaseUrl.startsWith("http://") || lowerCaseUrl.startsWith("https://") || lowerCaseUrl.startsWith("//")) {
             return imageUrl;
         } else {
             return site.resolveUrl(imageUrl);
