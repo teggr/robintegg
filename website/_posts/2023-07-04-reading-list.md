@@ -2,6 +2,7 @@
 title: Reading list for week 27 of 2023
 layout: default
 date: "2023-07-04"
+description: "Developer resources covering Java, Spring Boot, microservices, testing, and web development from week 27 of 2023."
 ---
 * [GitHub - alyssaxuu/flowy: The minimal javascript library to create flowcharts ✨](https://github.com/alyssaxuu/flowy)
 * [Mastering the Object Mother · jonasg.io](https://www.jonasg.io/posts/object-mother/)

@@ -2,6 +2,7 @@
 layout: post
 title: Theming Bootstrap in your Spring Boot application
 date: "2019-07-28"
+description: "Customizing Bootstrap themes in a Spring Boot application using Sass compilation with the frontend-maven-plugin."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - java

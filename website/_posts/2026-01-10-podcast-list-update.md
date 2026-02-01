@@ -2,6 +2,7 @@
 layout: post
 title: "Podcast List Update for 2026"
 date: "2026-01-10"
+description: "Curating and managing podcast subscriptions for 2026, featuring REWORK and Tech Lead Journal."
 image: /images/podcasts-2026.png
 tags:
   - podcasts

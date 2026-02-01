@@ -2,6 +2,7 @@
 layout: post
 title: Easy Maven Publishing with JitPack.io
 date: "2025-08-02"
+description: "Publish Java libraries to JitPack from GitHub without Maven Central setup—just tag and push to deploy."
 image: /images/publish-maven-to-jitpack.jpg
 tags:
   - java

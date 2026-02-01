@@ -2,6 +2,7 @@
 layout: post
 title: Maven 4 incoming
 date: "2025-04-04"
+description: "Key changes coming in Maven 4 including Java 17 requirement, subproject terminology, and new BOM package type."
 image: /images/maven-4-horizon.jpg
 tags:
   - java

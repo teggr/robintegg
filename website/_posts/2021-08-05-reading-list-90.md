@@ -2,6 +2,7 @@
 title: Reading list for August 2021
 layout: default
 date: "2021-08-05"
+description: "Curated links on Hibernate, JaCoCo testing, TestContainers, and software architecture from August 2021."
 ---
 * [How to store date, time, and timestamps in UTC time zone with JDBC and Hibernate](https://vladmihalcea.com/how-to-store-date-time-and-timestamps-in-utc-time-zone-with-jdbc-and-hibernate/)
 * [Using JaCoCo to measure system test coverage - Sebastian Daschner](https://blog.sebastian-daschner.com/entries/jacoco-system-test-coverage)

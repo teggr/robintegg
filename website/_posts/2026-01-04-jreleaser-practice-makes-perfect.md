@@ -2,6 +2,7 @@
 layout: post
 title: "JReleaser - Practice makes perfect"
 date: "2026-01-04"
+description: "Getting started with JReleaser for automated Java project releases to Maven Central and multiple distribution channels."
 image: /images/practice-makes-perfect.png
 tags:
   - java

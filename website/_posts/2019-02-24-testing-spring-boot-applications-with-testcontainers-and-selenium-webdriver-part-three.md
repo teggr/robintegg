@@ -2,6 +2,7 @@
 layout: post
 title: "Testing Spring Boot applications with TestContainers and Selenium WebDriver - Part Three"
 date: "2019-02-24"
+description: "Part three covers UI testing with TestContainers WebDriver support, running Selenium tests and capturing session recordings."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot

@@ -2,6 +2,7 @@
 layout: post
 title: "Introducing the Feeds Page: Taking Back Control of Your Content"
 date: "2026-01-17"
+description: "A new RSS feeds page showcasing curated sources for Java development, architecture, and software engineering without algorithmic filtering."
 image: /images/rss-feeds-2026.png
 tags:
   - RSS

@@ -2,6 +2,7 @@
 title: Reading list for April 2022
 layout: default
 date: "2022-04-05"
+description: "Software engineering and Java development resources from April 2022."
 ---
 * [The Fediverse Points to Our Social Media Future, Post-Musk – The New Stack](https://thenewstack.io/the-fediverse-points-to-our-social-media-future-post-musk/)
 * [GitHub - pulumi/pulumi: Pulumi - Universal Infrastructure as Code. Your Cloud, Your Language, Your Way 🚀](https://github.com/pulumi/pulumi)

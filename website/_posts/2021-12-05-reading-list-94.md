@@ -2,6 +2,7 @@
 title: Reading list for December 2021
 layout: default
 date: "2021-12-05"
+description: "Selected articles and resources for Java developers from December 2021."
 ---
 * [Event handling](https://cadenceworkflow.io/docs/concepts/events/#event-aggregation-and-correlation)
 * [12 Signs You’re Working in a Feature Factory](https://cutle.fish/blog/12-signs-youre-working-in-a-feature-factory)
