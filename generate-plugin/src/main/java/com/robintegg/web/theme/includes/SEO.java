@@ -29,6 +29,12 @@ public class SEO {
   }
 
   public static DomContent render(RenderModel renderModel) {
+    // Resolve absolute image URL if present
+    String imageUrl = renderModel.getPage().getImageUrl();
+    String absoluteImageUrl = imageUrl != null 
+        ? renderModel.getContext().getSite().resolveUrl(imageUrl) 
+        : null;
+    
     return each(
         iffElse(
             renderModel.getPage().getTitle() != null,
@@ -57,8 +63,8 @@ public class SEO {
         meta().attr(PROPERTY, "og:url").withContent(renderModel.getContext().getSite().resolveUrl(renderModel.getPage().getUrl())),
         meta().attr(PROPERTY, "og:site_name").withContent(renderModel.getContext().getSite().getTitle()),
         iff(
-            renderModel.getPage().getImageUrl() != null,
-            meta().attr(PROPERTY, "og:image").withContent(renderModel.getPage().getImageUrl())
+            absoluteImageUrl != null,
+            meta().attr(PROPERTY, "og:image").withContent(absoluteImageUrl)
         ),
         meta().attr(PROPERTY, "og:type").withContent("website"),
         meta().withName("twitter:card").withContent("summary"),
