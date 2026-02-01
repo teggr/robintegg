@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.robintegg.web.engine.RenderModel;
+import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 import j2html.tags.UnescapedText;
 import lombok.AccessLevel;
@@ -29,6 +30,12 @@ public class SEO {
   }
 
   public static DomContent render(RenderModel renderModel) {
+    // Resolve absolute image URL if present
+    String absoluteImageUrl = Utils.resolveImageUrl(
+        renderModel.getPage().getImageUrl(), 
+        renderModel.getContext().getSite()
+    );
+    
     return each(
         iffElse(
             renderModel.getPage().getTitle() != null,
@@ -57,8 +64,8 @@ public class SEO {
         meta().attr(PROPERTY, "og:url").withContent(renderModel.getContext().getSite().resolveUrl(renderModel.getPage().getUrl())),
         meta().attr(PROPERTY, "og:site_name").withContent(renderModel.getContext().getSite().getTitle()),
         iff(
-            renderModel.getPage().getImageUrl() != null,
-            meta().attr(PROPERTY, "og:image").withContent(renderModel.getPage().getImageUrl())
+            absoluteImageUrl != null,
+            meta().attr(PROPERTY, "og:image").withContent(absoluteImageUrl)
         ),
         meta().attr(PROPERTY, "og:type").withContent("website"),
         meta().withName("twitter:card").withContent("summary"),
