@@ -18,7 +18,8 @@ class FeedTest {
 
         Feed feed = new Feed();
 
-        ContentModel contentModel = new ContentModel();
+        RenderModel renderModel = new RenderModel();
+        Context context = new Context();
         Site site = new Site();
         Author author = new Author();
         author.setName("Robin Tegg");
@@ -27,7 +28,8 @@ class FeedTest {
         site.setDescription("description");
         site.setBaseUrl("rt.com");
         site.setUrl("someurl");
-        contentModel.setSite(site);
+        context.setSite(site);
+        renderModel.setContext(context);
 
         feed.addContent(new IndexContent() {
             @Override
@@ -46,7 +48,7 @@ class FeedTest {
             }
 
             @Override
-            public DomContent getExcerpt(RenderContentModel contentModel) {
+            public DomContent getExcerpt(RenderModel renderModel) {
                 return TagCreator.rawHtml("<div class='c'>exceprpt</div>");
             }
 
@@ -56,7 +58,7 @@ class FeedTest {
             }
 
             @Override
-            public DomContent getContent(RenderContentModel contentModel) {
+            public DomContent getContent(RenderModel renderModel) {
                 return TagCreator.rawHtml("<div class='c'>aome tezt</div>");
             }
 
@@ -76,7 +78,7 @@ class FeedTest {
             }
         });
 
-        System.out.println(feed.getContent(contentModel));
+        System.out.println(feed.getContent(renderModel));
 
     }
 }
