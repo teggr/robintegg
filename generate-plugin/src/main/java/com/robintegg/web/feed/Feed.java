@@ -3,6 +3,7 @@ package com.robintegg.web.feed;
 import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.feed.atom.*;
+import com.robintegg.web.utils.Utils;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -100,7 +101,7 @@ public class Feed {
                 .build())
             .link(List.of(
                     Link.builder()
-                        .href(entry.getUrl())
+                        .href(renderModel.getContext().getSite().resolveUrl(entry.getUrl()))
                         .rel("alternate")
                         .type("text/html")
                         .title(entry.getTitle())
@@ -112,7 +113,7 @@ public class Feed {
             .id(feedId(entry.getUrl()))
             .content(Content.builder()
                 .type("html")
-                .xmlBase(entry.getUrl())
+                .xmlBase(renderModel.getContext().getSite().resolveUrl(entry.getUrl()))
                 .value(entry.getContent().apply(renderModel).render())
                 .build())
             .author(List.of(
@@ -132,11 +133,11 @@ public class Feed {
                 .value(entry.getExcerpt().apply(renderModel).render())
                 .build())
             .mediaThumbnail(MediaThumbnail.builder()
-                .url(entry.getImageUrl())
+                .url(Utils.resolveImageUrl(entry.getImageUrl(), renderModel.getContext().getSite()))
                 .build())
             .mediaContent(MediaContent.builder()
                 .medium("image")
-                .url(entry.getImageUrl())
+                .url(Utils.resolveImageUrl(entry.getImageUrl(), renderModel.getContext().getSite()))
                 .build())
             .build();
   }
