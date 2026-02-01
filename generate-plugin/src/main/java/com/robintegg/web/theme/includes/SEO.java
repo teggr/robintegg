@@ -69,7 +69,11 @@ public class SEO {
         ),
         meta().attr(PROPERTY, "og:type").withContent("website"),
         meta().withName("twitter:card").withContent("summary"),
-        meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getContext().getSite().getAuthor().getName()),
+        iffElse(
+            renderModel.getPage().getTitle() != null,
+            meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getPage().getTitle()),
+            meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getContext().getSite().getAuthor().getName())
+        ),
         meta().withName("twitter:site").withContent("@" + renderModel.getContext().getSite().getTwitterUsername()),
         meta().withName("twitter:creator").withContent("@" + renderModel.getContext().getSite().getTwitterUsername()),
         script()
