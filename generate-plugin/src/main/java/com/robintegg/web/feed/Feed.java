@@ -99,7 +99,9 @@ public class Feed {
     // Use site's default author if entry author is null, empty, or blank
     String authorName = entry.getAuthor();
     if (authorName == null || authorName.isBlank()) {
-      authorName = renderModel.getContext().getSite().getAuthor().getName();
+      if(renderModel.getContext().getSite().getAuthor() != null) {
+        authorName = renderModel.getContext().getSite().getAuthor().getName();
+      }
     }
     
     return
