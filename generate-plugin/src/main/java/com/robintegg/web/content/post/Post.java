@@ -154,6 +154,22 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
     return this;
   }
 
+  class FirstParagraphExtractor extends AbstractVisitor {
+    private Node firstParagraph = null;
+
+    @Override
+    public void visit(Paragraph paragraph) {
+      if (firstParagraph == null) {
+        firstParagraph = paragraph;
+      }
+      // Don't call super.visit to avoid traversing further
+    }
+
+    public Node getFirstParagraph() {
+      return firstParagraph;
+    }
+  }
+
   class IndentedCodeBlockNodeRenderer implements NodeRenderer {
 
     private final HtmlWriter html;
