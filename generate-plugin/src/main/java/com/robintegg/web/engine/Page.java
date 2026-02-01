@@ -93,6 +93,30 @@ public class Page {
         return stringList.get(0);
     }
 
+    public String getImageWidth() {
+        List<String> stringList = data.get("image_width");
+        if (stringList == null) {
+            return null;
+        }
+        return stringList.get(0);
+    }
+
+    public String getImageHeight() {
+        List<String> stringList = data.get("image_height");
+        if (stringList == null) {
+            return null;
+        }
+        return stringList.get(0);
+    }
+
+    public String getImageAlt() {
+        List<String> stringList = data.get("image_alt");
+        if (stringList == null) {
+            return null;
+        }
+        return stringList.get(0);
+    }
+
   public String getPodnewsUrl() {
       List<String> stringList = data.get("podnews_url");
       if (stringList == null) {

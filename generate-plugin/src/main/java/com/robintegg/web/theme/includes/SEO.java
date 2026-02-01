@@ -60,8 +60,24 @@ public class SEO {
             renderModel.getPage().getImageUrl() != null,
             meta().attr(PROPERTY, "og:image").withContent(renderModel.getPage().getImageUrl())
         ),
+        iff(
+            renderModel.getPage().getImageWidth() != null,
+            meta().attr(PROPERTY, "og:image:width").withContent(renderModel.getPage().getImageWidth())
+        ),
+        iff(
+            renderModel.getPage().getImageHeight() != null,
+            meta().attr(PROPERTY, "og:image:height").withContent(renderModel.getPage().getImageHeight())
+        ),
+        iff(
+            renderModel.getPage().getImageAlt() != null,
+            meta().attr(PROPERTY, "og:image:alt").withContent(renderModel.getPage().getImageAlt())
+        ),
         meta().attr(PROPERTY, "og:type").withContent("website"),
         meta().withName("twitter:card").withContent("summary"),
+        iff(
+            renderModel.getPage().getImageAlt() != null,
+            meta().withName("twitter:image:alt").withContent(renderModel.getPage().getImageAlt())
+        ),
         meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getContext().getSite().getAuthor().getName()),
         meta().withName("twitter:site").withContent("@" + renderModel.getContext().getSite().getTwitterUsername()),
         meta().withName("twitter:creator").withContent("@" + renderModel.getContext().getSite().getTwitterUsername()),

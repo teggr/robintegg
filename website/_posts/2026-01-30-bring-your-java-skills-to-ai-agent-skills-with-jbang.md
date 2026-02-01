@@ -3,6 +3,9 @@ layout: post
 title: "Bring your Java skills to AI Agent Skills with JBang"
 date: "2026-01-30"
 image: /images/jbang-ai-skills.jpg
+image_width: "1200"
+image_height: "630"
+image_alt: "JBang and AI Skills integration diagram"
 tags:
   - java
   - jbang
