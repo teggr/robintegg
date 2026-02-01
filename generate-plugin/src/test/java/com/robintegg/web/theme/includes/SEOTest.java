@@ -38,6 +38,7 @@ class SEOTest {
         site.setTitle("Test Site");
         site.setDescription("Test Description");
         site.setUrl("https://example.com");
+        site.setBaseUrl("");  // Set baseUrl to empty string
         site.setAuthor(author);
         site.setTwitterUsername("testuser");
 
@@ -53,7 +54,7 @@ class SEOTest {
         String html = seoContent.render();
 
         // Verify OpenGraph image metadata
-        assertTrue(html.contains("<meta property=\"og:image\" content=\"/images/test.jpg\">"),
+        assertTrue(html.contains("<meta property=\"og:image\" content=\"https://example.com/images/test.jpg\">"),
                 "Should contain og:image meta tag");
         assertTrue(html.contains("<meta property=\"og:image:width\" content=\"1200\">"),
                 "Should contain og:image:width meta tag");
@@ -85,6 +86,7 @@ class SEOTest {
         site.setTitle("Test Site");
         site.setDescription("Test Description");
         site.setUrl("https://example.com");
+        site.setBaseUrl("");  // Set baseUrl to empty string
         site.setAuthor(author);
         site.setTwitterUsername("testuser");
 
