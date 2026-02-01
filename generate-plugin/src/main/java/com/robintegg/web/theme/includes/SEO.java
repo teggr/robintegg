@@ -84,7 +84,8 @@ public class SEO {
     jsonObject.put("@context", "https://schema.org");
 
     // Check if this is a blog post by looking at the layout
-    String layout = renderModel.getPage().getData().getOrDefault("layout", java.util.List.of("default")).get(0);
+    java.util.List<String> layoutList = renderModel.getPage().getData().getOrDefault("layout", java.util.List.of("default"));
+    String layout = !layoutList.isEmpty() ? layoutList.get(0) : "default";
     boolean isBlogPost = "post".equals(layout);
 
     if (isBlogPost) {
