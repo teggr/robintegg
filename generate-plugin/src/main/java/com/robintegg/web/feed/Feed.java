@@ -92,9 +92,9 @@ public class Feed {
   }
 
   private Entry mapToAtomEntry(RenderModel renderModel, FeedEntry entry) {
-    // Use site's default author if entry author is null or empty
+    // Use site's default author if entry author is null, empty, or blank
     String authorName = entry.getAuthor();
-    if (authorName == null || authorName.isEmpty()) {
+    if (authorName == null || authorName.isBlank()) {
       authorName = renderModel.getContext().getSite().getAuthor().getName();
     }
     
