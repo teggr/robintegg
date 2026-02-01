@@ -1,6 +1,6 @@
 package com.robintegg.web.pages;
 
-import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.engine.Page;
 import com.robintegg.web.engine.Pageable;
 import com.robintegg.web.theme.pages.IndexPage;
@@ -16,7 +16,7 @@ class IndexPageTest {
 
         System.out.println(
                 TagCreator.html(
-                        page.getRenderFunction().apply(new ContentModel())
+                        page.getRenderFunction().apply(new RenderModel())
                 ).render()
         );
 
