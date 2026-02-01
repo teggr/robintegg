@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SEOTest {
@@ -30,6 +31,7 @@ class SEOTest {
         site.setTitle("Test Site");
         site.setDescription("Test Description");
         site.setUrl("https://test.com");
+        site.setBaseUrl("");  // Empty string to avoid null in URLs
         site.setTwitterUsername("testuser");
         site.setAuthor(author);
 
@@ -44,8 +46,8 @@ class SEOTest {
         String html = SEO.render(renderModel).render();
 
         // Then
-        assertTrue(html.contains("<meta name=\"twitter:image\" content=\"/images/test-image.jpg\">"),
-                "HTML should contain twitter:image meta tag with correct image URL");
+        assertTrue(html.contains("<meta name=\"twitter:image\" content=\"https://test.com/images/test-image.jpg\">"),
+                "HTML should contain twitter:image meta tag with absolute image URL");
     }
 
     @Test
@@ -63,6 +65,7 @@ class SEOTest {
         site.setTitle("Test Site");
         site.setDescription("Test Description");
         site.setUrl("https://test.com");
+        site.setBaseUrl("");  // Empty string to avoid null in URLs
         site.setTwitterUsername("testuser");
         site.setAuthor(author);
 
@@ -77,7 +80,7 @@ class SEOTest {
         String html = SEO.render(renderModel).render();
 
         // Then
-        assertTrue(!html.contains("twitter:image"),
+        assertFalse(html.contains("twitter:image"),
                 "HTML should not contain twitter:image meta tag when image URL is absent");
     }
 }
