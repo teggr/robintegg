@@ -92,6 +92,11 @@ public class Feed {
   }
 
   private Entry mapToAtomEntry(RenderModel renderModel, FeedEntry entry) {
+    // Use entry author if available, otherwise fall back to site author
+    String authorName = entry.getAuthor() != null 
+        ? entry.getAuthor() 
+        : renderModel.getContext().getSite().getAuthor().getName();
+    
     return
         Entry.builder()
             .title(Title.builder()
@@ -117,7 +122,7 @@ public class Feed {
                 .build())
             .author(List.of(
                 Author.builder()
-                    .name(entry.getAuthor())
+                    .name(authorName)
                     .build()
             ))
             .category(entry.getTags().stream()
