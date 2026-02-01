@@ -137,10 +137,8 @@ public class SEO {
     ObjectNode jsonObject = objectMapper.createObjectNode();
     jsonObject.put("@context", "https://schema.org");
 
-    // Check if this is a blog post by looking at the layout
-    java.util.List<String> layoutList = renderModel.getPage().getData().getOrDefault("layout", java.util.List.of("default"));
-    String layout = !layoutList.isEmpty() ? layoutList.get(0) : "default";
-    boolean isBlogPost = "post".equals(layout);
+    // Check if this is a blog post
+    boolean isBlogPost = renderModel.getPage().isPost();
 
     if (isBlogPost) {
       // Use BlogPosting type for blog posts
