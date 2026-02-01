@@ -2,6 +2,7 @@
 layout: post
 title: Pretty command line apps with added JBang.
 date: "2025-04-01"
+description: "Discovering ConsoleUI and AsciiTable libraries for building interactive and professional command-line applications with JBang."
 image: /images/pretty-command-line.png
 tags:
   - java

@@ -2,6 +2,7 @@
 layout: post
 title: "Chrome Extensions Make Great Developer Tools"
 date: "2025-11-20"
+description: "Why Chrome extensions are powerful for building custom developer tools and automating web-based workflows."
 image: /images/chrome-extensions-developer-tools.jpg
 tags:
   - chrome

@@ -2,6 +2,7 @@
 title: Reading list for February 2022
 layout: default
 date: "2022-02-05"
+description: "Technical articles and resources for developers from February 2022."
 ---
 * [Top 10 Java Language Features](https://foojay.io/today/top-10-java-language-features/)
 * [A Step-by-Step Guide to Generating &amp; Validating SaaS Ideas - SitePoint](https://www.sitepoint.com/generating-saas-ideas/?utm_source=rss)   

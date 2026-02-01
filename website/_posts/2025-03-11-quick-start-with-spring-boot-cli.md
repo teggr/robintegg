@@ -2,6 +2,7 @@
 layout: post
 title: Quick Start with Spring Boot CLI
 date: "2025-03-11"
+description: "Using the Spring Boot CLI to scaffold new Spring Boot projects from the command line with the init command."
 image: /images/spring-boot-cli-suick-start-space.webp
 tags:
   - java

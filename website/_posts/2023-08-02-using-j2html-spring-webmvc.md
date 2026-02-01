@@ -2,6 +2,7 @@
 layout: post
 title: Using j2html for rendering web pages with Spring Web MVC
 date: "2023-08-02"
+description: "Integrating j2html with Spring Web MVC using BeanViewResolver to render HTML pages programmatically in Java."
 image: /images/j2html.png
 tags:
   - web

@@ -2,6 +2,7 @@
 layout: post
 title: NanoHTTPD - A mighty tiny webserver
 date: "2025-03-01"
+description: "Build lightweight web servers in Java with NanoHTTPD and JBang for embedded HTTP serving and quick prototypes."
 image: /images/aedrian-salazar-Tws17PwytpA-unsplash.jpg
 tags:
   - java

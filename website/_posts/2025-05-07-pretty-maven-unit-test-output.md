@@ -2,6 +2,7 @@
 layout: post
 title: Pretty Maven unit test output
 date: "2025-05-07"
+description: "Improve Maven Surefire test output with the JUnit 5 Tree Reporter plugin for hierarchical test visualization."
 image: /images/surefire-tests.png
 tags:
   - java

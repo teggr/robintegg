@@ -2,6 +2,7 @@
 layout: post
 title: Deploy a Jar to Heroku from the CLI
 date: "2022-07-27"
+description: "Quick reference for deploying Spring Boot JAR files directly to Heroku using the Heroku CLI java plugin."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - heroku

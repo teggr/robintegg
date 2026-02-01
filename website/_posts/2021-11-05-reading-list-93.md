@@ -2,6 +2,7 @@
 title: Reading list for November 2021
 layout: default
 date: "2021-11-05"
+description: "Curated developer resources and articles from November 2021."
 ---
 * [Examples - Apache ECharts](https://echarts.apache.org/examples/en/index.html)
 * [OpenAPI 3 Library for spring-boot](https://springdoc.org/)

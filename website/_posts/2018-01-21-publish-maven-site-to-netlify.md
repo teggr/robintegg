@@ -2,6 +2,7 @@
 layout: post
 title: "Publish Maven Site to Netlify"
 date: "2018-01-21"
+description: "How to deploy a Maven-based Java project to Netlify using the Maven Wrapper for static site generation."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - maven

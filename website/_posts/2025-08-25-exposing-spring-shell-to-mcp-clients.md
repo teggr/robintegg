@@ -2,6 +2,7 @@
 layout: post
 title: Exposing Spring Shell to MCP Clients
 date: "2025-08-25"
+description: "Expose Spring Shell commands as MCP tools for GitHub Copilot and other AI assistants using Spring AI server integration."
 image: /images/spring-shell-ai.png
 tags:
   - java

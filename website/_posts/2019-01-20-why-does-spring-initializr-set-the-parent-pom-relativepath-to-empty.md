@@ -2,6 +2,7 @@
 layout: post
 title: "Why does Spring Initializr set the parent pom relativePath to empty?"
 date: "2019-01-20"
+description: "Explaining why Spring Initializr sets the Maven parent POM relativePath to empty and how this optimization affects dependency resolution."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - java

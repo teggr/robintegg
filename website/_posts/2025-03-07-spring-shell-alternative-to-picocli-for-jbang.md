@@ -2,6 +2,7 @@
 layout: post
 title: Spring Shell alternative to picocli for JBang
 date: "2025-03-07"
+description: "Creating a custom JBang template for Spring Shell as an alternative to the default picocli CLI template."
 image: /images/spring-shell-picocli-jbang.webp
 tags:
   - java

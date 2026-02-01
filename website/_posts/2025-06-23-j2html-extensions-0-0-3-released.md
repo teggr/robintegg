@@ -2,6 +2,7 @@
 layout: post
 title: j2html Extensions 0.0.3 Released
 date: "2025-06-23"
+description: "Release announcement for j2html Extensions 0.0.3 with Maven BOM support for managing Bootstrap, HTMX, and Spring Boot starter artifacts."
 image: /images/release.png
 tags:
   - java

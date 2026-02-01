@@ -2,6 +2,7 @@
 layout: post
 title: "Watch out for the Spring @Cacheable default key"
 date: "2023-01-03"
+description: "Understanding how Spring @Cacheable annotation uses method parameters as cache keys and avoiding unexpected cache behavior."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - java
