@@ -31,9 +31,15 @@ public class SEO {
   public static DomContent render(RenderModel renderModel) {
     // Resolve absolute image URL if present
     String imageUrl = renderModel.getPage().getImageUrl();
-    String absoluteImageUrl = imageUrl != null 
-        ? renderModel.getContext().getSite().resolveUrl(imageUrl) 
-        : null;
+    String absoluteImageUrl = null;
+    if (imageUrl != null) {
+      // If already absolute, use as-is; otherwise resolve to absolute URL
+      if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+        absoluteImageUrl = imageUrl;
+      } else {
+        absoluteImageUrl = renderModel.getContext().getSite().resolveUrl(imageUrl);
+      }
+    }
     
     return each(
         iffElse(
