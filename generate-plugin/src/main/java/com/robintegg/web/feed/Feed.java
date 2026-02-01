@@ -92,6 +92,12 @@ public class Feed {
   }
 
   private Entry mapToAtomEntry(RenderModel renderModel, FeedEntry entry) {
+    // Default to site author if entry author is null or empty
+    String authorName = entry.getAuthor();
+    if (authorName == null || authorName.isEmpty()) {
+      authorName = renderModel.getContext().getSite().getAuthor().getName();
+    }
+    
     return
         Entry.builder()
             .title(Title.builder()
@@ -117,7 +123,7 @@ public class Feed {
                 .build())
             .author(List.of(
                 Author.builder()
-                    .name(entry.getAuthor())
+                    .name(authorName)
                     .build()
             ))
             .category(entry.getTags().stream()
