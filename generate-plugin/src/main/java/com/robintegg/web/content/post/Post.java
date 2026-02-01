@@ -14,6 +14,7 @@ import org.commonmark.node.AbstractVisitor;
 import org.commonmark.node.FencedCodeBlock;
 import org.commonmark.node.Image;
 import org.commonmark.node.Node;
+import org.commonmark.node.Paragraph;
 import org.commonmark.renderer.NodeRenderer;
 import org.commonmark.renderer.html.HtmlNodeRendererContext;
 import org.commonmark.renderer.html.HtmlNodeRendererFactory;
@@ -92,18 +93,34 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
   }
 
   public DomContent getExcerpt(RenderModel renderModel) {
-    document.accept(new AbstractVisitor() {
-      @Override
-      public void visit(Image image) {
-        image.setDestination(image.getDestination().replaceAll("\\{\\{site\\.baseurl\\}\\}", renderModel.getContext().getSite().getBaseUrl()));
-        super.visit(image);
-      }
-    });
-    HtmlRenderer renderer = HtmlRenderer.builder()
-        .build();
-    return TagCreator.rawHtml(
-        renderer.render(document)
-    );
+    // Check if description field exists in front matter
+    List<String> description = data.get("description");
+    if (description != null && !description.isEmpty()) {
+      return TagCreator.rawHtml(description.get(0));
+    }
+    
+    // Otherwise, extract and render the first paragraph
+    FirstParagraphExtractor extractor = new FirstParagraphExtractor();
+    document.accept(extractor);
+    Node firstParagraph = extractor.getFirstParagraph();
+    
+    if (firstParagraph != null) {
+      firstParagraph.accept(new AbstractVisitor() {
+        @Override
+        public void visit(Image image) {
+          image.setDestination(image.getDestination().replaceAll("\\{\\{site\\.baseurl\\}\\}", renderModel.getContext().getSite().getBaseUrl()));
+          super.visit(image);
+        }
+      });
+      HtmlRenderer renderer = HtmlRenderer.builder()
+          .build();
+      return TagCreator.rawHtml(
+          renderer.render(firstParagraph)
+      );
+    }
+    
+    // Fallback to empty if no paragraph found
+    return TagCreator.each();
   }
 
   public String getAuthor() {
@@ -135,6 +152,22 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
   public Post withKeyUrl() {
     this.url = key + ".html";
     return this;
+  }
+
+  static class FirstParagraphExtractor extends AbstractVisitor {
+    private Node firstParagraph = null;
+
+    @Override
+    public void visit(Paragraph paragraph) {
+      if (firstParagraph == null) {
+        firstParagraph = paragraph;
+      }
+      // Don't call super.visit to avoid traversing further
+    }
+
+    public Node getFirstParagraph() {
+      return firstParagraph;
+    }
   }
 
   class IndentedCodeBlockNodeRenderer implements NodeRenderer {

@@ -1,6 +1,6 @@
 package com.robintegg.web.pages;
 
-import com.robintegg.web.engine.ContentModel;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.engine.Page;
 import com.robintegg.web.theme.pages._404Page;
 import j2html.TagCreator;
@@ -15,7 +15,7 @@ class _404PageTest {
 
         System.out.println(
                 TagCreator.html(
-                        page.getRenderFunction().apply(new ContentModel())
+                        page.getRenderFunction().apply(new RenderModel())
                 ).render()
         );
 
