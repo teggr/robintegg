@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.robintegg.web.engine.RenderModel;
+import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 import j2html.tags.UnescapedText;
 import lombok.AccessLevel;
@@ -29,8 +30,11 @@ public class SEO {
   }
 
   public static DomContent render(RenderModel renderModel) {
-    String imageUrl = renderModel.getPage().getImageUrl();
-    String absoluteImageUrl = imageUrl != null ? renderModel.getContext().getSite().resolveUrl(imageUrl) : null;
+    // Resolve absolute image URL if present
+    String absoluteImageUrl = Utils.resolveImageUrl(
+        renderModel.getPage().getImageUrl(), 
+        renderModel.getContext().getSite()
+    );
     
     return each(
         iffElse(
@@ -69,7 +73,11 @@ public class SEO {
         ),
         meta().attr(PROPERTY, "og:type").withContent("website"),
         meta().withName("twitter:card").withContent("summary"),
-        meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getContext().getSite().getAuthor().getName()),
+        iffElse(
+            renderModel.getPage().getTitle() != null,
+            meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getPage().getTitle()),
+            meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getContext().getSite().getAuthor().getName())
+        ),
         meta().withName("twitter:site").withContent("@" + renderModel.getContext().getSite().getTwitterUsername()),
         meta().withName("twitter:creator").withContent("@" + renderModel.getContext().getSite().getTwitterUsername()),
         script()
