@@ -189,6 +189,8 @@ public class SEO {
         jsonObject.put(DESCRIPTION, renderModel.getPage().getDescription());
       } else if (renderModel.getPage().getExcerpt() != null) {
         jsonObject.put(DESCRIPTION, renderModel.getPage().getExcerpt());
+      } else {
+        jsonObject.put(DESCRIPTION, renderModel.getContext().getSite().getDescription());
       }
     } else {
       // Use WebSite type for non-blog pages
