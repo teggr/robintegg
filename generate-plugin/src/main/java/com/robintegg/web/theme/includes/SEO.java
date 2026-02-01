@@ -11,8 +11,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
-import java.util.List;
-
 import static j2html.TagCreator.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -110,8 +108,7 @@ public class SEO {
   }
   
   private static boolean isPostLayout(RenderModel renderModel) {
-    List<String> layout = renderModel.getPage().getData().get("layout");
-    return layout != null && !layout.isEmpty() && "post".equals(layout.get(0));
+    return "post".equals(renderModel.getPage().getLayout());
   }
 
   @SneakyThrows

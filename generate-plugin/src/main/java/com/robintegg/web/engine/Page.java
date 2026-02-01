@@ -149,4 +149,12 @@ public class Page {
         return stringList.get(0);
     }
 
+    public String getLayout() {
+        List<String> stringList = data.get("layout");
+        if (stringList == null || stringList.isEmpty()) {
+            return "default";
+        }
+        return stringList.get(0);
+    }
+
 }
