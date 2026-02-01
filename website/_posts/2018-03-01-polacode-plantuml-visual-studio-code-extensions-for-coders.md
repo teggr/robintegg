@@ -2,6 +2,7 @@
 layout: post
 title: "Polacode + PlantUML - Visual Studio Code extensions for coders"
 date: "2018-03-01"
+description: "Two essential Visual Studio Code extensions for developers: Polacode for beautiful code screenshots and PlantUML for text-based diagrams."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - visual studio code

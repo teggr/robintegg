@@ -2,6 +2,7 @@
 layout: post
 title: IntelliJ syntax highlighting for Java Text Blocks
 date: "2024-02-26"
+description: "Enable syntax highlighting in IntelliJ Java text blocks using language injection comments for HTML, SQL, JSON, and more."
 image: /images/jorge-rosal-nlIxMHQl6Vo-unsplash.jpg
 tags:
   - java

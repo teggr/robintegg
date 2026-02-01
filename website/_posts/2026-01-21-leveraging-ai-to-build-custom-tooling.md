@@ -2,6 +2,7 @@
 layout: post
 title: "Leveraging AI to Build Your Own Custom Tooling"
 date: "2026-01-23"
+description: "Using AI coding assistants to create custom scripts and tools that automate workflow friction points and repetitive tasks."
 image: /images/custom-tooling.jpg
 tags:
   - ai

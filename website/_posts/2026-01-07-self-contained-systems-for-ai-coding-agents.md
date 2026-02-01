@@ -2,6 +2,7 @@
 layout: post
 title: "Self-Contained Systems for AI Coding Agents"
 date: "2026-01-07"
+description: "How the Self-Contained Systems architecture pattern provides optimal code structure for AI coding agents to understand and modify."
 image: /images/scs-ai-agents.jpg
 tags:
   - architecture

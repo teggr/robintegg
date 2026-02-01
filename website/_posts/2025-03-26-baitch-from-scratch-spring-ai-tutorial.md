@@ -2,6 +2,7 @@
 layout: post
 title: B(ai)tch from Scratch: Building a Spring AI Project Tutorial
 date: "2025-03-26"
+description: "Complete tutorial building a Spring AI chatbot with chat builders, prompt templates, structured output, and MCP integration."
 image: /images/batch-from-scratch.png
 tags:
   - java

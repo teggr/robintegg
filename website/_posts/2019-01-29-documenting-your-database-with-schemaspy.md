@@ -2,6 +2,7 @@
 layout: post
 title: "Documenting your database with SchemaSpy"
 date: "2019-01-29"
+description: "Using SchemaSpy with Docker to automatically generate HTML documentation and ER diagrams for PostgreSQL databases."
 image: /images/Screenshot_2019-01-29-SchemaSpy-•-Database-Documentation-Built-Easy-1.jpg
 tags:
   - database

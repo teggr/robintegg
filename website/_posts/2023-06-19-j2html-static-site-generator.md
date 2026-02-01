@@ -2,6 +2,7 @@
 layout: post
 title: "j2html Static Site Generator"
 date: "2023-06-19"
+description: "Building type-safe HTML documents in Java using j2html's fluent API for static site generation."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - java
