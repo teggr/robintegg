@@ -2,6 +2,7 @@
 layout: post
 title: "Testing Spring Boot applications with TestContainers revisted 2020"
 date: "2020-03-08"
+description: "Updated TestContainers tutorial for Spring Boot 2.2+ with JUnit 5, @DynamicPropertySource, and modern testing approaches."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot

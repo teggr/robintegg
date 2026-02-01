@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.robintegg.web.engine.RenderModel;
+import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 import j2html.tags.UnescapedText;
 import lombok.AccessLevel;
@@ -29,6 +30,15 @@ public class SEO {
   }
 
   public static DomContent render(RenderModel renderModel) {
+    
+    boolean isPost = renderModel.getPage().isPost();
+    
+    // Resolve absolute image URL if present
+    String absoluteImageUrl = Utils.resolveImageUrl(
+        renderModel.getPage().getImageUrl(), 
+        renderModel.getContext().getSite()
+    );
+    
     return each(
         iffElse(
             renderModel.getPage().getTitle() != null,
@@ -44,25 +54,42 @@ public class SEO {
         meta().withName("author").withContent(renderModel.getContext().getSite().getAuthor().getName()),
         meta().attr(PROPERTY, "og:locale").withContent(renderModel.getContext().getLang()),
         iffElse(
-            renderModel.getPage().getExcerpt() != null,
-            meta().withName(DESCRIPTION).withContent(renderModel.getPage().getExcerpt()),
-            meta().withName(DESCRIPTION).withContent(renderModel.getContext().getSite().getDescription())
+            renderModel.getPage().getDescription() != null,
+            meta().withName(DESCRIPTION).withContent(renderModel.getPage().getDescription()),
+            iffElse(
+                renderModel.getPage().getExcerpt() != null,
+                meta().withName(DESCRIPTION).withContent(renderModel.getPage().getExcerpt()),
+                meta().withName(DESCRIPTION).withContent(renderModel.getContext().getSite().getDescription())
+            )
         ),
         iffElse(
-            renderModel.getPage().getExcerpt() != null,
-            meta().attr(PROPERTY, "og:description").withContent(renderModel.getPage().getExcerpt()),
-            meta().attr(PROPERTY, "og:description").withContent(renderModel.getContext().getSite().getDescription())
+            renderModel.getPage().getDescription() != null,
+            meta().attr(PROPERTY, "og:description").withContent(renderModel.getPage().getDescription()),
+            iffElse(
+                renderModel.getPage().getExcerpt() != null,
+                meta().attr(PROPERTY, "og:description").withContent(renderModel.getPage().getExcerpt()),
+                meta().attr(PROPERTY, "og:description").withContent(renderModel.getContext().getSite().getDescription())
+            )
         ),
         link().withRel("canonical").withHref(renderModel.getContext().getSite().resolveUrl(renderModel.getPage().getUrl())),
         meta().attr(PROPERTY, "og:url").withContent(renderModel.getContext().getSite().resolveUrl(renderModel.getPage().getUrl())),
         meta().attr(PROPERTY, "og:site_name").withContent(renderModel.getContext().getSite().getTitle()),
         iff(
-            renderModel.getPage().getImageUrl() != null,
-            meta().attr(PROPERTY, "og:image").withContent(renderModel.getPage().getImageUrl())
+            absoluteImageUrl != null,
+            meta().attr(PROPERTY, "og:image").withContent(absoluteImageUrl)
         ),
-        meta().attr(PROPERTY, "og:type").withContent("website"),
+        iff(
+            absoluteImageUrl != null,
+            meta().withName("twitter:image").withContent(absoluteImageUrl)
+        ),
+        meta().attr(PROPERTY, "og:type").withContent(isPost ? "article" : "website"),
+        renderArticleTags(renderModel, isPost),
         meta().withName("twitter:card").withContent("summary"),
-        meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getContext().getSite().getAuthor().getName()),
+        iffElse(
+            renderModel.getPage().getTitle() != null,
+            meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getPage().getTitle()),
+            meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getContext().getSite().getAuthor().getName())
+        ),
         meta().withName("twitter:site").withContent("@" + renderModel.getContext().getSite().getTwitterUsername()),
         meta().withName("twitter:creator").withContent("@" + renderModel.getContext().getSite().getTwitterUsername()),
         script()
@@ -70,6 +97,33 @@ public class SEO {
             .with(
                 new UnescapedText(ldJson(renderModel))
             )
+    );
+  }
+  
+  private static DomContent renderArticleTags(RenderModel renderModel, boolean isPost) {
+    if (!isPost) {
+      return text("");
+    }
+    
+    return each(
+        iff(renderModel.getPage().getDate() != null,
+            meta().attr(PROPERTY, "article:published_time").withContent(
+                renderModel.getPage().getDate().atStartOfDay().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME)
+            )
+        ),
+        iff(!renderModel.getPage().getAuthor().isEmpty(),
+            each(renderModel.getPage().getAuthor(), author ->
+                meta().attr(PROPERTY, "article:author").withContent(author)
+            )
+        ),
+        iff(renderModel.getPage().getCategory() != null && !renderModel.getPage().getCategory().isEmpty(),
+            meta().attr(PROPERTY, "article:section").withContent(renderModel.getPage().getCategory())
+        ),
+        iff(renderModel.getPage().getData().containsKey("tags"),
+            each(renderModel.getPage().getData().get("tags"), tag ->
+                meta().attr(PROPERTY, "article:tag").withContent(tag)
+            )
+        )
     );
   }
 

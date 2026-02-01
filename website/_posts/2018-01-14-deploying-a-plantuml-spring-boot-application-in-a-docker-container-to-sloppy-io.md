@@ -2,6 +2,7 @@
 layout: post
 title: "Deploying a PlantUML Spring Boot application in a docker container to sloppy.io"
 date: "2018-01-14"
+description: "Building and deploying a PlantUML diagram generation service using Spring Boot, Docker, and the sloppy.io platform."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - plantuml

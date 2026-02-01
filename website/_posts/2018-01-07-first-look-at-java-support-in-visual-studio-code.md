@@ -2,6 +2,7 @@
 layout: post
 title: "First look at Java support in Visual Studio Code"
 date: "2018-01-07"
+description: "Evaluating Visual Studio Code's Java extension pack for Spring Boot development and comparing it to Eclipse and Spring Tool Suite."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - visual studio

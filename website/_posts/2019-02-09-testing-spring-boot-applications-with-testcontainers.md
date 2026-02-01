@@ -2,6 +2,7 @@
 layout: post
 title: "Testing Spring Boot applications with TestContainers"
 date: "2019-02-09"
+description: "Part one of using TestContainers to test Spring Boot data access layers with real databases, Flyway migrations, and Spring Data JPA."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot

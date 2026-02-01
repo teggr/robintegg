@@ -2,6 +2,7 @@
 layout: post
 title: "Testing Spring Boot applications with TestContainers - Part Two"
 date: "2019-02-12"
+description: "Part two shows how to run full application integration tests with all dependencies running in Docker containers using TestContainers."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot

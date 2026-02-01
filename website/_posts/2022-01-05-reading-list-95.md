@@ -2,6 +2,7 @@
 title: Reading list for January 2022
 layout: default
 date: "2022-01-05"
+description: "Java and software development links curated for January 2022."
 ---
 * [Confessions of a Low-Code Convert](https://thenewstack.io/confessions-of-a-low-code-convert/)
 * [Transitional Architecture](https://martinfowler.com/articles/patterns-legacy-displacement/transitional-architecture.html)

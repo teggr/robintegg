@@ -2,6 +2,7 @@
 title: Reading list for September 2021
 layout: default
 date: "2021-09-05"
+description: "Resources on Spring Data JPA bulk updates, architecture patterns, and migrating to Java 17 from September 2021."
 ---
 * [Implementing Bulk Updates with Spring Data JPA](https://thorben-janssen.com/implementing-bulk-updates-with-spring-data-jpa/)
 * [Scaling the Practice of Architecture, Conversationally](https://martinfowler.com/articles/scaling-architecture-conversationally.html#HowThisTypicallyWorksInPractice)

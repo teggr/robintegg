@@ -85,6 +85,14 @@ public class Page {
         return null;
     }
 
+    public String getDescription() {
+        List<String> stringList = data.get("description");
+        if (stringList == null || stringList.isEmpty()) {
+            return null;
+        }
+        return stringList.get(0);
+    }
+
     public String getImageUrl() {
         List<String> stringList = data.get("image");
         if (stringList == null) {
@@ -147,6 +155,18 @@ public class Page {
             return "";
         }
         return stringList.get(0);
+    }
+
+    public String getLayout() {
+        List<String> stringList = data.get("layout");
+        if (stringList == null || stringList.isEmpty()) {
+            return "default";
+        }
+        return stringList.get(0);
+    }
+
+    public boolean isPost() {
+        return "post".equals(getLayout());
     }
 
 }

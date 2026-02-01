@@ -2,6 +2,7 @@
 layout: post
 title: Create iPhone shortcut for sharing links
 date: "2025-05-11"
+description: "Building an iOS shortcut to share links from any app directly to a custom web service without a dedicated app."
 image: /images/ios_automation.webp
 tags:
   - iPhone

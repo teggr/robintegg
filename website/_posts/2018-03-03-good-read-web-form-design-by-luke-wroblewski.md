@@ -2,6 +2,7 @@
 layout: post
 title: "Good Read: Web Form Design by Luke Wroblewski"
 date: "2018-03-03"
+description: "A review of Luke Wroblewski's Web Form Design book covering best practices, structure, and usability insights for creating better forms."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - web

@@ -2,6 +2,7 @@
 layout: post
 title: First look at Hilla Web Framework from Vaadin
 date: "2022-07-26"
+description: "Exploring Hilla web framework's integration of Spring Boot backends with reactive TypeScript frontends and auto-generated bindings."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot

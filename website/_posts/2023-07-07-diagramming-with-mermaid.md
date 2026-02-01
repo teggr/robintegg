@@ -2,6 +2,7 @@
 layout: post
 title: Diagramming with Mermaid
 date: "2023-07-07"
+description: "Using Mermaid.js for text-based diagrams in web content and integrating it with j2html for static site generation."
 image: /images/mermaid-js.png
 tags:
   - web

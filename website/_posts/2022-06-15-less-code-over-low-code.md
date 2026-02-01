@@ -2,6 +2,7 @@
 layout: post
 title: Less-code over low-code 
 date: "2022-06-15"
+description: "Comparing low-code platforms like OutSystems with traditional Spring Boot development and exploring ways to improve Java productivity."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot
