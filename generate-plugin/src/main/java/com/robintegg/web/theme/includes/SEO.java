@@ -136,12 +136,47 @@ public class SEO {
 
     ObjectNode jsonObject = objectMapper.createObjectNode();
     jsonObject.put("@context", "https://schema.org");
-    jsonObject.put("@type", "WebSite");
-    jsonObject.set("author", author);
-    jsonObject.put(DESCRIPTION, renderModel.getContext().getSite().getDescription());
-    jsonObject.put("headline", renderModel.getContext().getSite().getTitle());
-    jsonObject.put("name", renderModel.getContext().getSite().getTitle());
-    jsonObject.put("url", renderModel.getContext().getSite().getUrl());
+
+    // Check if this is a blog post
+    boolean isBlogPost = renderModel.getPage().isPost();
+
+    if (isBlogPost) {
+      // Use BlogPosting type for blog posts
+      jsonObject.put("@type", "BlogPosting");
+      jsonObject.put("headline", renderModel.getPage().getTitle());
+      jsonObject.set("author", author);
+      
+      // Add publication date
+      if (renderModel.getPage().getDate() != null) {
+        jsonObject.put("datePublished", renderModel.getPage().getDate().toString());
+      }
+      
+      // Add modified date if available
+      if (renderModel.getPage().getModifiedDate() != null) {
+        jsonObject.put("dateModified", renderModel.getPage().getModifiedDate().toString());
+      }
+      
+      // Add image if available
+      if (renderModel.getPage().getImageUrl() != null) {
+        jsonObject.put("image", renderModel.getPage().getImageUrl());
+      }
+      
+      // Add URL
+      jsonObject.put("url", renderModel.getContext().getSite().resolveUrl(renderModel.getPage().getUrl()));
+      
+      // Add description/excerpt if available
+      if (renderModel.getPage().getExcerpt() != null) {
+        jsonObject.put(DESCRIPTION, renderModel.getPage().getExcerpt());
+      }
+    } else {
+      // Use WebSite type for non-blog pages
+      jsonObject.put("@type", "WebSite");
+      jsonObject.set("author", author);
+      jsonObject.put(DESCRIPTION, renderModel.getContext().getSite().getDescription());
+      jsonObject.put("headline", renderModel.getContext().getSite().getTitle());
+      jsonObject.put("name", renderModel.getContext().getSite().getTitle());
+      jsonObject.put("url", renderModel.getContext().getSite().getUrl());
+    }
 
     return objectMapper.writeValueAsString(jsonObject);
 
