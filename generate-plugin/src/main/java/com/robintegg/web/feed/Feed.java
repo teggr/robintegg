@@ -3,6 +3,7 @@ package com.robintegg.web.feed;
 import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.feed.atom.*;
+import com.robintegg.web.utils.Utils;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -92,10 +93,18 @@ public class Feed {
   }
 
   private Entry mapToAtomEntry(RenderModel renderModel, FeedEntry entry) {
+
     String absoluteUrl = renderModel.getContext().getSite().resolveUrl(entry.getUrl());
-    String absoluteImageUrl = entry.getImageUrl() != null 
-        ? renderModel.getContext().getSite().resolveUrl(entry.getImageUrl()) 
-        : null;
+    String absoluteImageUrl = Utils.resolveImageUrl(entry.getImageUrl(), renderModel.getContext().getSite());
+
+    // Use site's default author if entry author is null, empty, or blank
+    String authorName = entry.getAuthor();
+    if (authorName == null || authorName.isBlank()) {
+      if(renderModel.getContext().getSite().getAuthor() != null) {
+        authorName = renderModel.getContext().getSite().getAuthor().getName();
+      }
+    }
+
     return
         Entry.builder()
             .title(Title.builder()
@@ -113,7 +122,7 @@ public class Feed {
             )
             .published(entry.getDate().atStartOfDay().atOffset(ZoneOffset.UTC))
             .updated(entry.getModifiedDate().atStartOfDay().atOffset(ZoneOffset.UTC))
-            .id(feedId(absoluteUrl))
+            .id(feedId(entry.getUrl()))
             .content(Content.builder()
                 .type("html")
                 .xmlBase(absoluteUrl)
@@ -121,7 +130,7 @@ public class Feed {
                 .build())
             .author(List.of(
                 Author.builder()
-                    .name(entry.getAuthor())
+                    .name(authorName)
                     .build()
             ))
             .category(entry.getTags().stream()

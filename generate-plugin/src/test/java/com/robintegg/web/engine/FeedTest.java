@@ -20,16 +20,18 @@ class FeedTest {
 
         Feed feed = new Feed();
 
-        ContentModel contentModel = new ContentModel();
+        RenderModel renderModel = new RenderModel();
+        Context context = new Context();
         Site site = new Site();
         Author author = new Author();
         author.setName("Robin Tegg");
         site.setAuthor(author);
         site.setTitle("my title");
         site.setDescription("description");
-        site.setBaseUrl("");
-        site.setUrl("https://robintegg.com");
-        contentModel.setSite(site);
+        site.setBaseUrl("rt.com");
+        site.setUrl("someurl");
+        context.setSite(site);
+        renderModel.setContext(context);
 
         feed.addContent(new IndexContent() {
             @Override
@@ -48,7 +50,7 @@ class FeedTest {
             }
 
             @Override
-            public DomContent getExcerpt(RenderContentModel contentModel) {
+            public DomContent getExcerpt(RenderModel renderModel) {
                 return TagCreator.rawHtml("<div class='c'>exceprpt</div>");
             }
 
@@ -58,7 +60,7 @@ class FeedTest {
             }
 
             @Override
-            public DomContent getContent(RenderContentModel contentModel) {
+            public DomContent getContent(RenderModel renderModel) {
                 return TagCreator.rawHtml("<div class='c'>aome tezt</div>");
             }
 
@@ -82,11 +84,11 @@ class FeedTest {
         System.out.println(feedContent);
 
         // Verify that the feed contains absolute URLs
-        assertTrue(feedContent.contains("<link href=\"https://robintegg.com/content\""), 
+        assertTrue(feedContent.contains("<link href=\"https://robintegg.com/content\""),
             "Feed entry link should use absolute URL");
-        assertTrue(feedContent.contains("<id>https://robintegg.com/content</id>"), 
+        assertTrue(feedContent.contains("<id>https://robintegg.com/content</id>"),
             "Feed entry id should use absolute URL");
-        assertTrue(feedContent.contains("url=\"https://robintegg.com/images/image.png\""), 
+        assertTrue(feedContent.contains("url=\"https://robintegg.com/images/image.png\""),
             "Feed media URLs should use absolute URLs");
 
     }
