@@ -7,13 +7,14 @@
     </author>
     <description>A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design.</description>
     <email>robin@tegg.me.uk</email>
+    <!-- use \-\-local for localhost:8000 -->
+    <baseUrl>https://robintegg.com</baseUrl>
+    <!-- socials -->
     <twitterUsername>robintegg</twitterUsername>
     <githubUsername>teggr</githubUsername>
     <linkedinUsername>robintegg</linkedinUsername>
     <blueskyUsername>robintegg.bsky.social</blueskyUsername>
     <mastodonUsername>robintegg</mastodonUsername>
-    <url>https://robintegg.com</url>
-    <baseUrl></baseUrl>
     <feedUrl>https://robintegg.com/feed.xml</feedUrl>
     <socialLink>
         <icon>github</icon>

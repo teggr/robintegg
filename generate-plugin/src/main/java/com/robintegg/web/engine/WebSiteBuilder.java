@@ -24,7 +24,7 @@ public class WebSiteBuilder {
     private final ThemePlugin themePlugin;
 
     @SneakyThrows
-    public void build() {
+    public void build( String baseUrl ) {
 
         // TODO: whilst multi-module in Intellij - must set workdirectory to the module root, unless we set it to absolute?
         var workingDirectory = Paths.get(System.getProperty("workingDirectory", ""));
@@ -35,6 +35,10 @@ public class WebSiteBuilder {
 
         // load site configuration
         Site site = SitePlugin.loadFromFile(workingDirectory);
+
+        if( baseUrl != null ) {
+            site.setBaseUrl(baseUrl);
+        }
 
         // define the source of content
         var contentSource = new ContentSource(site, workingDirectory);

@@ -28,7 +28,7 @@ public class Head {
         link()
             .withType("application/atom+xml")
             .withRel("alternate")
-            .withHref(Utils.relativeUrl("/" + FeedPlugin.INSTANCE.getFeed().getPath()))
+            .withHref(renderModel.getContext().getSite().resolveUrl("/" + FeedPlugin.INSTANCE.getFeed().getPath()))
             .withTitle(renderModel.getContext().getSite().getTitle())
     );
   }
