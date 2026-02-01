@@ -112,7 +112,7 @@ public class Feed {
                 .build())
             .link(List.of(
                     Link.builder()
-                        .href(entry.getUrl())
+                        .href(renderModel.getContext().getSite().resolveUrl(entry.getUrl()))
                         .rel("alternate")
                         .type("text/html")
                         .title(entry.getTitle())
@@ -124,7 +124,7 @@ public class Feed {
             .id(feedId(entry.getUrl()))
             .content(Content.builder()
                 .type("html")
-                .xmlBase(entry.getUrl())
+                .xmlBase(renderModel.getContext().getSite().resolveUrl(entry.getUrl()))
                 .value(entry.getContent().apply(renderModel).render())
                 .build())
             .author(List.of(
