@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.robintegg.web.engine.RenderModel;
+import com.robintegg.web.utils.Utils;
 import j2html.tags.DomContent;
 import j2html.tags.UnescapedText;
 import lombok.AccessLevel;
@@ -30,17 +31,10 @@ public class SEO {
 
   public static DomContent render(RenderModel renderModel) {
     // Resolve absolute image URL if present
-    String imageUrl = renderModel.getPage().getImageUrl();
-    String absoluteImageUrl = null;
-    if (imageUrl != null) {
-      // If already absolute or protocol-relative, use as-is; otherwise resolve to absolute URL
-      String lowerCaseUrl = imageUrl.toLowerCase();
-      if (lowerCaseUrl.startsWith("http://") || lowerCaseUrl.startsWith("https://") || imageUrl.startsWith("//")) {
-        absoluteImageUrl = imageUrl;
-      } else {
-        absoluteImageUrl = renderModel.getContext().getSite().resolveUrl(imageUrl);
-      }
-    }
+    String absoluteImageUrl = Utils.resolveImageUrl(
+        renderModel.getPage().getImageUrl(), 
+        renderModel.getContext().getSite()
+    );
     
     return each(
         iffElse(
