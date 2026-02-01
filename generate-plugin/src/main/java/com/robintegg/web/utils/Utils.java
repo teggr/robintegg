@@ -1,5 +1,6 @@
 package com.robintegg.web.utils;
 
+import com.robintegg.web.site.Site;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
@@ -17,6 +18,30 @@ public class Utils {
 
     public static String absoluteUrl(String path) {
         return path;
+    }
+
+    /**
+     * Resolves an image URL to an absolute URL.
+     * If the imageUrl is null, returns null.
+     * If the imageUrl is already absolute (starts with http://, https://, or //), returns it as-is.
+     * Otherwise, uses the site's resolveUrl method to convert it to an absolute URL.
+     *
+     * @param imageUrl the image URL to resolve (may be relative or absolute)
+     * @param site the site configuration containing the base URL
+     * @return the absolute image URL, or null if imageUrl is null
+     */
+    public static String resolveImageUrl(String imageUrl, Site site) {
+        if (imageUrl == null) {
+            return null;
+        }
+        
+        // If already absolute or protocol-relative, use as-is; otherwise resolve to absolute URL
+        String lowerCaseUrl = imageUrl.toLowerCase();
+        if (lowerCaseUrl.startsWith("http://") || lowerCaseUrl.startsWith("https://") || lowerCaseUrl.startsWith("//")) {
+            return imageUrl;
+        } else {
+            return site.resolveUrl(imageUrl);
+        }
     }
 
     public static String format(LocalDate date) {
