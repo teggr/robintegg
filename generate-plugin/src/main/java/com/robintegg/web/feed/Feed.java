@@ -93,7 +93,9 @@ public class Feed {
 
   private Entry mapToAtomEntry(RenderModel renderModel, FeedEntry entry) {
     String absoluteUrl = renderModel.getContext().getSite().resolveUrl(entry.getUrl());
-    String absoluteImageUrl = renderModel.getContext().getSite().resolveUrl(entry.getImageUrl());
+    String absoluteImageUrl = entry.getImageUrl() != null 
+        ? renderModel.getContext().getSite().resolveUrl(entry.getImageUrl()) 
+        : null;
     return
         Entry.builder()
             .title(Title.builder()
