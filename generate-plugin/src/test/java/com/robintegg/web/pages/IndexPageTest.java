@@ -1,9 +1,8 @@
 package com.robintegg.web.pages;
 
-import com.robintegg.web.engine.Context;
+import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.engine.Page;
 import com.robintegg.web.engine.Pageable;
-import com.robintegg.web.engine.RenderModel;
 import com.robintegg.web.theme.pages.IndexPage;
 import j2html.TagCreator;
 import org.junit.jupiter.api.Test;
@@ -15,12 +14,9 @@ class IndexPageTest {
 
         Page page = IndexPage.create("index.html", new Pageable(1, 10));
 
-        RenderModel renderModel = new RenderModel();
-        renderModel.setContext(new Context());
-        
         System.out.println(
                 TagCreator.html(
-                        page.getRenderFunction().apply(renderModel)
+                        page.getRenderFunction().apply(new RenderModel())
                 ).render()
         );
 

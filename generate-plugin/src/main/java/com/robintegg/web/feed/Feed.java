@@ -93,6 +93,17 @@ public class Feed {
   }
 
   private Entry mapToAtomEntry(RenderModel renderModel, FeedEntry entry) {
+
+   String absoluteImageUrl = Utils.resolveImageUrl(entry.getImageUrl(), renderModel.getContext().getSite());
+  
+    // Use site's default author if entry author is null, empty, or blank
+    String authorName = entry.getAuthor();
+    if (authorName == null || authorName.isBlank()) {
+      if(renderModel.getContext().getSite().getAuthor() != null) {
+        authorName = renderModel.getContext().getSite().getAuthor().getName();
+      }
+    }
+    
     return
         Entry.builder()
             .title(Title.builder()
@@ -118,7 +129,7 @@ public class Feed {
                 .build())
             .author(List.of(
                 Author.builder()
-                    .name(entry.getAuthor())
+                    .name(authorName)
                     .build()
             ))
             .category(entry.getTags().stream()
@@ -133,11 +144,11 @@ public class Feed {
                 .value(entry.getExcerpt().apply(renderModel).render())
                 .build())
             .mediaThumbnail(MediaThumbnail.builder()
-                .url(Utils.resolveImageUrl(entry.getImageUrl(), renderModel.getContext().getSite()))
+                .url(absoluteImageUrl)
                 .build())
             .mediaContent(MediaContent.builder()
                 .medium("image")
-                .url(Utils.resolveImageUrl(entry.getImageUrl(), renderModel.getContext().getSite()))
+                .url(absoluteImageUrl)
                 .build())
             .build();
   }

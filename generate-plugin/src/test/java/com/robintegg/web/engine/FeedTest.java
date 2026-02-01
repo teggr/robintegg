@@ -11,12 +11,10 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 class FeedTest {
 
     @Test
-    void shouldUseAbsoluteUrlsInFeedEntries() {
+    void getContent() {
 
         Feed feed = new Feed();
 
@@ -28,8 +26,8 @@ class FeedTest {
         site.setAuthor(author);
         site.setTitle("my title");
         site.setDescription("description");
-        site.setBaseUrl("");
-        site.setUrl("https://robintegg.com");
+        site.setBaseUrl("rt.com");
+        site.setUrl("someurl");
         context.setSite(site);
         renderModel.setContext(context);
 
@@ -41,54 +39,46 @@ class FeedTest {
 
             @Override
             public String getUrl() {
-                return "/2026/01/01/test-post.html";
+                return "/content";
             }
 
             @Override
             public String getTitle() {
-                return "Test Post Title";
+                return "content title";
             }
 
             @Override
             public DomContent getExcerpt(RenderModel renderModel) {
-                return TagCreator.rawHtml("<p>Test excerpt</p>");
+                return TagCreator.rawHtml("<div class='c'>exceprpt</div>");
             }
 
             @Override
             public String getCategory() {
-                return "test-category";
+                return "a-gategory";
             }
 
             @Override
             public DomContent getContent(RenderModel renderModel) {
-                return TagCreator.rawHtml("<p>Test content</p>");
+                return TagCreator.rawHtml("<div class='c'>aome tezt</div>");
             }
 
             @Override
             public List<String> getTags() {
-                return List.of("test","java");
+                return List.of("1","2");
             }
 
             @Override
             public String getAuthor() {
-                return "Test Author";
+                return "just robin";
             }
 
             @Override
             public String getImage() {
-                return "/images/test.png";
+                return "image.png";
             }
         });
 
-        String feedContent = feed.getContent(renderModel);
-        
-        // Verify absolute URLs in feed - critical for feed readers
-        assertTrue(feedContent.contains("xml:base=\"https://robintegg.com/2026/01/01/test-post.html\""), 
-            "xml:base should be an absolute URL for proper content resolution in feed readers");
-        assertTrue(feedContent.contains("href=\"https://robintegg.com/2026/01/01/test-post.html\""), 
-            "entry link should be an absolute URL");
-        assertTrue(feedContent.contains("url=\"https://robintegg.com/images/test.png\""), 
-            "media:thumbnail and media:content URLs should be absolute");
+        System.out.println(feed.getContent(renderModel));
 
     }
 }

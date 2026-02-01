@@ -28,7 +28,7 @@ public class Head {
         link()
             .withType("application/atom+xml")
             .withRel("alternate")
-            .withHref(FeedPlugin.INSTANCE.getFeed().getPath()) // TODO: need to make available via the theme and plugins
+            .withHref(Utils.relativeUrl("/" + FeedPlugin.INSTANCE.getFeed().getPath()))
             .withTitle(renderModel.getContext().getSite().getTitle())
     );
   }
