@@ -92,6 +92,8 @@ public class Feed {
   }
 
   private Entry mapToAtomEntry(RenderModel renderModel, FeedEntry entry) {
+    String absoluteUrl = renderModel.getContext().getSite().resolveUrl(entry.getUrl());
+    String absoluteImageUrl = renderModel.getContext().getSite().resolveUrl(entry.getImageUrl());
     return
         Entry.builder()
             .title(Title.builder()
@@ -100,7 +102,7 @@ public class Feed {
                 .build())
             .link(List.of(
                     Link.builder()
-                        .href(entry.getUrl())
+                        .href(absoluteUrl)
                         .rel("alternate")
                         .type("text/html")
                         .title(entry.getTitle())
@@ -109,10 +111,10 @@ public class Feed {
             )
             .published(entry.getDate().atStartOfDay().atOffset(ZoneOffset.UTC))
             .updated(entry.getModifiedDate().atStartOfDay().atOffset(ZoneOffset.UTC))
-            .id(feedId(entry.getUrl()))
+            .id(feedId(absoluteUrl))
             .content(Content.builder()
                 .type("html")
-                .xmlBase(entry.getUrl())
+                .xmlBase(absoluteUrl)
                 .value(entry.getContent().apply(renderModel).render())
                 .build())
             .author(List.of(
@@ -132,11 +134,11 @@ public class Feed {
                 .value(entry.getExcerpt().apply(renderModel).render())
                 .build())
             .mediaThumbnail(MediaThumbnail.builder()
-                .url(entry.getImageUrl())
+                .url(absoluteImageUrl)
                 .build())
             .mediaContent(MediaContent.builder()
                 .medium("image")
-                .url(entry.getImageUrl())
+                .url(absoluteImageUrl)
                 .build())
             .build();
   }

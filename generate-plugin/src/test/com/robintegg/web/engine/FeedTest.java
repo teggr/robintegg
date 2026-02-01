@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class FeedTest {
 
     @Test
@@ -25,8 +27,8 @@ class FeedTest {
         site.setAuthor(author);
         site.setTitle("my title");
         site.setDescription("description");
-        site.setBaseUrl("rt.com");
-        site.setUrl("someurl");
+        site.setBaseUrl("");
+        site.setUrl("https://robintegg.com");
         contentModel.setSite(site);
 
         feed.addContent(new IndexContent() {
@@ -72,11 +74,20 @@ class FeedTest {
 
             @Override
             public String getImage() {
-                return "image.png";
+                return "/images/image.png";
             }
         });
 
-        System.out.println(feed.getContent(contentModel));
+        String feedContent = feed.getContent(contentModel);
+        System.out.println(feedContent);
+
+        // Verify that the feed contains absolute URLs
+        assertTrue(feedContent.contains("<link href=\"https://robintegg.com/content\""), 
+            "Feed entry link should use absolute URL");
+        assertTrue(feedContent.contains("<id>https://robintegg.com/content</id>"), 
+            "Feed entry id should use absolute URL");
+        assertTrue(feedContent.contains("url=\"https://robintegg.com/images/image.png\""), 
+            "Feed media URLs should use absolute URLs");
 
     }
 }
