@@ -157,4 +157,8 @@ public class Page {
         return stringList.get(0);
     }
 
+    public boolean isPost() {
+        return "post".equals(getLayout());
+    }
+
 }

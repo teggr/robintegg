@@ -31,7 +31,7 @@ public class SEO {
 
   public static DomContent render(RenderModel renderModel) {
     
-    boolean isPost = isPostLayout(renderModel);
+    boolean isPost = renderModel.getPage().isPost();
     
     // Resolve absolute image URL if present
     String absoluteImageUrl = Utils.resolveImageUrl(
@@ -117,10 +117,6 @@ public class SEO {
             )
         )
     );
-  }
-  
-  private static boolean isPostLayout(RenderModel renderModel) {
-    return "post".equals(renderModel.getPage().getLayout());
   }
 
   @SneakyThrows
