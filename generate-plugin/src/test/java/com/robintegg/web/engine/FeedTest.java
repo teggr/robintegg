@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FeedTest {
 
     @Test
-    void feedEntriesShouldUseAbsoluteUrls() {
+    void shouldUseAbsoluteUrlsInFeedEntries() {
 
         Feed feed = new Feed();
 
