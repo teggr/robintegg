@@ -11,6 +11,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
+import java.util.List;
+
 import static j2html.TagCreator.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -29,6 +31,8 @@ public class SEO {
   }
 
   public static DomContent render(RenderModel renderModel) {
+    boolean isPost = isPostLayout(renderModel);
+    
     return each(
         iffElse(
             renderModel.getPage().getTitle() != null,
@@ -60,7 +64,8 @@ public class SEO {
             renderModel.getPage().getImageUrl() != null,
             meta().attr(PROPERTY, "og:image").withContent(renderModel.getPage().getImageUrl())
         ),
-        meta().attr(PROPERTY, "og:type").withContent("website"),
+        meta().attr(PROPERTY, "og:type").withContent(isPost ? "article" : "website"),
+        renderArticleTags(renderModel, isPost),
         meta().withName("twitter:card").withContent("summary"),
         meta().attr(PROPERTY, "twitter:title").withContent(renderModel.getContext().getSite().getAuthor().getName()),
         meta().withName("twitter:site").withContent("@" + renderModel.getContext().getSite().getTwitterUsername()),
@@ -71,6 +76,38 @@ public class SEO {
                 new UnescapedText(ldJson(renderModel))
             )
     );
+  }
+  
+  private static DomContent renderArticleTags(RenderModel renderModel, boolean isPost) {
+    if (!isPost) {
+      return text("");
+    }
+    
+    return each(
+        iff(renderModel.getPage().getDate() != null,
+            meta().attr(PROPERTY, "article:published_time").withContent(
+                renderModel.getPage().getDate().atStartOfDay().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME)
+            )
+        ),
+        iff(!renderModel.getPage().getAuthor().isEmpty(),
+            each(renderModel.getPage().getAuthor(), author ->
+                meta().attr(PROPERTY, "article:author").withContent(author)
+            )
+        ),
+        iff(renderModel.getPage().getCategory() != null && !renderModel.getPage().getCategory().isEmpty(),
+            meta().attr(PROPERTY, "article:section").withContent(renderModel.getPage().getCategory())
+        ),
+        iff(renderModel.getPage().getData().containsKey("tags"),
+            each(renderModel.getPage().getData().get("tags"), tag ->
+                meta().attr(PROPERTY, "article:tag").withContent(tag)
+            )
+        )
+    );
+  }
+  
+  private static boolean isPostLayout(RenderModel renderModel) {
+    List<String> layout = renderModel.getPage().getData().get("layout");
+    return layout != null && !layout.isEmpty() && "post".equals(layout.get(0));
   }
 
   @SneakyThrows
