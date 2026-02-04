@@ -24,7 +24,7 @@ My initial focus for January was trying to build on my usage of prompting with p
 
 My thoughts were to look at a toy-ideal flow of refining JIRA tickets so that they could be picked up and implemented in some kind of Ralph-type loop. At the moment there's very much a mental translation going on between the text in a ticket and me either writing code or prompting.
 
-The plan mode in Copilot can help in this regard, however the current experience is pretty janky when using a chat window. Way too much text—I'll later appreciate that aspect of Claude later in the month. I feel like the UX can be better and I may explore this more. Will lay some foundations for this in February.
+The plan mode in Copilot can help in this regard, however the current experience is pretty janky when using a chat window. Way too much text—I'll appreciate that aspect of Claude more later in the month. I feel like the UX can be better and I may explore this more. Will lay some foundations for this in February.
 
 ### Diving into GitHub Copilot skills
 
