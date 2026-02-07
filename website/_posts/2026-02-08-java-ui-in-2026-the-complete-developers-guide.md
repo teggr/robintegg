@@ -68,7 +68,7 @@ public class HelloJavaFX extends Application {
 ### Compose Desktop
 **Status:** Production-ready | **Java:** 11+ (JDK 17+ for packaging) | **Learning Curve:** Moderate (requires Kotlin) | **Last Release:** v1.10.0 (Jan 2026)
 
-Compose Desktop brings JetBrains' modern declarative UI framework to the desktop. Based on Jetpack Compose from Android, it uses Kotlin and a declarative programming model similar to React or SwiftUI. The framework features hardware-accelerated rendering via Skia, hot reload for rapid development, and seamless integration with Kotlin Multiplatform for sharing code across desktop, mobile, and web. Real-world apps like Wrike and Physics Wallah (17M users) demonstrate its production readiness. If you're comfortable with Kotlin and want a modern, declarative approach to desktop UI, Compose Desktop is an excellent choice.
+Compose Desktop brings JetBrains' modern declarative UI framework to the desktop. Based on Jetpack Compose from Android, it uses Kotlin and a declarative programming model similar to React or SwiftUI. The framework features hardware-accelerated rendering via Skia, hot reload for rapid development, and seamless integration with Kotlin Multiplatform for sharing code across desktop, mobile, and web. Real-world production applications include Wrike and several large-scale educational platforms, demonstrating its readiness for enterprise deployment. If you're comfortable with Kotlin and want a modern, declarative approach to desktop UI, Compose Desktop is an excellent choice.
 
 **Code Example:**
 ```kotlin
@@ -163,13 +163,14 @@ public class HelloSwingTree {
 ### NetBeans Platform
 **Status:** Production-ready, Mature | **Java:** 8+ | **Learning Curve:** Steep | **Maintained By:** Apache Software Foundation
 
-The NetBeans Platform is a full Rich Client Platform (RCP) for building modular desktop applications. NetBeans IDE itself—with over 7 million lines of code and 50,000+ files—is built on this platform, demonstrating its scalability. The platform provides 100+ modules covering window management, auto-update systems, file system abstractions, wizards, property sheets, and more. It's Swing-based and includes the Matisse visual GUI builder for drag-and-drop interface design. If you're building complex, modular desktop applications that need plugin architectures and extensive built-in services, NetBeans Platform provides a comprehensive foundation.
+The NetBeans Platform is a full Rich Client Platform (RCP) for building modular desktop applications. NetBeans IDE itself is built on this platform, demonstrating its scalability for large, complex applications. The platform provides 100+ modules covering window management, auto-update systems, file system abstractions, wizards, property sheets, and more. It's Swing-based and includes the Matisse visual GUI builder for drag-and-drop interface design. If you're building complex, modular desktop applications that need plugin architectures and extensive built-in services, NetBeans Platform provides a comprehensive foundation.
 
 **Code Example:**
 ```java
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
 import javax.swing.JLabel;
+import java.awt.BorderLayout;
 
 public class HelloNetBeans extends ModuleInstall {
     @Override
@@ -186,7 +187,7 @@ public class HelloNetBeans extends ModuleInstall {
 }
 ```
 
-**Learn More:** [https://netbeans.apache.org/platform/](https://netbeans.apache.org/platform/)
+**Learn More:** [https://netbeans.apache.org/](https://netbeans.apache.org/)
 
 ---
 
@@ -234,6 +235,7 @@ SnapKit is "Swing 2.0"—a UI toolkit developed by ReportMill that aims to run o
 ```java
 import snap.view.*;
 import snap.viewx.WebPage;
+import snap.gfx.Font;
 
 public class HelloSnapKit extends WebPage {
     protected View createUI() {
@@ -391,7 +393,7 @@ public class HelloVaadin extends VerticalLayout {
 ### Apache Wicket
 **Status:** Production-ready, Mature (since 2004) | **Java:** 17+ (Wicket 10) | **Learning Curve:** Moderate | **Last Release:** Wicket 10.7.0 (Sep 2025)
 
-Apache Wicket is a component-oriented web framework that brings Swing-like development to the web. It uses pure Java and HTML markup (no XML), with clean separation between markup and logic. Wicket manages stateful web applications automatically, treating models as opaque POJOs that are serialized between requests. The framework's component hierarchy—Pages, Components, Models—feels familiar to desktop developers and enables significant code reuse through Panels. Wicket 10, built on Java 17, includes Ajax support without writing JavaScript, WebSocket integration, and compatibility with Spring, CDI, and Guice. With 10% of enterprise Java developers using it and thousands of applications deployed worldwide at governments, banks, and universities, Wicket has proven its staying power since surviving the mid-2000s Java web framework wars.
+Apache Wicket is a component-oriented web framework that brings Swing-like development to the web. It uses pure Java and HTML markup (no XML), with clean separation between markup and logic. Wicket manages stateful web applications automatically, treating models as opaque POJOs that are serialized between requests. The framework's component hierarchy—Pages, Components, Models—feels familiar to desktop developers and enables significant code reuse through Panels. Wicket 10, built on Java 17, includes Ajax support without writing JavaScript, WebSocket integration, and compatibility with Spring, CDI, and Guice. Widely adopted in enterprise environments, Wicket powers thousands of applications deployed worldwide at governments, banks, and universities, having proven its staying power since surviving the mid-2000s Java web framework wars.
 
 **Code Example:**
 ```java
@@ -438,7 +440,7 @@ public class HelloBean implements Serializable {
 // <p:commandButton value="Update" update="@form" />
 ```
 
-**Learn More:** [https://www.primefaces.org/](https://www.primefaces.org/)
+**Learn More:** [https://primefaces.github.io/primefaces/](https://primefaces.github.io/primefaces/)
 
 ---
 
@@ -552,7 +554,7 @@ public class HelloController {
 ---
 
 ### j2html
-**Status:** Production-ready | **Java:** 8+ | **Learning Curve:** Easy | **Last Release:** v1.6.0
+**Status:** Production-ready | **Java:** 8+ | **Learning Curve:** Easy | **Last Release:** v1.6.0 (June 2022, current stable)
 
 j2html is not a template engine—it's a type-safe HTML builder for pure Java code. Using a fluent API, you construct HTML with compile-time safety, eliminating risks of unclosed tags, mistyped attributes, or XSS vulnerabilities through automatic escaping. It's extremely fast (100k renders in under 1 second, roughly 1000x faster than Velocity) and enables dynamic reuse of view code that's difficult with templates. j2html works particularly well with lightweight frameworks like Javalin for building APIs that return HTML fragments or generating dynamic emails and forms. While not suitable for traditional websites with large amounts of static HTML or heavy copy-pasted CSS framework markup, it excels when type safety and Java-centric development are priorities.
 
@@ -613,12 +615,12 @@ public class HelloController {
 
 ## Mobile UI Frameworks
 
-Java's mobile UI landscape in 2026 centers on cross-platform solutions that maximize code sharing between iOS and Android. Compose Multiplatform brings Kotlin's modern declarative UI to mobile with up to 96% code reuse. Gluon Mobile extends JavaFX to mobile platforms, recently achieving a major milestone with OpenJDK running natively on iOS. Codename One offers true write-once-run-anywhere capabilities with cloud-based builds that eliminate the need for Mac hardware when targeting iOS. All three frameworks are production-ready and powering real applications with millions of users.
+Java's mobile UI landscape in 2026 centers on cross-platform solutions that maximize code sharing between iOS and Android. Compose Multiplatform brings Kotlin's modern declarative UI to mobile with up to 96% code reuse. Gluon Mobile extends JavaFX to mobile platforms, recently achieving a major milestone with OpenJDK running natively on iOS. Codename One offers true write-once-run-anywhere capabilities with cloud-based builds that eliminate the need for Mac hardware when targeting iOS. All three frameworks are production-ready and powering real applications at scale.
 
 ### Compose Multiplatform
 **Status:** Production-ready (iOS stable v1.8.0+) | **Java:** 11+ (Kotlin-based) | **Learning Curve:** Moderate | **Last Release:** v1.10.0 (Jan 2026)
 
-Compose Multiplatform from JetBrains extends their modern declarative UI framework across mobile (iOS, Android), desktop, and web platforms. Based on Jetpack Compose from Android, it enables sharing up to 90-96% of code including UI and business logic across platforms. The framework features hardware-accelerated rendering via Skia, stable hot reload as of v1.10.0, and seamless Kotlin Multiplatform integration. Real-world applications demonstrate its production readiness: Feres taxi app has 1M+ downloads with 90% shared UI, Markaz e-commerce handles 100+ screens for 5M+ users, and Physics Wallah serves 17M users. With SwiftUI/UIKit interoperability for iOS and active development from JetBrains, Compose Multiplatform represents the modern approach to cross-platform mobile development from the Kotlin ecosystem.
+Compose Multiplatform from JetBrains extends their modern declarative UI framework across mobile (iOS, Android), desktop, and web platforms. Based on Jetpack Compose from Android, it enables sharing up to 90-96% of code including UI and business logic across platforms. The framework features hardware-accelerated rendering via Skia, stable hot reload as of v1.10.0, and seamless Kotlin Multiplatform integration. Real-world production applications demonstrate its maturity across various industries including e-commerce, transportation, and education platforms. With SwiftUI/UIKit interoperability for iOS and active development from JetBrains, Compose Multiplatform represents the modern approach to cross-platform mobile development from the Kotlin ecosystem.
 
 **Code Example:**
 ```kotlin
