@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.commonmark.Extension;
 import org.commonmark.ext.front.matter.YamlFrontMatterExtension;
 import org.commonmark.ext.front.matter.YamlFrontMatterVisitor;
+import org.commonmark.ext.heading.anchor.HeadingAnchorExtension;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 
@@ -54,9 +55,12 @@ public class FeedSubscriptionPlugin implements ContentTypePlugin {
       String fileExtension = (dotIndex == -1) ? "" : filename.substring(dotIndex + 1);
 
       if (fileExtension.equals("md")) {
-        Extension extension = YamlFrontMatterExtension.create();
+        List<Extension> extensions = List.of(
+            YamlFrontMatterExtension.create(),
+            HeadingAnchorExtension.create()
+        );
         Parser parser = Parser.builder()
-            .extensions(List.of(extension))
+            .extensions(extensions)
             .build();
 
         Node document = parser.parseReader(Files.newBufferedReader(path));
