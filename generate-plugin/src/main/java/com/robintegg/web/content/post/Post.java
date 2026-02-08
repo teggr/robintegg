@@ -10,6 +10,8 @@ import com.robintegg.web.utils.Utils;
 import j2html.TagCreator;
 import j2html.tags.DomContent;
 import lombok.ToString;
+import org.commonmark.Extension;
+import org.commonmark.ext.heading.anchor.HeadingAnchorExtension;
 import org.commonmark.node.AbstractVisitor;
 import org.commonmark.node.FencedCodeBlock;
 import org.commonmark.node.Image;
@@ -80,7 +82,9 @@ public class Post implements ContentItem, TaggedContent, CategorisedContent, Ind
         super.visit(image);
       }
     });
+    List<Extension> extensions = List.of(HeadingAnchorExtension.create());
     HtmlRenderer renderer = HtmlRenderer.builder()
+        .extensions(extensions)
         .nodeRendererFactory(new HtmlNodeRendererFactory() {
           public NodeRenderer create(HtmlNodeRendererContext context) {
             return new IndentedCodeBlockNodeRenderer(context);
