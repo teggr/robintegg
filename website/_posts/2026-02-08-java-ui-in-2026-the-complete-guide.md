@@ -735,7 +735,7 @@ public class HelloCasciian {
 ---
 
 ### Latte
-**Status:** Active Development | **Java:** 8+ | **Learning Curve:** Easy-Moderate | **Last Release:** Available on Maven Central
+**Status:** Active Development | **Java:** 8+ | **Learning Curve:** Easy-Moderate | **Last Release:** v0.1.1
 
 ![]({{site.baseurl}}/images/ui-latte.png)
 
