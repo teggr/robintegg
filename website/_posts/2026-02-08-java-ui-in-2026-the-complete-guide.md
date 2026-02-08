@@ -700,30 +700,119 @@ public class HelloLanterna {
 ---
 
 ### Casciian
-
-Casciian is a library for creating ASCII art-based terminal interfaces in Java. It provides tools and utilities for rendering complex text-based visualizations and interfaces in terminal environments.
+**Status:** Active Development | **Java:** 8+ | **Learning Curve:** Moderate | **Last Release:** v1.0.0
 
 ![]({{site.baseurl}}/images/ui-casciian.png)
+
+Casciian is a sophisticated text-based windowing system inspired by Borland's Turbo Vision, designed for building modern terminal UIs with advanced visual features. It supports translucent windows, layered images, and desktop effects that create a polished, game-like aesthetic—all within a terminal environment. The library works seamlessly across xterm-compatible terminals and can even run inside its own terminal window with full mouse support. Casciian combines the nostalgia of classic text UIs with contemporary features like pulsing button text, window animations, and multiple terminal support, making it perfect for creating visually impressive terminal applications.
+
+Built on a foundation originally dedicated to the public domain and now maintained under the Apache License, Casciian provides a complete toolkit for developing complex text-based applications. The framework includes windows, buttons, labels, menus, dialogs, and layout managers, all working together to create sophisticated interfaces. Whether you're building system administration tools, monitoring applications, or interactive terminal-based experiences, Casciian offers the visual polish and feature set to stand out from traditional terminal UIs.
+
+**Code Example:**
+```java
+import casciian.TApplication;
+import casciian.TWindow;
+import casciian.TButton;
+import casciian.TLabel;
+
+public class HelloCasciian {
+    public static void main(String[] args) throws Exception {
+        new TApplication() {
+            {
+                TWindow window = addWindow("Casciian Example", 2, 2, 40, 10);
+                window.addLabel("Hello, Casciian!", 2, 2);
+                window.addButton("&Close", 2, 4, () -> {
+                    getApplication().exit();
+                });
+            }
+        }.run();
+    }
+}
+```
 
 **Learn More:** [https://github.com/crramirez/casciian](https://github.com/crramirez/casciian)
 
 ---
 
 ### Latte
-
-Latte is a modern terminal UI framework for building interactive command-line applications with a focus on simplicity and developer experience.
+**Status:** Active Development | **Java:** 8+ | **Learning Curve:** Easy-Moderate | **Last Release:** v0.1.1
 
 ![]({{site.baseurl}}/images/ui-latte.png)
+
+Latte is a Java port of Golang's Bubble Tea framework, bringing The Elm Architecture's clean separation of concerns to terminal UI development in Java. The framework follows a simple pattern: you define a Model (your application state), implement an `init()` method for initialization, an `update()` method for handling events and state changes, and a `view()` method for rendering the UI. This architecture makes terminal applications predictable, testable, and easy to reason about. Latte handles all the complexity of terminal I/O, event handling, and rendering, letting you focus on your application logic.
+
+The framework excels at building interactive command-line tools like coffee ordering systems, Conway's Game of Life visualizations, and other event-driven terminal applications. With support for keyboard input, commands for I/O operations, and a clean message-passing system, Latte brings modern reactive programming patterns to the terminal. The library includes numerous ported examples from the Bubble Tea ecosystem, making it easy to learn by example and adapt proven patterns to your Java applications.
+
+**Code Example:**
+```java
+import org.flatscrew.latte.*;
+
+public class HelloLatte implements Model {
+    private int counter = 0;
+    
+    @Override
+    public Command init() {
+        return null;
+    }
+    
+    @Override
+    public UpdateResult<? extends Model> update(Message msg) {
+        if (msg instanceof KeyPressMessage key) {
+            if (key.key() == 'q') {
+                return new UpdateResult<>(this, QuitMessage::new);
+            } else if (key.key() == ' ') {
+                counter++;
+            }
+        }
+        return new UpdateResult<>(this, null);
+    }
+    
+    @Override
+    public String view() {
+        return String.format("Counter: %d\n\nPress space to increment, q to quit", counter);
+    }
+    
+    public static void main(String[] args) {
+        new Program(new HelloLatte()).run();
+    }
+}
+```
 
 **Learn More:** [https://github.com/flatscrew/latte](https://github.com/flatscrew/latte)
 
 ---
 
 ### AsciiTable
-
-AsciiTable is a library for rendering formatted ASCII tables in terminal applications, perfect for displaying tabular data in CLI tools and terminal-based dashboards.
+**Status:** Production-ready, Mature | **Java:** 8+ | **Learning Curve:** Easy | **Last Release:** v0.3.2
 
 ![]({{site.baseurl}}/images/ui-asciitable.png)
+
+AsciiTable is a versatile library for rendering beautifully formatted ASCII tables in terminal applications, perfect for displaying tabular data in CLI tools, monitoring dashboards, and log outputs. The library removes excessive whitespace and provides fine-grained control over every aspect of table appearance: text alignment (left, right, centered, justified), padding characters for all sides, customizable grid styles with various line weights (normal, light, strong, heavy), and configurable margins and frames. Tables can span columns, handle text wrapping, and even convert characters for LaTeX or HTML output, making it suitable for generating documentation or reports.
+
+The framework follows a clean architecture with three core concepts: the table itself for content management, a context for configuration, and a renderer for output generation. This separation allows you to define your table structure once and render it in multiple formats or with different styling options. Whether you're building command-line admin tools that display server statistics, creating terminal-based data visualizations, or formatting log output for better readability, AsciiTable provides the flexibility and control needed for professional-looking tabular output in any terminal environment.
+
+**Code Example:**
+```java
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
+public class HelloAsciiTable {
+    public static void main(String[] args) {
+        AsciiTable table = new AsciiTable();
+        table.addRule();
+        table.addRow("Name", "Age", "City");
+        table.addRule();
+        table.addRow("Alice", "30", "New York");
+        table.addRow("Bob", "25", "Los Angeles");
+        table.addRow("Charlie", "35", "Chicago");
+        table.addRule();
+        
+        table.setTextAlignment(TextAlignment.CENTER);
+        String rendered = table.render();
+        System.out.println(rendered);
+    }
+}
+```
 
 **Learn More:** [https://github.com/vdmeer/asciitable](https://github.com/vdmeer/asciitable)
 
