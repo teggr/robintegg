@@ -703,6 +703,8 @@ public class HelloLanterna {
 
 Casciian is a library for creating ASCII art-based terminal interfaces in Java. It provides tools and utilities for rendering complex text-based visualizations and interfaces in terminal environments.
 
+![]({{site.baseurl}}/images/ui-casciian.png)
+
 **Learn More:** [https://github.com/crramirez/casciian](https://github.com/crramirez/casciian)
 
 ---
@@ -711,21 +713,17 @@ Casciian is a library for creating ASCII art-based terminal interfaces in Java. 
 
 Latte is a modern terminal UI framework for building interactive command-line applications with a focus on simplicity and developer experience.
 
+![]({{site.baseurl}}/images/ui-latte.png)
+
 **Learn More:** [https://github.com/flatscrew/latte](https://github.com/flatscrew/latte)
-
----
-
-### ConsoleUI
-
-ConsoleUI provides a simple and intuitive API for building interactive console-based user interfaces with support for menus, prompts, and other common UI patterns.
-
-**Learn More:** [https://github.com/awegmann/consoleui](https://github.com/awegmann/consoleui)
 
 ---
 
 ### AsciiTable
 
 AsciiTable is a library for rendering formatted ASCII tables in terminal applications, perfect for displaying tabular data in CLI tools and terminal-based dashboards.
+
+![]({{site.baseurl}}/images/ui-asciitable.png)
 
 **Learn More:** [https://github.com/vdmeer/asciitable](https://github.com/vdmeer/asciitable)
 
