@@ -2,6 +2,7 @@ package com.robintegg.web.index;
 
 import com.robintegg.web.content.IndexContent;
 import com.robintegg.web.content.IndexedContent;
+import com.robintegg.web.content.post.Post;
 import com.robintegg.web.engine.ContentItem;
 import com.robintegg.web.engine.ContentModelVisitor;
 import com.robintegg.web.engine.Pageable;
@@ -47,7 +48,7 @@ public class IndexPlugin implements AggregatorPlugin {
     @Override
     public void add(ContentItem contentItem) {
 
-        if (contentItem instanceof IndexedContent ic) {
+        if (contentItem instanceof Post ic) {
 
             indexedContentList.add(ic);
 
