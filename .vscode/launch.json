@@ -10,7 +10,8 @@
             "request": "launch",
             "mainClass": "com.robintegg.web.Build",
             "projectName": "website",
-            "vmArgs" : "-DworkingDirectory=/workspaces/robintegg/website"
+            "vmArgs" : "-DworkingDirectory=C:\\Users\\robin\\IdeaProjects\\robintegg\\website",
+            "args": "--local"
         }
     ]
 }
