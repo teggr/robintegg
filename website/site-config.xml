@@ -5,7 +5,7 @@
         <name>Robin Tegg</name>
         <email>robin@tegg.me.uk</email>
     </author>
-    <description>A Java developer. Based in Leeds, England. Has interest in Software Architecture, Testing, Automation, Tooling and UI design.</description>
+    <description>Java Developer by trade, AI Explorer by choice, and a Spring Boot Wizard at heart. I specialize in building robust, scalable backend systems while actively integrating the power of Generative AI into modern software workflows. Beyond the IDE, I'm a firm believer in sharing knowledge and fostering the developer community. I thrive at the intersection of enterprise reliability and cutting-edge automation, always looking for the next challenge that requires a mix of clean code and creative intelligence. ☕🚀</description>
     <email>robin@tegg.me.uk</email>
     <!-- use \-\-local for localhost:8000 -->
     <baseUrl>https://robintegg.com</baseUrl>
