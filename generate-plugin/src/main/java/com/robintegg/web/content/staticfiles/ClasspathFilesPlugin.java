@@ -43,8 +43,8 @@ public class ClasspathFilesPlugin implements ContentTypePlugin {
 
     try {
 
-      // Extract filename, filename without extension, and extension using Path methods
-      String rootPath = path.replaceAll("theme/default", "");
+      // Strip the theme prefix (e.g. "theme/default" or "theme/v2") to produce a web-root-relative path
+      String rootPath = path.replaceAll("theme/[^/]+", "");
       String filename = Path.of(rootPath).getFileName().toString();
       int dotIndex = filename.lastIndexOf('.');
       String filenameWithoutExtension = (dotIndex == -1) ? filename : filename.substring(0, dotIndex);
