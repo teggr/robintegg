@@ -33,14 +33,27 @@ public class V2HomeLayout {
     return div()
         .withClass("home")
         .with(
-            iff(
-                renderModel.getPage().getTitle() != null,
-                h1()
-                    .withClass("page-heading")
-                    .withText(renderModel.getPage().getTitle())
-            ),
-            renderModel.getContent(),
-            // GitHub Activity Section
+            // Blog intro hero section
+            div()
+                .withClass("blog-intro")
+                .with(
+                    span()
+                        .withClass("blog-intro-label")
+                        .withText("Blog"),
+                    iff(
+                        renderModel.getPage().getTitle() != null,
+                        h1()
+                            .withClass("blog-intro-title")
+                            .withText(renderModel.getPage().getTitle())
+                    ),
+                    iff(
+                        renderModel.getContext().getSite().getDescription() != null,
+                        p()
+                            .withClass("blog-intro-description")
+                            .withText(Utils.escape(renderModel.getContext().getSite().getDescription()))
+                    )
+                ),
+            // GitHub Activity
             iff(
                 activeRepos != null && !activeRepos.isEmpty(),
                 each(
@@ -74,6 +87,7 @@ public class V2HomeLayout {
                         )
                 )
             ),
+            // Posts section
             iff(
                 indexedContent.getContent().size() > 0,
                 each(
@@ -86,61 +100,14 @@ public class V2HomeLayout {
                     ul()
                         .withClass("post-list")
                         .with(
-                            each(indexedContent.getContent(), indexContent -> {
-                              return li()
-                                  .with(
-                                      iff(
-                                          indexContent.getImage() != null && !indexContent.getImage().isEmpty(),
-                                          div()
-                                              .withClass("post-list-image")
-                                              .with(
-                                                  a()
-                                                      .withHref(Utils.relativeUrl(indexContent.getUrl()))
-                                                      .with(
-                                                          img()
-                                                              .withSrc(Utils.relativeUrl(indexContent.getImage()))
-                                                              .withAlt(Utils.escape(indexContent.getTitle()))
-                                                      )
-                                              )
-                                      ),
-                                      span()
-                                          .withClass("post-meta")
-                                          .withText(Utils.format(indexContent.getDate())),
-                                      h3()
-                                          .with(
-                                              a()
-                                                  .withClass("post-link")
-                                                  .withHref(Utils.relativeUrl(indexContent.getUrl()))
-                                                  .withText(Utils.escape(indexContent.getTitle()))
-                                          ),
-                                      iff(
-                                          renderModel.getContext().getSite().showExcerpts(),
-                                          indexContent.getExcerpt(renderModel)
-                                      ),
-                                      iff(
-                                          "reading-list".equals(indexContent.getCategory()),
-                                          indexContent.getContent(renderModel)
-                                      ),
-                                      iff(
-                                          indexContent.getTags().size() > 0,
-                                          ul()
-                                              .withClass("post-tags")
-                                              .with(
-                                                  each(indexContent.getTags(), tag -> {
-                                                    return li()
-                                                        .with(
-                                                            a()
-                                                                .withHref(Utils.relativeUrl("/tags/" + tag))
-                                                                .withText(Utils.escape(tag))
-                                                        );
-                                                  })
-                                              )
-                                      )
-                                  );
-                            })
+                            each(indexedContent.getContent(), indexContent ->
+                                li()
+                                    .with(renderPostCard(indexContent, renderModel))
+                            )
                         )
                 )
             ),
+            // Pagination
             div()
                 .withClass("pagination")
                 .with(
@@ -150,28 +117,111 @@ public class V2HomeLayout {
                             .withHref(Utils.relativeUrl(indexedContent.getPreviousPagePath()))
                             .withRel("previous")
                             .withClass("previous")
-                            .withText("Previous"),
+                            .withText("← Newer"),
                         span()
                             .withClass("previous")
-                            .withText("Previous")
+                            .withText("← Newer")
                     ),
                     span()
                         .withClass("page_number")
-                        .withText(String.format("Page: %s", indexedContent.getPage(), indexedContent.getTotalPages())),
+                        .withText(String.format("Page %s of %s", indexedContent.getPage(), indexedContent.getTotalPages())),
                     iffElse(
                         indexedContent.isNext(),
                         a()
                             .withHref(Utils.relativeUrl(indexedContent.getNextPagePath()))
                             .withRel("next")
                             .withClass("next")
-                            .withText("Next"),
+                            .withText("Older →"),
                         span()
                             .withClass("next")
-                            .withText("Next")
+                            .withText("Older →")
                     )
                 )
         );
 
+  }
+
+  private static DomContent renderPostCard(IndexContent indexContent, RenderModel renderModel) {
+    // Use first tag as the category label if no explicit category
+    String categoryLabel = indexContent.getCategory() != null && !indexContent.getCategory().isEmpty()
+        ? indexContent.getCategory()
+        : (!indexContent.getTags().isEmpty() ? indexContent.getTags().get(0) : null);
+
+    // Remaining tags (after the first, which is used as category label)
+    List<String> remainingTags = indexContent.getTags().size() > 1
+        ? indexContent.getTags().subList(1, indexContent.getTags().size())
+        : List.of();
+
+    return article()
+        .withClass("post-card")
+        .with(
+            // Image at top of card
+            iff(
+                indexContent.getImage() != null && !indexContent.getImage().isEmpty(),
+                a()
+                    .withClass("post-card-image-link")
+                    .withHref(Utils.relativeUrl(indexContent.getUrl()))
+                    .with(
+                        img()
+                            .withClass("post-card-image")
+                            .withSrc(Utils.relativeUrl(indexContent.getImage()))
+                            .withAlt(Utils.escape(indexContent.getTitle()))
+                    )
+            ),
+            // Card body
+            div()
+                .withClass("post-card-body")
+                .with(
+                    // Category label
+                    iff(
+                        categoryLabel != null,
+                        span()
+                            .withClass("post-card-category")
+                            .withText(Utils.escape(categoryLabel))
+                    ),
+                    // Title
+                    a()
+                        .withClass("post-card-title")
+                        .withHref(Utils.relativeUrl(indexContent.getUrl()))
+                        .withText(Utils.escape(indexContent.getTitle())),
+                    // Excerpt
+                    iff(
+                        renderModel.getContext().getSite().showExcerpts() && !"reading-list".equals(indexContent.getCategory()),
+                        div()
+                            .withClass("post-card-excerpt")
+                            .with(indexContent.getExcerpt(renderModel))
+                    ),
+                    iff(
+                        "reading-list".equals(indexContent.getCategory()),
+                        div()
+                            .withClass("post-card-excerpt")
+                            .with(indexContent.getContent(renderModel))
+                    ),
+                    // Remaining tags
+                    iff(
+                        !remainingTags.isEmpty(),
+                        ul()
+                            .withClass("post-card-tags")
+                            .with(
+                                each(remainingTags, tag ->
+                                    li().with(
+                                        a()
+                                            .withHref(Utils.relativeUrl("/tags/" + tag))
+                                            .withText(Utils.escape(tag))
+                                    )
+                                )
+                            )
+                    ),
+                    // Footer: date
+                    div()
+                        .withClass("post-card-footer")
+                        .with(
+                            time()
+                                .withClass("post-card-date")
+                                .withText(Utils.format(indexContent.getDate()))
+                        )
+                )
+        );
   }
 
 }
