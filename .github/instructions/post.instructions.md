@@ -131,11 +131,14 @@ spring.profiles.active=local
 ```
 
 ### What to Avoid
-- ❌ Excessive use of bullet lists (prefer paragraphs with code examples)
+- ❌ Bullet lists where prose would read more naturally — default to paragraphs, not lists
+- ❌ Using lists to describe properties or characteristics of something (write them as sentences instead)
 - ❌ Emoticons and emoji (occasional use is fine but don't overdo it)
 - ❌ Buzzwords without substance
 - ❌ Long introductions before getting to the content
 - ❌ Code without context or explanation
+
+**On lists specifically:** Only use bullet or numbered lists when the items are genuinely enumerable and order or parallel structure matters (e.g., a sequence of CLI commands, a set of Maven dependencies, a reading list of links). For descriptions, explanations, or anything narrative — write it as prose. Converting a list of bullet points into a well-constructed paragraph almost always reads better.
 
 ### What to Include
 - ✅ Working code examples that demonstrate the concept
@@ -261,5 +264,6 @@ Before finalizing a blog post, verify:
 - [ ] Images use {{site.baseurl}}/images/ path
 - [ ] Tone is conversational and developer-focused
 - [ ] Content leads with practical code examples
+- [ ] Lists have been replaced with prose wherever narrative or descriptive content is involved
 - [ ] Links to external resources are included
 - [ ] Markdown formatting is consistent
