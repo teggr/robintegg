@@ -18,8 +18,7 @@ public class IndexPage {
                 .path(path)
                 .pageable(pageable)
                 .data(Map.of(
-                        "layout", List.of("home"),
-                        "list_title", List.of("Posts")
+                "layout", List.of("home")
                 ))
                 .renderFunction(IndexPage::render)
                 .build();

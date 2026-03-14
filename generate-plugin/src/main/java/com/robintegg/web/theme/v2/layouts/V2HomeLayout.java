@@ -26,33 +26,18 @@ public class V2HomeLayout {
 
   public static DomContent render(RenderModel renderModel) {
 
-    PagedContent<IndexContent> indexedContent = IndexPlugin.INSTANCE.getIndexedContent(renderModel.getPage().getPageable());
+    PagedContent<IndexContent> indexedContent = IndexPlugin.INSTANCE.getHomePagedContent(renderModel.getPage().getPageable());
+    IndexContent featuredContent = IndexPlugin.INSTANCE.getLatestIndexedContent().orElse(null);
 
     List<GitHubRepository> activeRepos = GithubActivityPlugin.INSTANCE.getActiveRepositories();
 
     return div()
         .withClass("home")
         .with(
-            // Blog intro hero section
-            div()
-                .withClass("blog-intro")
-                .with(
-                    span()
-                        .withClass("blog-intro-label")
-                        .withText("Blog"),
-                    iff(
-                        renderModel.getPage().getTitle() != null,
-                        h1()
-                            .withClass("blog-intro-title")
-                            .withText(renderModel.getPage().getTitle())
-                    ),
-                    iff(
-                        renderModel.getContext().getSite().getDescription() != null,
-                        p()
-                            .withClass("blog-intro-description")
-                            .withText(Utils.escape(renderModel.getContext().getSite().getDescription()))
-                    )
-                ),
+            iff(
+                renderModel.getPage().getPageable().getPage() == 1 && featuredContent != null,
+                renderFeaturedPost(featuredContent, renderModel)
+            ),
             // GitHub Activity
             iff(
                 activeRepos != null && !activeRepos.isEmpty(),
@@ -90,62 +75,112 @@ public class V2HomeLayout {
             // Posts section
             iff(
                 indexedContent.getContent().size() > 0,
-                each(
-                    iff(
-                        renderModel.getPage().getListTitle() != null,
-                        h2()
-                            .withClass("post-list-heading")
-                            .withText(renderModel.getPage().getListTitle())
-                    ),
-                    ul()
-                        .withClass("post-list")
-                        .with(
-                            each(indexedContent.getContent(), indexContent ->
-                                li()
-                                    .with(renderPostCard(indexContent, renderModel))
-                            )
+                ul()
+                    .withClass("post-list")
+                    .with(
+                        each(indexedContent.getContent(), indexContent ->
+                            li()
+                                .with(renderPostCard(indexContent, renderModel))
                         )
-                )
-            ),
-            // Pagination
-            div()
-                .withClass("pagination")
-                .with(
-                    iffElse(
-                        indexedContent.isPrevious(),
-                        a()
-                            .withHref(Utils.relativeUrl(indexedContent.getPreviousPagePath()))
-                            .withRel("previous")
-                            .withClass("previous")
-                            .withText("← Newer"),
-                        span()
-                            .withClass("previous")
-                            .withText("← Newer")
-                    ),
-                    span()
-                        .withClass("page_number")
-                        .withText(String.format("Page %s of %s", indexedContent.getPage(), indexedContent.getTotalPages())),
-                    iffElse(
-                        indexedContent.isNext(),
-                        a()
-                            .withHref(Utils.relativeUrl(indexedContent.getNextPagePath()))
-                            .withRel("next")
-                            .withClass("next")
-                            .withText("Older →"),
-                        span()
-                            .withClass("next")
-                            .withText("Older →")
                     )
-                )
+            ),
+            iff(
+                indexedContent.getTotalPages() > 1,
+                div()
+                    .withClass("pagination")
+                    .with(
+                        iffElse(
+                            indexedContent.isPrevious(),
+                            a()
+                                .withHref(Utils.relativeUrl(indexedContent.getPreviousPagePath()))
+                                .withRel("previous")
+                                .withClass("previous")
+                                .withText("← Newer"),
+                            span()
+                                .withClass("previous")
+                                .withText("← Newer")
+                        ),
+                        span()
+                            .withClass("page_number")
+                            .withText(String.format("Page %s of %s", indexedContent.getPage(), indexedContent.getTotalPages())),
+                        iffElse(
+                            indexedContent.isNext(),
+                            a()
+                                .withHref(Utils.relativeUrl(indexedContent.getNextPagePath()))
+                                .withRel("next")
+                                .withClass("next")
+                                .withText("Older →"),
+                            span()
+                                .withClass("next")
+                                .withText("Older →")
+                        )
+                    )
+            )
         );
 
   }
 
+  private static DomContent renderFeaturedPost(IndexContent indexContent, RenderModel renderModel) {
+    String categoryLabel = getCategoryLabel(indexContent);
+
+    return article()
+        .withClass("featured-post")
+        .with(
+            iffElse(
+                indexContent.getImage() != null && !indexContent.getImage().isEmpty(),
+                a()
+                    .withClass("featured-post-image-link")
+                    .withHref(Utils.relativeUrl(indexContent.getUrl()))
+                    .with(
+                        img()
+                            .withClass("featured-post-image")
+                            .withSrc(Utils.relativeUrl(indexContent.getImage()))
+                            .withAlt(Utils.escape(indexContent.getTitle()))
+                    ),
+                div()
+                    .withClass("featured-post-image-link featured-post-image-fallback")
+                    .with(
+                        span()
+                            .withClass("featured-post-fallback-label")
+                            .withText("Latest work")
+                    )
+            ),
+            div()
+                .withClass("featured-post-body")
+                .with(
+                    span()
+                        .withClass("featured-post-kicker")
+                        .withText("Featured"),
+                    iff(
+                        categoryLabel != null,
+                        span()
+                            .withClass("featured-post-category")
+                            .withText(Utils.escape(categoryLabel))
+                    ),
+                    a()
+                        .withClass("featured-post-title")
+                        .withHref(Utils.relativeUrl(indexContent.getUrl()))
+                        .withText(Utils.escape(indexContent.getTitle())),
+                    div()
+                        .withClass("featured-post-excerpt")
+                        .with(indexContent.getExcerpt(renderModel)),
+                    div()
+                        .withClass("featured-post-footer")
+                        .with(
+                            time()
+                                .withClass("featured-post-date")
+                                .withText(Utils.format(indexContent.getDate())),
+                            a()
+                                .withClass("featured-post-link")
+                                .withHref(Utils.relativeUrl(indexContent.getUrl()))
+                                .withText("Read article →")
+                        )
+                )
+        );
+  }
+
   private static DomContent renderPostCard(IndexContent indexContent, RenderModel renderModel) {
-    // Use first tag as the category label if no explicit category
-    String categoryLabel = indexContent.getCategory() != null && !indexContent.getCategory().isEmpty()
-        ? indexContent.getCategory()
-        : (!indexContent.getTags().isEmpty() ? indexContent.getTags().get(0) : null);
+    String categoryLabel = getCategoryLabel(indexContent);
 
     // Remaining tags (after the first, which is used as category label)
     List<String> remainingTags = indexContent.getTags().size() > 1
@@ -223,5 +258,11 @@ public class V2HomeLayout {
                 )
         );
   }
+
+    private static String getCategoryLabel(IndexContent indexContent) {
+        return indexContent.getCategory() != null && !indexContent.getCategory().isEmpty()
+            ? indexContent.getCategory()
+            : (!indexContent.getTags().isEmpty() ? indexContent.getTags().get(0) : null);
+      }
 
 }

@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 public class IndexPlugin implements AggregatorPlugin {
@@ -57,10 +58,11 @@ public class IndexPlugin implements AggregatorPlugin {
     }
 
     public List<IndexContent> getIndexedContent() {
-        return indexedContentList.stream()
-                .map(IndexedContent::getIndexContent)
-                .sorted(Comparator.comparing(IndexContent::getDate).reversed())
-                .toList();
+        return getSortedIndexedContent();
+    }
+
+    public Optional<IndexContent> getLatestIndexedContent() {
+        return getSortedIndexedContent().stream().findFirst();
     }
 
     public void registerPlugins() {
@@ -69,19 +71,18 @@ public class IndexPlugin implements AggregatorPlugin {
 
     public PagedContent<IndexContent> getIndexedContent(Pageable pageable) {
 
-        int skip = (pageable.getPage() - 1) * pageable.getPageSize();
-        int limit = pageable.getPageSize() != 0 ? pageSize : indexedContentList.size();
+        List<IndexContent> sortedContent = getSortedIndexedContent();
 
-        int totalPages = indexedContentList.size() / limit;
-        if (indexedContentList.size() % limit != 0) totalPages++;
+        int skip = (pageable.getPage() - 1) * pageable.getPageSize();
+        int limit = pageable.getPageSize() != 0 ? pageSize : sortedContent.size();
+
+        int totalPages = calculateTotalPages(sortedContent.size(), limit);
 
         int nextPage = pageable.getPage() + 1;
         int previousPage = pageable.getPage() - 1;
 
         return new PagedContent<IndexContent>(
-                indexedContentList.stream()
-                        .map(IndexedContent::getIndexContent)
-                        .sorted(Comparator.comparing(IndexContent::getDate).reversed())
+            sortedContent.stream()
                         .skip(skip)
                         .limit(limit)
                         .toList(),
@@ -96,6 +97,57 @@ public class IndexPlugin implements AggregatorPlugin {
                 totalPages
         );
 
+    }
+
+    public PagedContent<IndexContent> getHomePagedContent(Pageable pageable) {
+
+        List<IndexContent> remainingContent = getSortedIndexedContent().stream()
+                .skip(1)
+                .toList();
+
+        int skip = (pageable.getPage() - 1) * pageable.getPageSize();
+        int limit = pageable.getPageSize() != 0 ? pageSize : remainingContent.size();
+        int totalPages = calculateTotalPages(remainingContent.size(), limit);
+
+        int nextPage = pageable.getPage() + 1;
+        int previousPage = pageable.getPage() - 1;
+
+        return new PagedContent<>(
+                remainingContent.stream()
+                        .skip(skip)
+                        .limit(limit)
+                        .toList(),
+                pageable.getPage(),
+                pageable.getPageSize(),
+                nextPage <= totalPages,
+                nextPage,
+                Utils.getPathForPage(nextPage),
+                pageable.getPage() > 1,
+                previousPage,
+                Utils.getPathForPage(previousPage),
+                totalPages
+        );
+
+    }
+
+    private List<IndexContent> getSortedIndexedContent() {
+        return indexedContentList.stream()
+                .map(IndexedContent::getIndexContent)
+                .sorted(Comparator.comparing(IndexContent::getDate).reversed())
+                .toList();
+    }
+
+    private int calculateTotalPages(int contentSize, int limit) {
+        if (limit == 0) {
+            return 1;
+        }
+
+        int totalPages = contentSize / limit;
+        if (contentSize % limit != 0) {
+            totalPages++;
+        }
+
+        return Math.max(1, totalPages);
     }
 
 }
