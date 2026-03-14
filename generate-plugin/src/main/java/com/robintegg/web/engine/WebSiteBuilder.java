@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,6 +67,7 @@ public class WebSiteBuilder {
         var outputDirectory = workingDirectory.resolve("target/site");
         log.info("output directory: {}", outputDirectory.toAbsolutePath());
 
+        cleanOutputDirectory(outputDirectory);
         Files.createDirectories(outputDirectory);
 
         // create render engine
@@ -73,6 +75,24 @@ public class WebSiteBuilder {
         ContentRenderer contentRenderer = new ContentRenderer();
         contentRenderer.render(outputDirectory, layouts, contentModel, context);
 
+    }
+
+    @SneakyThrows
+    static void cleanOutputDirectory(java.nio.file.Path outputDirectory) {
+        if (!Files.exists(outputDirectory)) {
+            return;
+        }
+
+        try (var paths = Files.walk(outputDirectory)) {
+            paths.sorted(Comparator.reverseOrder())
+                .forEach(path -> {
+                    try {
+                        Files.deleteIfExists(path);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        }
     }
 
 }
