@@ -114,6 +114,7 @@ jwebserver
 - Follow existing front matter patterns in _posts/, _books/, _podcasts/
 - Date format: `YYYY-MM-DD`
 - Images should reference `/images/` path
+- Avoid using the em dash character (`—`) as a clause separator in prose; prefer commas, parentheses, colons, or sentence breaks for smoother flow.
 
 ### Testing
 - Write unit tests for core logic and utilities

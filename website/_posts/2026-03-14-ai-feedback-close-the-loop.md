@@ -2,6 +2,7 @@
 layout: post
 title: "AI Feedback: Close the Loop"
 date: "2026-03-14"
+image: /images/ai-feedback-close-the-loop.png
 description: "How to build a feedback loop at the end of every AI-assisted ticket, using a reusable Copilot prompt to update instructions and ArchUnit tests so the AI gets smarter session by session."
 tags:
   - ai
@@ -19,7 +20,7 @@ This is the feedback gap, and closing it is what makes an AI-assisted workflow c
 
 ## Why the Loop Is Left Open
 
-In traditional development you accumulate knowledge. You make a mistake, you learn, and you carry that forward. The code, the tests, and the documentation all reflect what the team has figured out. Future developers — and future you — benefit from it.
+In traditional development you accumulate knowledge. You make a mistake, you learn, and you carry that forward. The code, the tests, and the documentation all reflect what the team has figured out. Future developers (and future you) benefit from it, but without you the knowledge is lost.
 
 With AI-assisted development, the session is a disposable context window. The AI is good at working within the rules it has been given, but those rules have to be explicitly encoded somewhere it can read. If the rules only exist in your head, or buried in a PR comment, they are invisible to the next session.
 
@@ -27,7 +28,7 @@ The two places where you can encode structural knowledge that the AI will actual
 
 ## The ArchUnit Angle
 
-[ArchUnit](https://www.archunit.org/) is a Java library for writing architecture rules as unit tests. If you have not used it before, the idea is simple: you write a test that expresses a structural rule — "controllers must live in the web package", "services must not depend on controllers" — and if that rule is violated the test fails. It runs in your normal test suite, so a violation breaks the build.
+[ArchUnit](https://www.archunit.org/) is a Java library for writing architecture rules as unit tests. If you have not used it before, the idea is simple: you write a test that expresses a structural rule, "controllers must live in the web package" and "services must not depend on controllers," and if that rule is violated the test fails. It runs in your normal test suite, so a violation breaks the build.
 
 For AI-assisted development, ArchUnit is particularly valuable because it does two jobs at once. It enforces the rule programmatically, but it also **documents the rule** in a form that survives sessions. A new session can be pointed at the existing ArchUnit tests to understand the project's structural expectations before writing a single line of code.
 
@@ -69,7 +70,7 @@ class ArchitectureTest {
 }
 ```
 
-When Copilot creates `UserController` in the wrong package and the developer does not catch it in review, the build does. The failure message includes the `.because()` text, which gives both the developer and — if you paste the output into a new session — the AI a clear description of the violated rule.
+When Copilot creates `UserController` in the wrong package and the developer does not catch it in review, the build does. The failure message includes the `.because()` text, which gives both the developer and (if you paste the output into a new session) the AI a clear description of the violated rule.
 
 The corresponding instruction in `.github/copilot-instructions.md` would be:
 
@@ -88,86 +89,76 @@ With both the instruction and the ArchUnit test in place, the AI is less likely 
 
 ## The Feedback Prompt
 
-The manual version of this — reviewing the session, identifying gaps, and writing new instructions or tests by hand — works but rarely happens. The end of a ticket is the worst possible moment to ask a developer to reflect carefully and write documentation. Everyone wants to move on.
+The manual version of this (reviewing the session, identifying gaps, and writing new instructions or tests by hand) works but rarely happens. The end of a ticket is the worst possible moment to ask a developer to reflect carefully and write documentation. Everyone wants to move on.
 
 A reusable Copilot prompt changes the dynamic. You run it, it does the reflection for you, it pauses to get your input, and it proposes concrete changes. You approve or adjust, and it applies them. The whole thing takes a few minutes and the project is genuinely better for the next session.
 
 Here is a `tidy.prompt.md` that does this work:
 
 ```markdown
----
-name: tidy
-description: Review the session, close the feedback loop, and propose updates 
-             to Copilot instructions and ArchUnit tests.
----
+    ---
+    name: tidy
+    description: Review the session, close the feedback loop, and propose updates 
+                to Copilot instructions and ArchUnit tests.
+    ---
 
-# Tidy Up: Close the Feedback Loop
+    # Tidy Up: Close the Feedback Loop
 
-## Phase 1: Review
+    ## Phase 1: Review
 
-Examine what changed in this session by running:
+    Examine what changed in this session by running:
 
-```shell
-git diff main --stat
-git diff main -- "*.java"
-```
+    ```shell
+    git diff main --stat
+    git diff main -- "*.java"
+    ```
 
-Look for:
-- Classes placed in unexpected packages
-- Naming conventions that deviate from the existing codebase
-- Dependencies introduced between layers that should not exist
-- Any correction the user had to make manually after the AI's first attempt
+    Look for:
+    - Classes placed in unexpected packages
+    - Naming conventions that deviate from the existing codebase
+    - Dependencies introduced between layers that should not exist
+    - Any correction the user had to make manually after the AI's first attempt
 
-Summarise your findings as a short list of observations. 
+    Summarise your findings as a short list of observations. 
 
-PAUSE — present the observations and ask the user to confirm, add to, or 
-remove items before continuing.
+    PAUSE: present the observations and ask the user to confirm, add to, or 
+    remove items before continuing.
 
-## Phase 2: Propose Changes
+    ## Phase 2: Propose Changes
 
-For each confirmed observation, propose one or both of the following:
+    For each confirmed observation, propose one or both of the following:
 
-**A. An update to `.github/copilot-instructions.md`**
-A concise rule the AI should follow in future sessions. State it as a 
-direct instruction. Keep it under three sentences. Propose the exact text 
-to append to the instructions file.
+    **A. An update to `.github/copilot-instructions.md`**
+    A concise rule the AI should follow in future sessions. State it as a 
+    direct instruction. Keep it under three sentences. Propose the exact text 
+    to append to the instructions file.
 
-**B. An ArchUnit test**
-A new `@ArchTest` that encodes the structural rule and would have caught 
-the issue automatically. Use the existing `ArchitectureTest.java` as a 
-base. Include a `.because()` clause that explains the rule in plain English.
+    **B. An ArchUnit test**
+    A new `@ArchTest` that encodes the structural rule and would have caught 
+    the issue automatically. Use the existing `ArchitectureTest.java` as a 
+    base. Include a `.because()` clause that explains the rule in plain English.
 
-Present the proposed changes clearly. For each one, state:
-- What gap it closes
-- Where the change will be made
+    Present the proposed changes clearly. For each one, state:
+    - What gap it closes
+    - Where the change will be made
 
-PAUSE — ask the user to approve, reject, or modify each proposal before 
-applying anything.
+    PAUSE: ask the user to approve, reject, or modify each proposal before 
+    applying anything.
 
-## Phase 3: Apply
+    ## Phase 3: Apply
 
-Apply only the approved changes:
-- Append approved instructions to `.github/copilot-instructions.md`
-- Add approved ArchUnit tests to the existing architecture test class
+    Apply only the approved changes:
+    - Append approved instructions to `.github/copilot-instructions.md`
+    - Add approved ArchUnit tests to the existing architecture test class
 
-Confirm each change with a brief summary of what was written and where.
+    Confirm each change with a brief summary of what was written and where.
 ```
 
 The two `PAUSE` checkpoints are the key feature here. The first prevents the prompt from inventing gaps that did not exist. The second prevents it from applying changes the developer has not reviewed. It is the plan/implement pattern applied to the feedback process itself.
 
-## Putting It Together
-
-Imagine you are working through a ticket to add a new feature — a `PaymentController` and a `PaymentService`. The session goes well but when you review the diff you notice that Copilot put `PaymentService` in `com.example.service` (correct) but `PaymentController` in `com.example` (wrong). You moved it manually.
-
-Running `/tidy` after merging the PR, the prompt spots the move in the git diff. It surfaces it in Phase 1 and you confirm it is a real gap. In Phase 2 it proposes both a new instruction and a new ArchUnit test. You review both, adjust the wording of the instruction slightly, and approve. In Phase 3 it writes them into the project.
-
-The next developer — or the next session of the current developer — starts with a project that knows one more thing about itself. ArchUnit will catch the mistake before it reaches review. The instructions file will guide the AI away from making it in the first place.
-
 Over a month of typical feature work, this compounds. The instructions file grows to reflect how the project actually works, not just how it was initially set up. The ArchUnit suite grows to catch categories of mistake that the team has actually encountered. Both of these artefacts survive well beyond any individual session or developer.
 
-## A Note on Timing
-
-The end of a ticket is the right time to run this, not the middle. During implementation you want the AI focused on the problem at hand, not meta-reasoning about its own behaviour. Running `/tidy` as part of the "definition of done" — alongside updating the PR description and checking the CI is green — gives it a natural place in the workflow without disrupting flow state.
+## Tidying in a workflow
 
 If you are working with the workflow agent pattern [described in a previous post](/2026/03/13/orchestrating-ai-workflows-with-agents-prompts-and-skills), the `tidy` step fits naturally at the end of the workflow sequence, alongside the review phase.
 
