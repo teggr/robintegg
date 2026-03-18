@@ -11,21 +11,17 @@ tags:
   - llm
 ---
 
-I use GitHub Copilot every day in VS Code. My company pays for the license, so I'm motivated to make the most of it — not just as a code completion tool, but as a foundation for building my own agentic workflows and tooling.
+I use GitHub Copilot every single day. My company pays for a license, and I also pay for a personal one — it's my go-to platform for AI-assisted coding, and I want to make the most of both. That means going beyond autocomplete and building my own tools, automations, and agentic workflows on top of it.
 
-Until recently, that meant staying within an IDE like VS Code or IntelliJ. But GitHub recently announced a Copilot SDK, and although it launched without a Java version, a team of developers from the Java community stepped up and created a downstream port of the .NET version. That port has now become the official Java SDK. A big well done to everyone involved in making that happen.
+In a [previous post](/2026/03/13/orchestrating-ai-workflows-with-agents-prompts-and-skills) I wrote about a mental model for AI orchestration using three Copilot primitives: Agents, Prompts, and Skills. The Java Copilot SDK is what makes that model programmable. Instead of writing workflow instructions in Markdown and hoping the AI interprets them correctly, the SDK lets you write proper Java code that calls the LLM, structures the interaction, and wires everything together. You can automate your agents and prompts, not just describe them.
+
+GitHub released a Copilot SDK, and although it initially launched without a Java version, a team of developers from the Java community stepped up and created a downstream port of the .NET version. That port has now become the official Java SDK. A big well done to everyone involved.
 
 Here's where you can find out more:
 
 - [copilot-sdk-java on GitHub](https://github.com/github/copilot-sdk-java) — SDK source code
 - [Bruno Borges on Medium](https://medium.com/@brunoborges) — follow Bruno for updates and deep dives on the SDK
 - [Official Java SDK Documentation](https://github.github.com/copilot-sdk-java/) — documentation and getting started guides
-
-## Where does this fit with Spring AI?
-
-If you're already using Spring AI, you're probably wondering where the Copilot SDK sits in relation to it. Honestly, it feels like a higher-level abstraction. The Copilot SDK has built-in concepts like skills and tools out of the box, whereas Spring AI operates at a lower level and gives you more control over the model interaction.
-
-The other significant difference is licensing. As far as I'm aware, you can't use your GitHub Copilot license with Spring AI — it targets models through its own provider integrations. If you're paying for a Copilot license and want to use that investment in your own tooling, the Copilot SDK is the natural fit. Whether the two ecosystems converge in the future remains to be seen, but for now they serve slightly different audiences.
 
 ## Getting started with a JBang file summarizer
 
@@ -110,10 +106,15 @@ Once you've got a summarizer working, the natural next step is to wire it into a
 
 I covered how skills work in more depth in [Bring your Java skills to AI Agent Skills with JBang](/2026/01/30/bring-your-java-skills-to-ai-agent-skills-with-jbang), which pairs well with this post if you want to see how the pieces connect.
 
+## A note on Spring AI
+
+If you're already using Spring AI, you might wonder where the Copilot SDK sits in relation to it. It feels like a higher-level abstraction — the SDK has built-in concepts like skills and tools out of the box, whereas Spring AI operates at a lower level and gives you more control. The other significant difference is that, as far as I'm aware, you can't use your GitHub Copilot license with Spring AI — it targets models through its own provider integrations. If you're investing in a Copilot license and want to use that in your own tooling, the Copilot SDK is the natural fit. Whether the two ecosystems converge in the future remains to be seen.
+
 ## References
 
 - [copilot-sdk-java on GitHub](https://github.com/github/copilot-sdk-java)
 - [Bruno Borges on Medium](https://medium.com/@brunoborges)
 - [Official Java SDK Documentation](https://github.github.com/copilot-sdk-java/)
 - [JBang documentation](https://www.jbang.dev/documentation/)
+- [Orchestrating AI Workflows with Copilot Agents, Prompts, and Skills](/2026/03/13/orchestrating-ai-workflows-with-agents-prompts-and-skills)
 - [Bring your Java skills to AI Agent Skills with JBang](/2026/01/30/bring-your-java-skills-to-ai-agent-skills-with-jbang)
