@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Getting Started with the Java Copilot SDK"
-date: "2026-03-18"
+date: "2026-03-26"
 image: /images/java-copilot-sdk.png
 tags:
   - java
@@ -13,7 +13,9 @@ tags:
 
 I use GitHub Copilot every single day. My company pays for a license, and I also pay for a personal one — it's my go-to platform for AI-assisted coding, and I want to make the most of both. That means going beyond autocomplete and building my own tools, automations, and agentic workflows on top of it.
 
-In a [previous post](/2026/03/13/orchestrating-ai-workflows-with-agents-prompts-and-skills) I wrote about a mental model for AI orchestration using three Copilot primitives: Agents, Prompts, and Skills. The Java Copilot SDK is what makes that model programmable. Instead of writing workflow instructions in Markdown and hoping the AI interprets them correctly, the SDK lets you write proper Java code that calls the LLM, structures the interaction, and wires everything together. You can automate your agents and prompts, not just describe them.
+In a [previous post](/2026/03/13/orchestrating-ai-workflows-with-agents-prompts-and-skills) I wrote about a mental model for AI orchestration using three Copilot primitives: Agents, Prompts, and Skills.
+
+The Java Copilot SDK is what makes that model programmable. Instead of writing workflow instructions in Markdown and hoping the AI interprets them correctly, the SDK lets you write proper Java code that calls the LLM, structures the interaction, and wires everything together. You can automate your agents and prompts, not just describe them.
 
 GitHub released a Copilot SDK, and although it initially launched without a Java version, a team of developers from the Java community stepped up and created a downstream port of the .NET version. That port has now become the official Java SDK. A big well done to everyone involved.
 
@@ -29,67 +31,86 @@ One of the most practical things you can do with the Copilot SDK is build comman
 
 JBang makes this frictionless. No Maven project, no IDE, no build file — just a single Java file you can run directly from the terminal.
 
+```shell
+# create the jbang script
+jbang init summarize.java
+
+# edit the script
+jbang edit . summarize.java
+```
+
 Here's a complete file summarizer script using the Java Copilot SDK:
 
 ```java
 ///usr/bin/env jbang "$0" "$@" ; exit $?
-//JAVA 21+
-//DEPS com.github.github:copilot-sdk-java:0.1.0
+//JAVA 25+
+//DEPS com.github:copilot-sdk-java:0.2.1-java.0
 
 import com.github.copilot.sdk.CopilotClient;
-import com.github.copilot.sdk.chat.ChatRequest;
-import com.github.copilot.sdk.chat.Message;
-import com.github.copilot.sdk.chat.Role;
+import com.github.copilot.sdk.json.MessageOptions;
+import com.github.copilot.sdk.json.PermissionHandler;
+import com.github.copilot.sdk.json.SessionConfig;
+import com.github.copilot.sdk.json.SystemMessageConfig;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
+void main(String... args) throws Exception {
 
-public class summarize {
-
-    public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
-            System.err.println("Usage: jbang summarize.java <file-path>");
-            System.exit(1);
-        }
-
-        Path filePath = Path.of(args[0]);
-        if (!Files.exists(filePath)) {
-            System.err.println("File not found: " + filePath);
-            System.exit(1);
-        }
-
-        String content = Files.readString(filePath);
-
-        CopilotClient client = CopilotClient.create();
-
-        ChatRequest request = ChatRequest.builder()
-            .model("gpt-4o")
-            .messages(List.of(
-                Message.of(Role.SYSTEM, """
-                    You are a technical writing assistant. Summarise the provided content 
-                    concisely, covering: the main topic, key points, and any action items 
-                    or conclusions. Keep the summary to 3-5 sentences.
-                    """),
-                Message.of(Role.USER, "Please summarise the following content:\n\n" + content)
-            ))
-            .build();
-
-        String summary = client.chat().complete(request)
-            .choices().getFirst()
-            .message().content();
-
-        System.out.println("Summary of: " + filePath.getFileName());
-        System.out.println("-".repeat(50));
-        System.out.println(summary);
+    if (args.length != 1) {
+        System.err.println("Usage: jbang summarize.java <file-path>");
+        System.exit(1);
     }
+
+    Path filePath = Path.of(args[0]);
+    if (!Files.exists(filePath)) {
+        System.err.println("File not found: " + filePath);
+        System.exit(1);
+    }
+
+    String content = Files.readString(filePath);
+
+    // Create and start client
+    try (var client = new CopilotClient()) {
+
+        client.start().get();
+
+        // Create a session
+        var session = client.createSession(
+                new SessionConfig()
+                        .setSystemMessage(new SystemMessageConfig()
+                                .setContent(
+                                        """
+                                                You are a technical writing assistant.
+                                                Summarise the provided content concisely, covering: the main topic, key points, and any action or conclusions.
+                                                Keep the summary to 3-5 sentences.
+                                                """))
+                        .setOnPermissionRequest(PermissionHandler.APPROVE_ALL))
+                .get();
+
+        // Send a message
+        var response = session.sendAndWait(new MessageOptions()
+                .setPrompt(String.format("Please summarise the content of %s", content))).get();
+
+        System.out.println(response.getData().content());
+
+        client.stop().get();
+
+    }
+
 }
+
 ```
 
 Save this as `summarize.java` and run it with:
 
 ```bash
+# run command
 jbang summarize.java path/to/your/file.md
+
+# output
+jbang summarize.java README.md
+[jbang] Building jar for summarize.java...
+Mar 26, 2026 12:00:55 PM com.github.copilot.sdk.CopilotClient lambda$startCore$1
+INFO: Copilot client connected
+The **GitHub Copilot SDK for Java** is a pre-GA Java library (Java 17+, available via Maven/Gradle) that enables programmatic control of GitHub Copilot CLI to build AI-powered applications and agentic workflows. It provides a `CopilotClient` API for creating sessions, sending prompts, and handling streaming events like assistant messages and token usage. The SDK tracks the official .NET/Node.js Copilot SDK reference implementations, with weekly automated upstream syncs via GitHub Actions and AI-assisted porting to Java. It is MIT-licensed, supports JBang for zero-setup experimentation, and includes full documentation, Javadoc, MCP server integration guides, and a cookbook of common recipes.
 ```
 
 The `//DEPS` directive pulls the Copilot SDK from Maven Central automatically — no setup required. JBang handles the classpath for you. The SDK picks up your Copilot credentials from the environment, the same credentials your IDE uses, so there's no additional authentication to configure.
@@ -102,7 +123,7 @@ The `CopilotClient` is the entry point for everything. From there you can access
 
 ## Next steps
 
-Once you've got a summarizer working, the natural next step is to wire it into a GitHub Copilot skill so the AI can call it on your behalf. The JBang script becomes a skill script, and Copilot orchestrates when and how to invoke it based on your conversation.
+Once you've got a summarizer working, the natural next step is to wire the client into your Java application or even add it into a GitHub Copilot skill so the AI can call it on your behalf. The JBang script becomes a skill script, and Copilot orchestrates when and how to invoke it based on your conversation.
 
 I covered how skills work in more depth in [Bring your Java skills to AI Agent Skills with JBang](/2026/01/30/bring-your-java-skills-to-ai-agent-skills-with-jbang), which pairs well with this post if you want to see how the pieces connect.
 
