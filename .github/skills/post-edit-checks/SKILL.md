@@ -1,9 +1,11 @@
 ---
 name: post-edit-checks
-description: Performs checks on edited content to ensure quality and consistency of front matter.
+description: Performs checks on new or edited blog post content to ensure quality and consistency of front matter.
 ---
 
-This skill performs checks on edited content to ensure that the front matter adheres to specified quality and consistency standards. It verifies the presence of required fields, checks for valid data types, and ensures that values fall within acceptable ranges. The skill can be configured to enforce specific rules based on the content type and can provide detailed feedback on any issues found during the checks.
+This skill performs checks on new or edited blog post content to ensure that the front matter adheres to specified quality and consistency standards. It verifies the presence of required fields, checks for valid data types, and ensures that values fall within acceptable ranges. The skill can be configured to enforce specific rules based on the content type and can provide detailed feedback on any issues found during the checks.
+
+**Always run this skill after creating or editing a blog post**, including when creating a new post from a GitHub issue or agent task.
 
 * Check that the images referenced in the front matter exist in the static image folder - `website/_static/images`.
 
