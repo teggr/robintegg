@@ -79,6 +79,7 @@ date: "2021-07-05"
 - Use first person ("I", "we") when sharing experiences or opinions
 - Be direct and practical - focus on what works and why
 - Share personal insights and lessons learned
+- Avoid using the em dash character (—) as a clause separator in prose; prefer commas, parentheses, colons, or sentence breaks
 - Avoid corporate/marketing speak
 
 ### Content Structure
@@ -131,14 +132,14 @@ spring.profiles.active=local
 ```
 
 ### What to Avoid
-- ❌ Bullet lists where prose would read more naturally — default to paragraphs, not lists
+- ❌ Bullet lists where prose would read more naturally; default to paragraphs, not lists
 - ❌ Using lists to describe properties or characteristics of something (write them as sentences instead)
 - ❌ Emoticons and emoji (occasional use is fine but don't overdo it)
 - ❌ Buzzwords without substance
 - ❌ Long introductions before getting to the content
 - ❌ Code without context or explanation
 
-**On lists specifically:** Only use bullet or numbered lists when the items are genuinely enumerable and order or parallel structure matters (e.g., a sequence of CLI commands, a set of Maven dependencies, a reading list of links). For descriptions, explanations, or anything narrative — write it as prose. Converting a list of bullet points into a well-constructed paragraph almost always reads better.
+**On lists specifically:** Only use bullet or numbered lists when the items are genuinely enumerable and order or parallel structure matters (e.g., a sequence of CLI commands, a set of Maven dependencies, a reading list of links). For descriptions, explanations, or anything narrative, write it as prose. Converting a list of bullet points into a well-constructed paragraph almost always reads better.
 
 ### What to Include
 - ✅ Working code examples that demonstrate the concept
