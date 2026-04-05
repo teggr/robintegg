@@ -16,7 +16,7 @@ tags:
 
 It feels to me that there's not a lot of practical "this is how I use AI in my day-to-day work" type content out there for whatever reason. I'll share what I've been experimenting with, what has worked, what hasn't, and what I'm planning to try next.
 
-**Tools I'm currently using**: GitHub Copilot, Claude, Java Copilot SDK
+**Tools I'm currently using**: GitHub Copilot, Claude, Gemini, vscode, Java Copilot SDK, [Granola](https://www.granola.ai/)
 
 ## Harnesses and Orchestration
 
@@ -73,8 +73,6 @@ For me this folder is becoming a kind of institutional memory for my personal pr
 [Beyond the IDE](https://www.linkedin.com/posts/lucaronin_what-comes-after-the-ide-the-ide-has-been-ugcPost-7440685122653143040-uOys) — Luca Ronin's post on what the development environment looks like once the IDE is no longer the centre of gravity. The IDE has been the primary interface for developers for decades. What replaces it when AI agents are doing most of the implementation?
 
 [Nagmi and Wsgmi](https://x.com/rahulgs/status/2036857870042411438?s=46) — A useful frame for deciding what to focus on while the models themselves continue to improve rapidly. Not everything you build today will be worth keeping, but some of it will compound.
-
-[Automating Maven Dependency Upgrades Using AI](https://dzone.com/articles/automating-maven-dependency-upgrades-using-ai) — Another article in a long line of AI-generated Java content on DZone that doesn't bring much that's new. The real skill here isn't prompting an AI to generate this — it's being able to build on code that already exists and does the job. That would be worth reading.
 
 [Copilot CLI: Comparing CLI Features](https://docs.github.com/en/copilot/concepts/agents/copilot-cli/comparing-cli-features) — A much cleaner version of the Copilot CLI feature documentation than what existed before. It clearly breaks down the distinction between custom instructions, skills, tools, MCP servers, hooks, subagents, and custom agents. If you've been confused about where one ends and the other begins, this is the article to read.
 
