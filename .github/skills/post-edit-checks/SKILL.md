@@ -6,6 +6,7 @@ description: Performs review checks on edited website content to ensure quality,
 This skill performs review checks on edited website content before it is finalized. It verifies front matter quality and consistency, and it also acts as the final review checklist for post readiness.
 
 Checks include:
+- Check that the `image:` field is present in the front matter.
 - Check that the images referenced in the front matter exist in the static image folder - `website/_static/images`.
 - Check that file naming and front matter are complete and valid.
 - Check that code examples, links, and markdown formatting meet the post requirements.
@@ -18,6 +19,7 @@ Before finalizing a blog post, verify:
 - [ ] Title is descriptive and clear.
 - [ ] Date is correct in `YYYY-MM-DD` format.
 - [ ] Tags are relevant and match existing tag conventions.
+- [ ] `image:` field is present in the front matter.
 - [ ] Code examples are complete and working.
 - [ ] Code blocks have appropriate language identifiers.
 - [ ] Images use `{{site.baseurl}}/images/` path.

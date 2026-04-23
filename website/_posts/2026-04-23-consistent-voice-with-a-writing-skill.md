@@ -9,6 +9,7 @@ tags:
   - github copilot
   - skills
   - workflow
+image: /images/voice-skill.jpg
 ---
 
 As a Developer spending so much time in code, it's quite a context shift when going to long form writing. One of the top reasons for me to start writing on my website was to keep practicing. One area in which AI has been really helpful for me is in the authoring and editing of content.
