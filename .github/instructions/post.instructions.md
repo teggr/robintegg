@@ -1,6 +1,5 @@
 ---
-applicable_paths:
-  - "website/_posts/**"
+applyTo: "website/_posts/**"
 ---
 
 # Copilot Instructions for Blog Posts
@@ -8,8 +7,9 @@ applicable_paths:
 ## Scope
 This file provides instructions for creating and editing blog post files in the `website/_posts/` directory.
 
-## Target Audience
-Blog posts are written for Java developers and technical professionals. The tone should be conversational and developer-to-developer, as if explaining a concept or technique to a colleague over coffee.
+## Voice
+
+Use `.github/skills/voice-skill/SKILL.md` for voice, tone, anti-filler, and audience guidance when writing or editing posts.
 
 ## File Naming Convention
 Blog post files must follow this naming pattern:
@@ -72,52 +72,44 @@ date: "2021-07-05"
 ---
 ```
 
-## Writing Style
+## Post Structure
 
-### Tone and Voice
-- Write in a conversational, developer-to-developer tone
-- Use first person ("I", "we") when sharing experiences or opinions
-- Be direct and practical - focus on what works and why
-- Share personal insights and lessons learned
-- Avoid using the em dash character (—) as a clause separator in prose; prefer commas, parentheses, colons, or sentence breaks
-- Avoid corporate/marketing speak
-
-### Content Structure
 - Start with a brief introduction that explains what the post covers
 - Use clear section headings (##, ###) to organize content
 - Lead with practical examples and working code
 - Explain the "why" behind technical decisions
 - End with references, next steps, or related resources
 
-### Code-First Approach
+## Code-First Structure
+
 Blog posts should be rich with code examples that demonstrate concepts in action:
 
-1. **Show, don't just tell**: Include actual code snippets that readers can understand and use
-2. **Use complete, runnable examples**: When possible, show full method/class implementations
-3. **Include setup and dependencies**: Show Maven/Gradle dependencies, configuration, or setup code
-4. **Demonstrate real-world usage**: Use practical examples from actual projects
-5. **Add context around code**: Explain what the code does and why it matters
+1. **Show the implementation**: Include actual code snippets that readers can understand and use.
+2. **Use runnable examples where possible**: Prefer complete methods, classes, commands, or configuration.
+3. **Include setup details when required**: Show Maven/Gradle dependencies, configuration, or setup code when needed to make the example usable.
+4. **Demonstrate practical usage**: Use realistic examples from actual projects or workflows.
+5. **Add context around examples**: Explain what the code does and why it matters.
 
-### Code Block Formatting
+## Code Block Formatting
 Use fenced code blocks with language identifiers:
 
 ```java
 @Command
 @Service
 public class WeatherService {
-    @Command(command = "weather-forecast", description = "Get weather forecast")
-    @Tool(description = "Get weather forecast for a location")
-    public String getWeatherForecast(double latitude, double longitude) {
-        // implementation here
-    }
+  @Command(command = "weather-forecast", description = "Get weather forecast")
+  @Tool(description = "Get weather forecast for a location")
+  public String getWeatherForecast(double latitude, double longitude) {
+    // implementation here
+  }
 }
 ```
 
 ```xml
 <dependency>
-    <groupId>com.j2html</groupId>
-    <artifactId>j2html</artifactId>
-    <version>1.6.0</version>
+  <groupId>com.j2html</groupId>
+  <artifactId>j2html</artifactId>
+  <version>1.6.0</version>
 </dependency>
 ```
 
@@ -131,23 +123,13 @@ spring.application.name=my-app
 spring.profiles.active=local
 ```
 
-### What to Avoid
-- ❌ Bullet lists where prose would read more naturally; default to paragraphs, not lists
-- ❌ Using lists to describe properties or characteristics of something (write them as sentences instead)
-- ❌ Emoticons and emoji (occasional use is fine but don't overdo it)
-- ❌ Buzzwords without substance
-- ❌ Long introductions before getting to the content
-- ❌ Code without context or explanation
-
-**On lists specifically:** Only use bullet or numbered lists when the items are genuinely enumerable and order or parallel structure matters (e.g., a sequence of CLI commands, a set of Maven dependencies, a reading list of links). For descriptions, explanations, or anything narrative, write it as prose. Converting a list of bullet points into a well-constructed paragraph almost always reads better.
-
-### What to Include
-- ✅ Working code examples that demonstrate the concept
-- ✅ Personal experience and lessons learned
-- ✅ Links to official documentation and resources
-- ✅ Practical use cases and scenarios
-- ✅ Step-by-step instructions when appropriate
-- ✅ Screenshots when showing UI or visual output
+## Structural Expectations
+- Start with a brief introduction that explains what the post covers
+- Include working code examples that demonstrate the concept
+- Include links to official documentation and resources
+- Include practical use cases and scenarios
+- Include step-by-step instructions when appropriate
+- Include screenshots when showing UI or visual output
 
 ## Images and Assets
 Images should be referenced using the following format:
@@ -253,18 +235,6 @@ Link to official documentation and authoritative sources:
 - Use `**bold**` for emphasis, not `__bold__`
 - Use `-` for unordered lists, not `*` or `+`
 
-## Review Checklist
-Before finalizing a blog post, verify:
-- [ ] File name follows YYYY-MM-DD-title-slug.md pattern
-- [ ] YAML front matter is complete and valid
-- [ ] Title is descriptive and clear
-- [ ] Date is correct in YYYY-MM-DD format
-- [ ] Tags are relevant and match existing tag conventions
-- [ ] Code examples are complete and working
-- [ ] Code blocks have appropriate language identifiers
-- [ ] Images use {{site.baseurl}}/images/ path
-- [ ] Tone is conversational and developer-focused
-- [ ] Content leads with practical code examples
-- [ ] Lists have been replaced with prose wherever narrative or descriptive content is involved
-- [ ] Links to external resources are included
-- [ ] Markdown formatting is consistent
+## Final Review
+
+Use `.github/skills/post-edit-checks/SKILL.md` for the final review checklist before finalizing a post.
