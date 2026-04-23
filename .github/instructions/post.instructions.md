@@ -74,7 +74,7 @@ date: "2021-07-05"
 
 ## Post Structure
 
-- Start with a brief introduction that explains what the post covers
+- Start with a brief introduction that explains what the post covers. The most important part of the introduction is the WHY should the reader continue reading.
 - Use clear section headings (##, ###) to organize content
 - Lead with practical examples and working code
 - Explain the "why" behind technical decisions
