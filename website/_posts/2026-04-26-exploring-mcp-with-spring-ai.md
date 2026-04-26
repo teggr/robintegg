@@ -12,7 +12,7 @@ tags:
   - ai
 ---
 
-MCP (Model Context Protocol) is becoming an important primitive in the AI tooling landscape. It gives an LLM structured access to external systems through an agent, without requiring custom integration code on the model side. If you are building Java services and want to make them available to AI assistants like GitHub Copilot or Claude Desktop, MCP is the protocol to know.
+MCP (Model Context Protocol) is becoming an important primitive in the AI tooling landscape. It gives an LLM structured access to external systems through an agent. If you want to support this protocol from a Java application and make it available to AI assistants like GitHub Copilot or Claude Desktop, MCP is the protocol to know.
 
 Spring AI has had MCP support since the 1.0.0-M4 milestone release and wraps the [MCP Java SDK](https://modelcontextprotocol.io/sdk/java/mcp-overview) with Boot starters and annotation-based configuration that feel natural to Spring developers.
 
@@ -119,7 +119,43 @@ public String noteResource(String id) {
 }
 ```
 
-You can also return a `ReadResourceResult` directly when you need more control over the content type or structure. For dynamically enumerated resources (where the list of URIs depends on runtime data) there is a lower-level `McpServerFeatures.SyncResourceSpecification` API available.
+You can also return a `ReadResourceResult` directly when you need more control over the content type or structure.
+
+For dynamically enumerated resources where the full list of URIs is only known at runtime, Spring AI provides a lower-level `McpServerFeatures.SyncResourceSpecification` API. The notebook example uses this to register each note as its own individually addressable resource:
+
+```java
+@Bean
+public List<McpServerFeatures.SyncResourceSpecification> notes() {
+
+    List<SyncResourceSpecification> resourceSpecifications = new ArrayList<>();
+
+    for (NoteListItem item : noteService.listNotes()) {
+
+        McpSchema.Resource noteResource = new McpSchema.Resource(
+                "note://notes/" + item.getId(),
+                item.getTitle(),
+                item.getTitle(),
+                "Note content",
+                null, null, null, null);
+
+        McpServerFeatures.SyncResourceSpecification resourceSpecification =
+                new McpServerFeatures.SyncResourceSpecification(
+                        noteResource, (exchange, request) -> {
+                            return new McpSchema.ReadResourceResult(
+                                    List.of(new McpSchema.TextResourceContents(
+                                            "note://notes/" + item.getId(),
+                                            "text/markdown",
+                                            noteService.getNote(item.getId()).get().getContent())));
+                        });
+
+        resourceSpecifications.add(resourceSpecification);
+    }
+
+    return resourceSpecifications;
+}
+```
+
+Spring AI picks up any `List<McpServerFeatures.SyncResourceSpecification>` bean and registers the resources automatically.
 
 ### @McpPrompt
 
@@ -144,20 +180,6 @@ public class NotebookMcpPrompts {
 ```
 
 More complex prompts can use `@McpArg` to accept named arguments and build dynamic messages based on context.
-
-### @McpComplete
-
-Provide tab-completion hints for prompt arguments. This is useful when a prompt argument maps to a finite set of options the client can offer to the user:
-
-```java
-@McpComplete(prompt = "city-search")
-public List<String> completeCityName(String prefix) {
-    return cities.stream()
-        .filter(city -> city.toLowerCase().startsWith(prefix.toLowerCase()))
-        .limit(10)
-        .toList();
-}
-```
 
 The full annotation reference is at [docs.spring.io/spring-ai/reference/api/mcp/mcp-annotations-server.html](https://docs.spring.io/spring-ai/reference/api/mcp/mcp-annotations-server.html).
 
