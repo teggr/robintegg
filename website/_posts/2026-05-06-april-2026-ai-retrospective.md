@@ -22,7 +22,7 @@ It feels to me that there's not a lot of practical "this is how I use AI in my d
 
 April has felt different from the months before it. The constant wave of new frameworks, new agent platforms, and new models hasn't stopped, but there's a change in how people are responding to it. Rather than immediately jumping to the next thing, more people seem to be pausing to figure out how to make proper use of what they already have. The conversation has shifted from "what's new" towards "what actually works in practice and how do I get more out of it."
 
-That matches where I am. The harness work I started in March has been about making things reliable and repeatable rather than building more of it. It's less satisfying to describe, but the return on investment is real. You can only learn so much from building the seventh slightly different version of the same thing.
+That matches where I am. It's less satisfying to describe, but the return on investment is real. You can only learn so much from building the seventh slightly different version of the same thing.
 
 ## Persistent Knowledge Bases
 
@@ -38,15 +38,9 @@ Both of these connect to something I mentioned in the March retro: the knowledge
 
 ## Getting On with Granola
 
-I mentioned [Granola](https://www.granola.ai/) in the March tools list without much detail. April has given me enough hands-on time to say something more useful about it. Granola works like Apple Notes but sits alongside your meetings and transcribes your computer audio directly without a bot joining the call. It works across Zoom, Google Meet, Teams, Webex, and Slack. When the meeting ends, it enhances the rough notes you typed during the call into something structured and readable.
+I mentioned [Granola](https://www.granola.ai/) in the March tools list without much detail. April has given me enough hands-on time to say something more useful about it. Granola sits alongside your meetings and transcribes your computer audio directly without a bot joining the call. It works across Zoom, Google Meet, Teams, Webex, and Slack. When the meeting ends, it enhances the rough notes you typed during the call into something structured and readable.
 
 What makes it worth using over a raw transcript is the combination: you still take partial notes yourself, and Granola fills in the structure around them. The result is a clean record that captures both what you wrote and what you missed. Over a month of regular use the value compounds in the same way the wiki idea does. You stop losing the substance of meetings.
-
-## Koog: Goal-Oriented Agents in Kotlin
-
-I referenced [Koog](https://github.com/JetBrains/koog) in the March retro as an emerging goal-oriented framework. JetBrains have now released more material explaining how it works in practice. The framework is Kotlin-native and built for Kotlin Multiplatform, which means agents can run across JVM, JS, Android, and iOS from the same codebase. The positioning is around goals rather than predefined workflow steps: instead of specifying what the agent should do next, you specify what it should achieve, and the framework handles the execution.
-
-There is a [YouTube video](https://youtu.be/Tg3BN36v-wQ?si=3IYfdFWzPNi4v0TY) that walks through the agent model with concrete examples. If you are on the JVM and interested in goal-oriented agent design, this is worth an hour of your time.
 
 ## Trying Emdash and Supacode
 
@@ -85,7 +79,5 @@ Two posts in April that connect to this month's themes:
 [Fat skills / thin harness / fat code (Garry Tan)](https://x.com/garrytan/status/2043566215927328955?s=46): A short framing from Garry Tan. The idea is that investment belongs in the skills and in the code, not in the harness layer itself. Thin harnesses with rich skills and strong codebases is where stability lives. Matches my own experience from building the Copilot SDK harness.
 
 ## What I'm thinking about for May
-
-The knowledge base idea has me thinking about building something concrete. The Karpathy approach is clear enough that it could be implemented incrementally inside an existing project structure without a big upfront commitment. Starting small: a single wiki folder fed by session notes, maintained by a reusable skill. See if it compounds.
 
 The multi-repo problem with tools like Emdash also still needs a solution. I want to be able to run agents across a bounded set of related repositories as a single unit of work. No obvious tool does this well yet.
