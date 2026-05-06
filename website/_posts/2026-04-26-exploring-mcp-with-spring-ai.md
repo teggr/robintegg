@@ -3,7 +3,7 @@ layout: post
 title: "Exploring MCP with Spring AI"
 date: "2026-04-26"
 description: "MCP gives your LLM access to external systems via your agent. Spring AI makes it straightforward to build MCP servers in Java using annotations."
-image: /images/spring-shell-ai.png
+image: /images/spring-ai-mcp-demo.jpg
 tags:
   - java
   - spring
@@ -14,7 +14,7 @@ tags:
 
 MCP (Model Context Protocol) is becoming an important primitive in the AI tooling landscape. It gives an LLM structured access to external systems through an agent. If you want to support this protocol from a Java application and make it available to AI assistants like GitHub Copilot or Claude Desktop, MCP is the protocol to know.
 
-Spring AI has had MCP support since the 1.0.0-M4 milestone release and wraps the [MCP Java SDK](https://modelcontextprotocol.io/sdk/java/mcp-overview) with Boot starters and annotation-based configuration that feel natural to Spring developers.
+Spring AI introduced MCP early. It wraps the [MCP Java SDK](https://modelcontextprotocol.io/sdk/java/mcp-overview) with Boot starters and annotation-based configuration that feel natural to Spring developers. This article references the latest available version of `2.0.0-M4`.
 
 ## What MCP gives you
 
@@ -50,6 +50,7 @@ Spring AI provides Boot starters for both MCP clients and servers. For building 
 <dependency>
     <groupId>org.springframework.ai</groupId>
     <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+    <version>2.0.0-M4</version>
 </dependency>
 ```
 
