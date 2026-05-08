@@ -66,20 +66,40 @@ Expectations:
 - Explicit trade-offs.
 - Minimal abstraction.
 
-### Register 2: AI Journey Journal
+### Register 2: AI Journal and Retrospective
 
-Use for reflective posts about workflow experiments and tooling habits.
+Use for reflective posts about workflow experiments and tooling habits, including monthly or quarterly retrospectives.
 
 Expectations:
-- Personal perspective is allowed.
-- Keep conclusions proportional to evidence.
-- Focus on what changed and what remains unresolved.
+- Personal perspective is central and can be exploratory, but claims should stay proportional to evidence.
+- Choose scope intentionally: either one primary experiment/decision/workflow change, or a period roundup that synthesizes multiple threads.
+- For period roundups, set a clear period lens early and synthesize 2-3 recurring themes across sections.
+- Use concrete evidence from observed behavior: workflow friction, feature boundaries, outcomes from repeated use, and integration constraints.
+- Evaluate tools with a stable pattern: what it does, what worked, where it breaks in your context, and whether you will revisit it.
+- Keep claims grounded in direct usage and link to sources when referencing external ideas.
+- Include curation when useful (for example, related posts and selected external links) to map the period.
+- End with the next open question or unresolved point, not a generic summary paragraph.
 
 ### Cross-Register Constants
 
 Always keep direct tone, practical detail, balanced judgement, and low filler.
 
 In all registers, prefer paragraphs over lists unless sequence, ranking, or grouped reference genuinely matters.
+
+## Retrospective Structure Guidance
+
+When drafting retrospective posts, use this as the default shape unless there is a reason to deviate:
+
+1. Period framing: one short orienting paragraph that explains the month and why these notes are useful.
+2. Main themes: 2-4 sections covering what changed in practice.
+3. Tool evaluations: balanced assessment of tools used during the period.
+4. Related writing: short section linking to your own posts from that period.
+5. Curated links: external links with one line of why each link matters.
+6. Next question: one concrete unresolved problem to carry into the next period.
+
+For retrospective introductions, one brief orientation paragraph is acceptable before the main substance if it establishes period, scope, and audience value.
+
+For retrospectives, "evidence-first" does not require code snippets. Valid evidence includes repeatable workflow details, concrete product behavior, and constraints encountered in real use.
 
 ## Channel Notes
 
