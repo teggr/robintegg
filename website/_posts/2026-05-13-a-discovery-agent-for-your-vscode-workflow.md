@@ -2,7 +2,7 @@
 layout: post
 title: "A Discovery Agent for Your VSCode Workflow"
 date: "2026-05-13"
-image: /images/agents-prompts-skills.png
+image: /images/discovery-agent.png
 tags:
   - ai
   - vscode
@@ -23,7 +23,7 @@ I built a custom VSCode agent for this and published it as a gist.
 
 [gist.github.com/teggr/9e7cf87f41c9112d0cd0cafbb56dc6c3](https://gist.github.com/teggr/9e7cf87f41c9112d0cd0cafbb56dc6c3)
 
-The agent is called Discovery. Its sole responsibility is investigation, not planning and not implementation. It is deliberately read-only except for a session memory file it maintains at `/memories/session/discovery.md`. If you catch it trying to edit source files, that is a signal it has gone off track.
+The agent is called Discovery. Its sole responsibility is investigation, not planning and not implementation. It maintains at `/memories/session/discovery.md`. It has no access to editing but has execution which helps replicate issues.
 
 The agent moves through five phases iteratively:
 
