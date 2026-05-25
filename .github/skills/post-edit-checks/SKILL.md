@@ -3,11 +3,31 @@ name: post-edit-checks
 description: Performs checks on new or edited blog post content to ensure quality and consistency of front matter.
 ---
 
-This skill performs checks on new or edited blog post content to ensure that the front matter adheres to specified quality and consistency standards. It verifies the presence of required fields, checks for valid data types, and ensures that values fall within acceptable ranges. The skill can be configured to enforce specific rules based on the content type and can provide detailed feedback on any issues found during the checks.
+This skill performs review checks on new or edited blog post content before it is finalized. It verifies front matter quality and consistency, and it also acts as the final review checklist for post readiness.
 
 **Always run this skill after creating or editing a blog post**, including when creating a new post from a GitHub issue or agent task.
 
-* Check that the images referenced in the front matter exist in the static image folder - `website/_static/images`.
+Checks include:
+- Check that the `image:` field is present in the front matter.
+- Check that the images referenced in the front matter exist in the static image folder - `website/_static/images`.
+- Check that file naming and front matter are complete and valid.
+- Check that code examples, links, and markdown formatting meet the post requirements.
+
+## Review Checklist
+
+Before finalizing a blog post, verify:
+- [ ] File name follows `YYYY-MM-DD-title-slug.md` pattern.
+- [ ] YAML front matter is complete and valid.
+- [ ] Title is descriptive and clear.
+- [ ] Date is correct in `YYYY-MM-DD` format.
+- [ ] Tags are relevant and match existing tag conventions.
+- [ ] `image:` field is present in the front matter.
+- [ ] Code examples are complete and working.
+- [ ] Code blocks have appropriate language identifiers.
+- [ ] Images use `{{site.baseurl}}/images/` path.
+- [ ] Content leads with practical code examples.
+- [ ] Links to external resources are included.
+- [ ] Markdown formatting is consistent.
 
 ## Scripts
 
