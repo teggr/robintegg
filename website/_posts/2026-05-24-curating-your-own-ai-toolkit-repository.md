@@ -3,7 +3,7 @@ layout: post
 title: "Curating Your Own AI Toolkit Repository"
 date: "2026-05-24"
 description: "Why I created ai-toolkit to manage prompts, agents, skills, and instructions, and how a published catalog plus JBang installer helps me start faster."
-image: /images/ai-toolkit-screenshot.gif
+image: /images/ai-toolkit-post.png
 tags:
   - ai
   - github copilot
