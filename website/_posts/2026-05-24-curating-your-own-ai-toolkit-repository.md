@@ -15,7 +15,7 @@ tags:
 
 I wanted one place to manage the Copilot resources I keep reusing across projects: prompts, agents, skills, and custom instructions. Local folders were starting to drift, and setup for a new repository became too manual.
 
-So I put everything into a dedicated repository: [ai-toolkit](https://github.com/teggr/ai-toolkit), and published it at [teggr.github.io/ai-toolkit](https://teggr.github.io/ai-toolkit/).
+So I've started to put everything into a dedicated repository: [ai-toolkit](https://github.com/teggr/ai-toolkit), and published it at [teggr.github.io/ai-toolkit](https://teggr.github.io/ai-toolkit/).
 
 ![ai-toolkit published site screenshot]({{site.baseurl}}/images/ai-toolkit-screenshot.gif)
 
@@ -34,7 +34,7 @@ That structure matters when you are iterating on agent workflows. I can version 
 
 ## Why I added a JBang installer
 
-I wanted startup friction close to zero, especially when testing new ideas in fresh repositories. The `AiToolkit.java` script gives me a simple install flow:
+In order to reduce the effort in starting a new repo, especially when testing new ideas in fresh repositories. The `AiToolkit.java` script gives me a simple install flow:
 
 ```bash
 jbang https://raw.githubusercontent.com/teggr/ai-toolkit/main/AiToolkit.java list
@@ -49,7 +49,7 @@ A private local collection is useful, but publishing the catalog gives me two pr
 
 First, I get a single place to browse and share what I have built. The published site makes discovery easier than digging through local paths.
 
-Second, it keeps me honest about cloud constraints. Globally installed local skills are not available to cloud agents, so depending on local-only setup can produce inconsistent results between local and cloud runs. Keeping resources curated in a repository makes that gap visible and easier to manage.
+Second, it keeps me honest about cloud constraints. I currently share my resources across projects using globally installed local skills. However, these are not available to cloud agents, so depending on local-only setup can produce inconsistent results between local and cloud runs. This new approach means I can easily install per repo and rather than use the global approach.
 
 ## Where this helps most
 
