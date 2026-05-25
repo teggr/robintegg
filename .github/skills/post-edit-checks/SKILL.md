@@ -1,9 +1,11 @@
 ---
 name: post-edit-checks
-description: Performs review checks on edited website content to ensure quality, consistency of front matter, and final post readiness.
+description: Performs checks on new or edited blog post content to ensure quality and consistency of front matter.
 ---
 
-This skill performs review checks on edited website content before it is finalized. It verifies front matter quality and consistency, and it also acts as the final review checklist for post readiness.
+This skill performs review checks on new or edited blog post content before it is finalized. It verifies front matter quality and consistency, and it also acts as the final review checklist for post readiness.
+
+**Always run this skill after creating or editing a blog post**, including when creating a new post from a GitHub issue or agent task.
 
 Checks include:
 - Check that the `image:` field is present in the front matter.

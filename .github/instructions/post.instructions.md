@@ -132,9 +132,14 @@ spring.profiles.active=local
 - Include screenshots when showing UI or visual output
 
 ## Images and Assets
-Images should be referenced using the following format:
+Inline images in the post body should be referenced using the `{{site.baseurl}}` prefix to ensure links work both locally and when deployed:
 ```markdown
 ![Image description]({{site.baseurl}}/images/image-name.png)
+```
+
+The YAML front matter `image:` field (used for og:image and page thumbnails) uses the `/images/` path directly:
+```yaml
+image: /images/image-name.png
 ```
 
 Images are stored in `website/_static/images/` and referenced as `/images/` in markdown.

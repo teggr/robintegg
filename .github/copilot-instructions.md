@@ -113,7 +113,7 @@ jwebserver
 - Use YAML front matter for metadata (layout, title, date, tags, etc.)
 - Follow existing front matter patterns in _posts/, _books/, _podcasts/
 - Date format: `YYYY-MM-DD`
-- Images should reference `/images/` path
+- Images should reference `{{site.baseurl}}/images/` path when used as inline links in post body (e.g., `![alt]({{site.baseurl}}/images/foo.png)`); the YAML front matter `image:` field uses `/images/` path directly
 - Avoid using the em dash character (`—`) as a clause separator in prose; prefer commas, parentheses, colons, or sentence breaks for smoother flow.
 
 ### Testing
