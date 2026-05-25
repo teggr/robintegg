@@ -28,7 +28,7 @@ Use first person when sharing experience or judgement. Personal experience is us
 
 Write like a sharp human, not a language model. Use contractions naturally.
 
-Keep paragraphs short, default 1-2 sentences and never more than 3.
+Keep paragraphs short, default 1-3 sentences and never more than 5.
 
 Get to the point. Skip throat-clearing and preamble.
 
@@ -56,7 +56,7 @@ Get to the point. Skip throat-clearing and preamble.
 
 ## Formatting Defaults
 
-- Short paragraphs, 1-2 sentences by default, 3 max.
+- Short paragraphs, 1-3 sentences by default, 5 max.
 - Use digits for numbers.
 - Use contractions by default.
 - Bold sparingly, only for key points.
@@ -130,18 +130,6 @@ Remove these patterns before finalizing:
 - Code blocks dropped in without context or explanation.
 - Mechanical transition words used as section glue.
 - Contrived rhetorical framing to force tension.
-
-## Voice Sample Inputs
-
-When available, learn from the user's own writing samples to calibrate rhythm, phrasing, and tone.
-
-Prefer samples from:
-- Long-form Google Docs where the author is explaining real work.
-- Reports, proposals, or emails with substantive technical explanation.
-- Thoughtful long Slack messages.
-- Older blog posts, memos, and pre-AI writing.
-
-Pre-AI writing is especially valuable because it captures native voice before model mimicry drift.
 
 ## Audience Adaptation
 
