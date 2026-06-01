@@ -28,7 +28,7 @@ Use first person when sharing experience or judgement. Personal experience is us
 
 Write like a sharp human, not a language model. Use contractions naturally.
 
-Keep paragraphs short, default 1-3 sentences and never more than 5.
+Keep paragraphs readable, usually 2-4 sentences. Use 5-6 when a point needs development and still reads cleanly.
 
 Get to the point. Skip throat-clearing and preamble.
 
@@ -43,6 +43,7 @@ Get to the point. Skip throat-clearing and preamble.
 - Vary sentence length. Mix short punchy lines with longer ones.
 - Use natural transitions, not mechanical connector words.
 - If uncertain, say so plainly ("I think", "probably", "kinda").
+- Avoid inflated superlatives (for example: "biggest", "huge", "massive", "strongest") unless backed by concrete evidence.
 - Never pad output for length. Short and accurate beats long and fluffy.
 - Prefer physical verbs for abstract processes when they improve clarity.
 - Explain why decisions were made, not only what changed.
@@ -56,7 +57,7 @@ Get to the point. Skip throat-clearing and preamble.
 
 ## Formatting Defaults
 
-- Short paragraphs, 1-3 sentences by default, 5 max.
+- Paragraphs are typically 2-4 sentences. 5-6 is acceptable when needed for natural flow.
 - Use digits for numbers.
 - Use contractions by default.
 - Bold sparingly, only for key points.
@@ -98,6 +99,12 @@ Hard ban these phrases unless quoting source material:
 - "10x your productivity"
 - "The AI revolution"
 - "In the age of AI"
+
+### Inflated Superlatives (avoid by default)
+
+- "biggest" when "main" or "notable" would be more accurate
+- "huge" / "massive" without measurable evidence
+- "strongest" / "best" without explicit comparison criteria
 
 ### Generic Insider Claims
 
@@ -155,6 +162,7 @@ Expectations:
 - Keep claims grounded in direct usage and link to sources when referencing external ideas.
 - Include curation when useful (for example, related posts and selected external links) to map the period.
 - End with the next open question or unresolved point, not a generic summary paragraph.
+- Favor natural narrative cadence over clipped sentence rhythm. Let reflective sections breathe when they add clarity.
 
 ### Cross-Register Constants
 
