@@ -3,7 +3,7 @@ layout: post
 title: "May 2026 AI Retrospective"
 date: "2026-06-01"
 description: "Discovery-first workflows, toolkit curation, and where orchestration still breaks for me in May 2026."
-image: /images/ai-retrospective-apr-2026.jpg
+image: /images/ai-retrospective-may-2026.jpg
 tags:
   - ai
   - retrospective
