@@ -5,17 +5,19 @@ description: Performs checks on new or edited blog post content to ensure qualit
 
 This skill performs review checks on new or edited blog post content before it is finalized. It verifies front matter quality and consistency, and it also acts as the final review checklist for post readiness.
 
-**Always run this skill after creating or editing a blog post**, including when creating a new post from a GitHub issue or agent task.
+Always run this skill after creating or editing a blog post, including when creating a new post from a GitHub issue or agent task.
 
-Checks include:
+## Checks
+
 - Check that the `image:` field is present in the front matter.
-- Check that the images referenced in the front matter exist in the static image folder - `website/_static/images`.
+- Check that the images referenced in the front matter exist in the static image folder, `_static/images`.
 - Check that file naming and front matter are complete and valid.
 - Check that code examples, links, and markdown formatting meet the post requirements.
 
 ## Review Checklist
 
 Before finalizing a blog post, verify:
+
 - [ ] File name follows `YYYY-MM-DD-title-slug.md` pattern.
 - [ ] YAML front matter is complete and valid.
 - [ ] Title is descriptive and clear.
@@ -33,15 +35,17 @@ Before finalizing a blog post, verify:
 
 ### check-front-matter-images.ps1
 
-Scans all content files in `website/_posts` and `website/_podcasts` directories and verifies that any images referenced in the YAML front matter (via the `image:` field) exist in the `website/_static/images` directory.
+Scans all content files in `_posts` and `_podcasts` directories and verifies that any images referenced in the YAML front matter (via the `image:` field) exist in the `_static/images` directory.
 
 **Usage:**
+
 ```powershell
 # Run from repository root directory
 .\.github\skills\post-edit-checks\scripts\check-front-matter-images.ps1
 ```
 
 **Output:**
+
 - Summary of total files scanned
-- List of missing images (if any)
+- List of missing images, if any
 - Count of valid image references

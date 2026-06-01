@@ -1,16 +1,16 @@
 ---
 name: voice-skill
-description: Use this skill when creating or editing markdown content in website/_posts, website/_books, website/_podcasts, website/_drafts, or website/_feeds. Applies Robin Tegg writing voice, anti-filler rules, and balanced technical style.
+description: Use this skill when creating or editing markdown content in _posts, _books, _podcasts, _drafts, or _feeds. Applies Robin Tegg writing voice, anti-filler rules, and balanced technical style.
 ---
 
 # Robin Tegg Writing Voice
 
 Use this skill only for markdown content in:
-- website/_posts/
-- website/_books/
-- website/_podcasts/
-- website/_drafts/
-- website/_feeds/
+- _posts/
+- _books/
+- _podcasts/
+- _drafts/
+- _feeds/
 
 Do not use this skill for code, build scripts, Java classes, or non-content documentation.
 

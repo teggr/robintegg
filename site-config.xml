@@ -9,6 +9,7 @@
     <email>robin@tegg.me.uk</email>
     <!-- use \-\-local for localhost:8000 -->
     <baseUrl>https://robintegg.com</baseUrl>
+    <theme>v2</theme>
     <!-- socials -->
     <twitterUsername>robintegg</twitterUsername>
     <githubUsername>teggr</githubUsername>
