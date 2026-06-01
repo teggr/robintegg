@@ -33,14 +33,14 @@ robintegg/
 Run the site build from the repository root:
 
 ```bash
-jbang --fresh run.electrostatic:electrostatic-cli:0.0.1-SNAPSHOT build --base-url=http://localhost:8080
-jbang --fresh run.electrostatic:electrostatic-cli:0.0.1-SNAPSHOT serve --base-url=http://localhost:8080
+jbang --fresh site.electrostatic:electrostatic-cli:0.0.1 build --base-url=http://localhost:8080
+jbang --fresh site.electrostatic:electrostatic-cli:0.0.1 serve --base-url=http://localhost:8080
 ```
 
 Use the production build for deployment checks:
 
 ```bash
-jbang --fresh run.electrostatic:electrostatic-cli:0.0.1-SNAPSHOT build
+jbang --fresh site.electrostatic:electrostatic-cli:0.0.1 build
 ```
 
 The generated site is written to `generated-site/`.

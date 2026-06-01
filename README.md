@@ -9,12 +9,12 @@ Uses [electrostatic](https://github.com/teggr/electrostatic) for building and de
 ## Local Development
 
 ```
-jbang --fresh run.electrostatic:electrostatic-cli:0.0.1-SNAPSHOT build --base-url=http://localhost:8080
-jbang --fresh run.electrostatic:electrostatic-cli:0.0.1-SNAPSHOT serve --base-url=http://localhost:8080
+jbang --fresh site.electrostatic:electrostatic-cli:0.0.1 build --base-url=http://localhost:8080
+jbang --fresh site.electrostatic:electrostatic-cli:0.0.1 serve --base-url=http://localhost:8080
 ```
 
 ## Publishing
 
 ```
-jbang --fresh run.electrostatic:electrostatic-cli:0.0.1-SNAPSHOT build
+jbang --fresh site.electrostatic:electrostatic-cli:0.0.1 build
 ```
