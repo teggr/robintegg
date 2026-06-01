@@ -1,8 +1,8 @@
 # Script to check that images referenced in front matter exist in the static images folder
 # Usage: Run from repository root directory
 
-$contentFiles = Get-ChildItem -Path "website\_posts","website\_podcasts" -Filter "*.md" -Recurse -ErrorAction SilentlyContinue
-$imageDir = "website\_static\images"
+$contentFiles = Get-ChildItem -Path "_posts","_podcasts" -Filter "*.md" -Recurse -ErrorAction SilentlyContinue
+$imageDir = "_static\images"
 $missingImages = @()
 $validImages = @()
 

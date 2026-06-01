@@ -2,199 +2,113 @@
 
 ## Project Overview
 
-This is a personal website and blog for Robin Tegg (https://www.robintegg.com), built using a custom Java-based static site generator. The project generates static HTML from Markdown content files (posts, books, podcasts) and deploys to Netlify.
+This is Robin Tegg's personal website and blog. The repo is content-first: Markdown content, static assets, and an Electrostatic build launched through JBang.
 
 ## Technology Stack
 
-- **Language**: Java 17
-- **Build Tool**: Apache Maven 3.9+
-- **HTML Generation**: j2html library for programmatic HTML generation
-- **Markdown Processing**: CommonMark with YAML front matter support
-- **Logging**: SLF4J with simple implementation
-- **Testing**: JUnit 5 (Jupiter)
-- **Utilities**: Apache Commons Lang3, Jackson for JSON/XML
-- **Deployment**: Netlify via GitHub Actions
+- Markdown with YAML front matter
+- Electrostatic CLI via JBang
+- Java 21 build environment
+- Netlify deployment via GitHub Actions
 
 ## Project Structure
 
-The project is a multi-module Maven project with the following structure:
+The repository root is the site workspace.
 
 ```
 robintegg/
-├── generate-plugin/     # Core website generation engine
-│   ├── src/main/java/com/robintegg/web/
-│   │   ├── engine/      # Website builder and content model
-│   │   ├── theme/       # Theme rendering and plugins
-│   │   ├── content/     # Content type plugins (posts, books, podcasts)
-│   │   ├── feed/        # RSS/Atom feed generation
-│   │   ├── pages/       # Page generators (index, tags, categories)
-│   │   └── utils/       # Utility classes
-│   └── src/test/        # Unit tests
-├── workflows/           # Raindrop.io integration for bookmarks
-├── website/             # Website content and build entry point
-│   ├── _posts/          # Blog post markdown files
-│   ├── _books/          # Book review markdown files
-│   ├── _podcasts/       # Podcast episode markdown files
-│   ├── _drafts/         # Draft content (excluded by default)
-│   ├── _static/         # Static assets
-│   └── src/main/java/   # Build.java main entry point
-└── pom.xml              # Parent POM
+├── _posts/            # Blog posts
+├── _books/            # Book content
+├── _podcasts/         # Podcast content
+├── _drafts/           # Draft content
+├── _feeds/            # Feed source definitions
+├── _static/           # Static assets and images
+├── generated-site/    # Build output
+├── site-config.xml    # Site configuration
+└── .github/workflows/ # CI/CD workflow
 ```
 
-## Architecture and Design
+## Build And Serve
 
-### Content Model
-- The website builder loads content from markdown files with YAML front matter
-- Content types (posts, books, podcasts) are processed by type-specific plugins
-- The content model aggregates items and builds indexes, tag pages, and category pages
-- Content is rendered using j2html for type-safe HTML generation
+Run the site build from the repository root:
 
-### Plugin System
-- **Content Type Plugins**: Define how different content types are loaded and processed
-- **Aggregator Plugins**: Build derived models (tags, categories) from content
-- **Render Plugins**: Define how content types are rendered to HTML
-- **Theme Plugin**: Provides layouts, includes, and page templates
-
-### Visitor Pattern
-- `ContentModelVisitor` provides a common interface for traversing the content model
-- Separates content structure from rendering logic
-
-## Building and Testing
-
-### Build the project
 ```bash
-mvn clean install
+jbang --fresh run.electrostatic:electrostatic-cli:0.0.1-SNAPSHOT build --base-url=http://localhost:8080
+jbang --fresh run.electrostatic:electrostatic-cli:0.0.1-SNAPSHOT serve --base-url=http://localhost:8080
 ```
 
-### Run tests only
+Use the production build for deployment checks:
+
 ```bash
-mvn clean test
+jbang --fresh run.electrostatic:electrostatic-cli:0.0.1-SNAPSHOT build
 ```
 
-### Build the website
-```bash
-# Build with production settings
-mvn --batch-mode -P prod clean test exec:java
+The generated site is written to `generated-site/`.
 
-# Build with local settings
-mvn clean test exec:java
-```
+## Content Rules
 
-### System Properties
-- `environment=local|production` - Target environment for built site
-- `drafts=false|true` - Include posts in _drafts folder
-- `workingDirectory=<path>` - Directory containing content (defaults to current directory)
+- Use YAML front matter for every post, book, and podcast entry.
+- Keep post file names in the format `YYYY-MM-DD-title-slug.md`.
+- Use `/images/...` in front matter `image:` fields.
+- Use `{{site.baseurl}}/images/...` for inline image references in Markdown.
+- Prefer concrete examples, commands, and code blocks in technical posts.
+- Avoid the em dash character (`—`) in prose unless it is clearly necessary.
 
-### Output
-Generated site is built to: `website/target/site/`
+## Markdown And Post Editing
 
-### Local Testing
-After building, serve the site locally:
-```bash
-cd website/target/site
-jwebserver
-# Or use: python3 -m http.server 8000
-```
+- Blog post content lives in `_posts/`.
+- Book content lives in `_books/`.
+- Podcast content lives in `_podcasts/`.
+- Drafts live in `_drafts/`.
+- Static images live in `_static/images/`.
 
-## Code Style and Conventions
+When editing Markdown content, follow the voice and post-quality guidance in:
 
-### Java Conventions
-- Use **Lombok** annotations for boilerplate reduction (@Slf4j, @Data, @Builder, etc.)
-- Follow Java naming conventions (camelCase for methods, PascalCase for classes)
-- Use meaningful variable and method names
-- Keep methods focused and single-purpose
+- `.github/skills/voice-skill/SKILL.md`
+- `.github/skills/post-edit-checks/SKILL.md`
 
-### HTML Generation
-- Use **j2html** fluent API for HTML generation
-- Prefer type-safe j2html over string templates
-- Build HTML programmatically in Java code
-
-### Markdown Content
-- Use YAML front matter for metadata (layout, title, date, tags, etc.)
-- Follow existing front matter patterns in _posts/, _books/, _podcasts/
-- Date format: `YYYY-MM-DD`
-- Images should reference `{{site.baseurl}}/images/` path when used as inline links in post body (e.g., `![alt]({{site.baseurl}}/images/foo.png)`); the YAML front matter `image:` field uses `/images/` path directly
-- Avoid using the em dash character (`—`) as a clause separator in prose; prefer commas, parentheses, colons, or sentence breaks for smoother flow.
-
-### Testing
-- Write unit tests for core logic and utilities
-- Place tests in corresponding package under `src/test/`
-- Use JUnit 5 assertions and annotations
-- Test file naming: `*Test.java`
-
-## Common Development Tasks
+## Common Tasks
 
 ### Adding a New Blog Post
-1. Create a new markdown file in `website/_posts/` with naming: `YYYY-MM-DD-title-slug.md`
-2. Add YAML front matter with required fields:
-   ```yaml
-   ---
-   layout: post
-   title: "Your Post Title"
-   date: "YYYY-MM-DD"
-   image: /images/your-image.jpg
-   tags:
-     - tag1
-     - tag2
-   ---
-   ```
-3. Write content in Markdown below the front matter
-4. Build and test locally before committing
+1. Create a file in `_posts/` using the `YYYY-MM-DD-title-slug.md` naming pattern.
+2. Add front matter with at least `layout`, `title`, and `date`.
+3. Add an `image:` field if the post has a featured image.
+4. Write the article body in Markdown below the front matter.
+5. Build or preview locally with the JBang command above.
 
-### Adding a New Content Type
-1. Create a content model class in `generate-plugin/src/main/java/com/robintegg/web/content/`
-2. Implement a content type plugin that extends base plugin classes
-3. Add rendering logic in the theme plugin
-4. Register the plugin in the WebSiteBuilder
-5. Add tests for the new content type
+### Updating Site Configuration
+1. Edit `site-config.xml` when site configuration changes.
+2. Keep build-related changes aligned with the JBang/Electrostatic workflow.
+3. Confirm the generated output still appears correctly in `generated-site/`.
 
-### Modifying the Theme
-1. Theme code is in `generate-plugin/src/main/java/com/robintegg/web/theme/`
-2. Layouts and includes are defined as j2html components
-3. Update `DefaultThemePlugin.java` to modify site-wide styling or structure
-4. Test changes by rebuilding the website
+### Working With Images
+1. Store image files in `_static/images/`.
+2. Reference them from front matter with `/images/<file>`.
+3. Reference them in post bodies with `{{site.baseurl}}/images/<file>`.
 
-### Adding Dependencies
-1. Add Maven dependencies to appropriate module's `pom.xml`
-2. Use consistent versions across modules when possible
-3. Keep dependencies in parent POM when used by multiple modules
-4. Run `mvn clean install` after adding dependencies
+## CI/CD And Deployment
 
-## CI/CD and Deployment
+The GitHub Actions workflow is in `.github/workflows/build-and-deploy.yml`. It checks out the repo, sets up JDK 21, runs the JBang/Electrostatic build, and deploys the `generated-site/` directory to Netlify.
 
-### GitHub Actions Workflow
-- Triggered on push to `master` branch
-- Located at `.github/workflows/build-and-deploy.yml`
-- Steps:
-  1. Checkout code
-  2. Setup JDK 17 (Temurin distribution)
-  3. Build with Maven: `mvn --batch-mode -P prod clean test exec:java`
-  4. Deploy to Netlify using netlify-cli
+## Key Files
 
-### Deployment
-- Site is automatically deployed to Netlify on successful build
-- Production URL: https://www.robintegg.com
-- Netlify configuration uses environment variables for auth and site ID
-
-## Key Files to Know
-
-- `website/src/main/java/com/robintegg/web/Build.java` - Main entry point for building the website
-- `generate-plugin/src/main/java/com/robintegg/web/engine/WebSiteBuilder.java` - Core website building logic
-- `generate-plugin/src/main/java/com/robintegg/web/theme/DefaultThemePlugin.java` - Theme implementation
-- `website/site-config.xml` - Website configuration file
+- `site-config.xml` - Site configuration
+- `_posts/` - Blog posts
+- `_books/` - Book content
+- `_podcasts/` - Podcast content
+- `_static/images/` - Static images used by the site
+- `generated-site/` - Build output
 - `.github/workflows/build-and-deploy.yml` - CI/CD pipeline
 
-## Tips for Contributors
+## Tips For Contributors
 
-1. **Make minimal changes**: This is a personal website, so changes should be surgical and focused
-2. **Test locally**: Always build and preview the site locally before committing
-3. **Follow existing patterns**: Look at existing content and code for conventions
-4. **Keep it simple**: The codebase values simplicity and maintainability over complexity
-5. **Update documentation**: If adding features, document them in the README or this file
+1. Make small, focused changes.
+2. Keep content paths rooted at the repository top level.
+3. Use the JBang command shown above to verify changes locally.
+4. Keep documentation in sync with the actual folder layout.
 
 ## References
 
-- j2html Documentation: https://j2html.com/
-- CommonMark Specification: https://commonmark.org/
-- Maven Documentation: https://maven.apache.org/guides/
-- Lombok Documentation: https://projectlombok.org/
+- Electrostatic: https://github.com/teggr/electrostatic
+- JBang: https://www.jbang.dev/
+- Netlify: https://www.netlify.com/

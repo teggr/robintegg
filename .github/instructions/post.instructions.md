@@ -1,19 +1,22 @@
 ---
-applyTo: "website/_posts/**"
+applyTo: "_posts/**"
 ---
 
 # Copilot Instructions for Blog Posts
 
 ## Scope
-This file provides instructions for creating and editing blog post files in the `website/_posts/` directory.
+
+This file provides instructions for creating and editing blog post files in the `_posts/` directory.
 
 ## Voice
 
 Use `.github/skills/voice-skill/SKILL.md` for voice, tone, anti-filler, and audience guidance when writing or editing posts.
 
 ## File Naming Convention
+
 Blog post files must follow this naming pattern:
-```
+
+```text
 YYYY-MM-DD-title-slug.md
 ```
 
@@ -23,9 +26,11 @@ Examples:
 - `2019-02-09-testing-spring-boot-applications-with-testcontainers.md`
 
 ## YAML Front Matter
-Every blog post must start with YAML front matter enclosed in `---` markers. Required and optional fields:
+
+Every blog post must start with YAML front matter enclosed in `---` markers.
 
 ### Required Fields
+
 ```yaml
 ---
 layout: post
@@ -35,6 +40,7 @@ date: "YYYY-MM-DD"
 ```
 
 ### Optional Fields
+
 ```yaml
 image: /images/your-image.jpg
 tags:
@@ -47,6 +53,7 @@ category: reading-list
 ### Front Matter Examples
 
 **Standard technical post:**
+
 ```yaml
 ---
 layout: post
@@ -63,6 +70,7 @@ tags:
 ```
 
 **Reading list post:**
+
 ```yaml
 ---
 title: Reading list for July 2021
@@ -74,23 +82,24 @@ date: "2021-07-05"
 
 ## Post Structure
 
-- Start with a brief introduction that explains what the post covers. The most important part of the introduction is the WHY should the reader continue reading.
-- Use clear section headings (##, ###) to organize content
-- Lead with practical examples and working code
-- Explain the "why" behind technical decisions
-- End with references, next steps, or related resources
+- Start with a brief introduction that explains what the post covers.
+- Use clear section headings (`##`, `###`) to organize content.
+- Lead with practical examples and working code.
+- Explain the why behind technical decisions.
+- End with references, next steps, or related resources.
 
 ## Code-First Structure
 
-Blog posts should be rich with code examples that demonstrate concepts in action:
+Blog posts should be rich with code examples that demonstrate concepts in action.
 
-1. **Show the implementation**: Include actual code snippets that readers can understand and use.
-2. **Use runnable examples where possible**: Prefer complete methods, classes, commands, or configuration.
-3. **Include setup details when required**: Show Maven/Gradle dependencies, configuration, or setup code when needed to make the example usable.
-4. **Demonstrate practical usage**: Use realistic examples from actual projects or workflows.
-5. **Add context around examples**: Explain what the code does and why it matters.
+1. Show the implementation with actual code snippets.
+2. Use runnable examples where possible.
+3. Include setup details when required.
+4. Demonstrate practical usage with realistic examples.
+5. Add context around examples.
 
 ## Code Block Formatting
+
 Use fenced code blocks with language identifiers:
 
 ```java
@@ -124,71 +133,18 @@ spring.profiles.active=local
 ```
 
 ## Structural Expectations
-- Start with a brief introduction that explains what the post covers
-- Include working code examples that demonstrate the concept
-- Include links to official documentation and resources
-- Include practical use cases and scenarios
-- Include step-by-step instructions when appropriate
-- Include screenshots when showing UI or visual output
 
-## Images and Assets
-Inline images in the post body should be referenced using the `{{site.baseurl}}` prefix to ensure links work both locally and when deployed:
-```markdown
-![Image description]({{site.baseurl}}/images/image-name.png)
-```
-
-The YAML front matter `image:` field (used for og:image and page thumbnails) uses the `/images/` path directly:
-```yaml
-image: /images/image-name.png
-```
-
-Images are stored in `website/_static/images/` and referenced as `/images/` in markdown.
-
-## Common Content Patterns
-
-### Tutorial/How-To Posts
-```markdown
-Brief intro explaining what you'll build/learn
-
-## Getting Started
-Setup instructions with code
-
-## Implementation
-Step-by-step with code examples
-
-## Testing
-How to verify it works
-
-## References
-Links to documentation and related resources
-```
-
-### Technical Explanation Posts
-```markdown
-Brief intro explaining the topic
-
-## What is X?
-Clear explanation with context
-
-## How it Works
-Technical details with code examples
-
-## Practical Usage
-Real-world examples
-
-## Notes and Considerations
-Edge cases, gotchas, best practices
-```
-
-### Reading List Posts
-```markdown
-Simple list of links with titles:
-* [Article Title](url)
-* [Another Article](url)
-```
+- Start with a brief introduction that explains what the post covers.
+- Include working code examples that demonstrate the concept.
+- Include links to official documentation and resources.
+- Include practical use cases and scenarios.
+- Include step-by-step instructions when appropriate.
+- Include screenshots when showing UI or visual output.
 
 ## Series Posts
+
 When writing a series of related posts, link between them:
+
 ```markdown
 This is the first of a short series of posts:
 - Part One - Data access layer integration tests
@@ -199,47 +155,68 @@ This is the first of a short series of posts:
 ## Code Examples Best Practices
 
 ### Java Code
-- Show imports when relevant to understanding
-- Include complete method signatures
-- Use meaningful variable names
-- Add brief comments only when necessary for clarity
-- Show both interface and implementation when relevant
+- Show imports when relevant to understanding.
+- Include complete method signatures.
+- Use meaningful variable names.
+- Add brief comments only when necessary for clarity.
+- Show both interface and implementation when relevant.
 
 ### Configuration Examples
-- Show complete configuration files when possible
-- Highlight the important parts
-- Explain what each section does
+- Show complete configuration files when possible.
+- Highlight the important parts.
+- Explain what each section does.
 
 ### Command-Line Examples
-- Show full commands that can be copied and run
-- Include expected output when helpful
-- Show the working directory context when needed
+- Show full commands that can be copied and run.
+- Include expected output when helpful.
+- Show the working directory context when needed.
 
-### Maven/Gradle Dependencies
-- Always show the full dependency declaration
-- Include version numbers
-- Mention compatibility notes if relevant
+### Dependency Examples
+- Always show the full dependency declaration.
+- Include version numbers.
+- Mention compatibility notes if relevant.
 
 ## Internal Links
+
 Link to other posts using relative paths:
+
 ```markdown
 [previous post](/2023/06/19/j2html-static-site-generator)
 ```
 
 ## External Links
+
 Link to official documentation and authoritative sources:
+
 ```markdown
 [Spring Boot Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/)
 [GitHub Repository](https://github.com/user/repo)
 ```
 
 ## Markdown Style
-- Use ATX-style headers (`##`, `###`) not underline style
-- Use fenced code blocks (```) not indented code blocks
-- Leave blank lines around headers and code blocks
-- Use `**bold**` for emphasis, not `__bold__`
-- Use `-` for unordered lists, not `*` or `+`
+
+- Use ATX-style headers (`##`, `###`) not underline style.
+- Use fenced code blocks (```) not indented code blocks.
+- Leave blank lines around headers and code blocks.
+- Use `**bold**` for emphasis, not `__bold__`.
+- Use `-` for unordered lists, not `*` or `+`.
 
 ## Final Review
 
 Use `.github/skills/post-edit-checks/SKILL.md` for the final review checklist before finalizing a post.
+
+## Images And Assets
+
+Inline images in the post body should be referenced using the `{{site.baseurl}}` prefix so links work locally and when deployed:
+
+```markdown
+![Image description]({{site.baseurl}}/images/image-name.png)
+```
+
+The YAML front matter `image:` field uses the `/images/` path directly:
+
+```yaml
+image: /images/image-name.png
+```
+
+Images are stored in `_static/images/` and referenced as `/images/` in markdown.
