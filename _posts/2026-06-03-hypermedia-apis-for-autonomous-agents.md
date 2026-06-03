@@ -58,6 +58,33 @@ HAL-FORMS extends HAL by adding templated actions (`_templates`) to a representa
 
 That is useful for an agent because the representation now carries both state and action hints. The client no longer needs to reconstruct the full workflow from static docs plus guesswork.
 
+This is the kind of response shape I want an agent to consume:
+
+```json
+{
+  "_links": {
+    "self": { "href": "/orders/123" },
+    "cancel": { "href": "/orders/123/cancel" }
+  },
+  "status": "CREATED",
+  "_templates": {
+    "cancel": {
+      "method": "POST",
+      "properties": [
+        { "name": "reason", "required": true }
+      ]
+    }
+  }
+}
+```
+
+And this is the corresponding call pattern:
+
+```bash
+curl -H "Accept: application/prs.hal-forms+json" \
+  http://localhost:8080/orders/123
+```
+
 ## What changed in behavior
 
 From the current S1 to S6 directional data, the hypermedia implementation usually showed lower API-call pressure and fewer invalid attempts in the more stateful scenarios.
