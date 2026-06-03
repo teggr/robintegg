@@ -2,8 +2,8 @@
 layout: post
 title: "Hypermedia APIs for Autonomous Agents"
 date: "2026-06-03"
-description: "An extended write-up of the hypermedia API hypothesis for agent workflows, with Spring HATEOAS HAL-FORMS and repo-backed evidence."
-image: /images/spring-ai-mcp-demo.jpg
+description: "An extended write-up of the hypermedia API hypothesis for agent workflows with Spring HATEOAS and HAL-FORMS."
+image: /images/hypermedia-apis-for-agents.jpg
 tags:
   - ai
   - java
@@ -11,21 +11,21 @@ tags:
   - spring hateoas
   - hypermedia
 ---
-Agent tooling has a maintenance problem. We publish wrappers, tool schemas, and skill definitions, then spend time keeping them aligned with the live API. When they drift, the agent starts guessing.
+Agent tooling to access APIs has a maintenance problem. We publish cli wrappers, mcp tools, and skill definitions, then spend time keeping them aligned with the live production HTTP API. Out of sync local clients cause non-deterministic errors and reduces the agent's speed and accuracy.
 
-This post extends the README from [hypermedia-apis-for-autonomous-agents](https://github.com/teggr/hypermedia-apis-for-autonomous-agents) and explains why I think hypermedia is a better default for stateful agent workflows.
+This post walks through an experiment I ran using the [hypermedia-apis-for-autonomous-agents repository](https://github.com/teggr/hypermedia-apis-for-autonomous-agents) to see if agents could understand HTTP APIs better and explains why I think hypermedia is a better default for implementing APIs for stateful agent workflows.
 
-If you want the short version first, read the project README: [Hypermedia APIs for Autonomous Agents](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/blob/main/README.md). The rest of this article adds implementation context and practical boundaries.
+If you want to read more about the experiment, read the project README: [Hypermedia APIs for Autonomous Agents](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/blob/main/README.md). The rest of this article adds implementation context and practical boundaries.
 
 ## The hypothesis
 
 The hypothesis is simple and testable:
 
-1. Raw API usage without discoverable contracts creates the most ambiguity.
-2. OpenAPI improves discoverability and usually improves speed and accuracy.
-3. Hypermedia, especially HAL-FORMS affordances, improves stateful flows further because valid next actions are returned with the current resource state.
+1. Raw HTTP API usage without discoverable contracts creates the most ambiguity.
+2. Adding an OpenAPI spec improves discoverability and usually improves speed and accuracy.
+3. Hypermedia, like HAL-FORMS with it's affordances, improves client understanding, navigation and correctness of stateful flows further because valid next actions are returned with the current resource state.
 
-The key point is not that wrappers are bad. It is that wrappers describe global capability, while hypermedia can describe the context-valid next move right now.
+The key point is not that wrappers are bad. It is that wrappers don't contain all the context, while hypermedia can describe the context-valid next move right now.
 
 ## Why hypermedia is interesting for agents
 
@@ -37,16 +37,9 @@ In practice, this means the server can tell the agent, "here are the actions cur
 
 ## The project and what it compares
 
-The repository is here: [teggr/hypermedia-apis-for-autonomous-agents](https://github.com/teggr/hypermedia-apis-for-autonomous-agents).
+I implemented the same order-management domain in two styles: a conventional endpoint-driven API and a hypermedia API that publishes state-aware affordances. Both implementations exposed equivalent business capabilities so the comparison focused on client behavior, not domain scope.
 
-I implemented the same order-management domain in two styles:
-
-- Conventional API: [`reference-services/conventional-api`](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/tree/main/reference-services/conventional-api)
-- Hypermedia API: [`reference-services/hypermedia-api`](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/tree/main/reference-services/hypermedia-api)
-
-Scenarios S1 to S6 were then exercised via Copilot-driven prompts, with service-side measurements captured before and after each run.
-
-Operational details and run steps are in [`test-plans/experiment-runbook.md`](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/blob/main/test-plans/experiment-runbook.md), and the current manual analysis is in [`test-plans/manual-results`](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/tree/main/test-plans/manual-results).
+I then ran a set of Copilot-driven tasks against both services and measured how each style behaved under realistic workflow pressure. The tests included common order lifecycle operations such as creating an order, adding and updating items, progressing and cancelling orders, and handling invalid transitions. For each run, I captured service-side metrics before and after execution to compare call volume, invalid attempts, and workflow completion behavior.
 
 ## HAL-FORMS in Spring HATEOAS
 
@@ -87,18 +80,9 @@ curl -H "Accept: application/prs.hal-forms+json" \
 
 ## What changed in behavior
 
-From the current S1 to S6 directional data, the hypermedia implementation usually showed lower API-call pressure and fewer invalid attempts in the more stateful scenarios.
+Across the current test runs, the hypermedia implementation generally produced fewer unnecessary API calls and fewer invalid state transitions in multi-step order workflows. In practical terms, when the server published valid next actions from the current resource state, the agent made fewer guess-driven moves and completed flows with less correction overhead.
 
-The conventional implementation was more sensitive to discovery behavior, especially when non-domain calls crept in.
-
-These results are directional, not final proof. Still, they support the architectural intuition: state-aware affordances can reduce transition ambiguity.
-
-If you want to inspect the evidence directly, start with:
-
-- [`summary.md`](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/blob/main/test-plans/manual-results/summary.md)
-- [`metrics-deltas-adjusted.csv`](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/blob/main/test-plans/manual-results/metrics-deltas-adjusted.csv)
-- [`normalization-notes.md`](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/blob/main/test-plans/manual-results/normalization-notes.md)
-- [`verdict-draft.md`](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/blob/main/test-plans/manual-results/verdict-draft.md)
+The conventional implementation was more sensitive to discovery noise and more likely to drift into less relevant calls before converging on the right path. These findings are still directional rather than definitive, but they support the core architectural claim: state-aware affordances appear to reduce transition ambiguity and improve workflow reliability for agent-driven interactions.
 
 ## Where this fits and where it does not
 
@@ -112,11 +96,7 @@ So the practical recommendation for now is:
 - Use hypermedia where state transitions are the main failure mode.
 - Treat wrappers as accelerators, not the primary source of workflow truth.
 
-## What I want to test next
-
-The next step is tighter validation with a larger scenario set and stricter controls around discovery noise. I also want to test mixed strategies, where OpenAPI handles broad discovery and HAL-FORMS handles the stateful transition-heavy segments.
-
-If you're evaluating agent architecture in Java systems, this repo is a good starting point for your own comparison runs:
+If you're evaluating agent use of your APIs, this repo is a good starting point for your own comparison runs:
 
 - [Repository](https://github.com/teggr/hypermedia-apis-for-autonomous-agents)
 - [README](https://github.com/teggr/hypermedia-apis-for-autonomous-agents/blob/main/README.md)
