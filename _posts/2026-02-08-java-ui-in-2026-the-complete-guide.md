@@ -34,7 +34,7 @@ The Java web UI landscape offers diverse approaches to building web applications
 ### Vaadin
 **Status:** Production-ready, Enterprise-focused | **Java:** 17+ (21+ recommended) | **Learning Curve:** Easy | **Last Release:** Vaadin 25
 
-![]({{site.baseurl}}/images/ui-vaadin.png)
+![](/images/ui-vaadin.png)
 
 Vaadin is a server-driven UI framework where you write your entire web interface in Java—no JavaScript required. Components live on the JVM and automatically synchronize with the browser, handling all the client-server communication transparently. Vaadin 25 brings deep Spring Boot 3.x integration, support for Java 25 LTS, and the modern Aura design system for professional UIs out of the box. The framework includes AI-assisted development tools and emphasizes security through server-side rendering, which reduces XSS attack surfaces. Vaadin is used by many large enterprises and excels at enterprise dashboards, internal tools, and line-of-business applications where Java teams want to avoid JavaScript context-switching.
 
@@ -62,7 +62,7 @@ public class HelloVaadin extends VerticalLayout {
 ### Apache Wicket
 **Status:** Production-ready, Mature (since 2004) | **Java:** 17+ (Wicket 10) | **Learning Curve:** Moderate | **Last Release:** Wicket 10.7.0 (Sep 2025)
 
-![]({{site.baseurl}}/images/ui-wicket.png)
+![](/images/ui-wicket.png)
 
 Apache Wicket is a component-oriented web framework that brings Swing-like development to the web. It uses pure Java and HTML markup (no XML), with clean separation between markup and logic. Wicket manages stateful web applications automatically, treating models as opaque POJOs that are serialized between requests. The framework's component hierarchy—Pages, Components, Models—feels familiar to desktop developers and enables significant code reuse through Panels. Wicket 10, built on Java 17, includes Ajax support without writing JavaScript, WebSocket integration, and compatibility with Spring, CDI, and Guice. Widely adopted in enterprise environments, Wicket powers thousands of applications deployed worldwide at governments, banks, and universities, having proven its staying power since surviving the mid-2000s Java web framework wars.
 
@@ -92,7 +92,7 @@ public class HelloWicket extends WebPage {
 ### TeaVM
 **Status:** Production-ready | **Java:** Any (bytecode-based) | **Learning Curve:** Easy | **Last Release:** Active (2025-2026)
 
-![]({{site.baseurl}}/images/ui-teavm.png)
+![](/images/ui-teavm.png)
 
 TeaVM is an ahead-of-time compiler that transpiles Java bytecode to JavaScript or WebAssembly, making it work with any JVM language—Java, Kotlin, Scala, or others. Unlike GWT which works on source code, TeaVM operates on bytecode, giving it broader language support. The framework supports the new WebAssembly GC standard for garbage-collected languages and produces readable, optimized JavaScript without requiring npm, Webpack, or other frontend build tools. TeaVM includes JSO (JavaScript Objects) API for JS interop, DOM module for browser APIs, and sophisticated optimizations like dead code elimination. It's used by WebFX (JavaFX apps in browsers) and various projects where backend Java developers want to target the web without learning the JavaScript ecosystem.
 
@@ -119,7 +119,7 @@ public class HelloTeaVM {
 ### HTMX + Spring Boot
 **Status:** Modern, Very Active | **Java:** 11+ (Spring Boot 2.x+), 17+ (Spring Boot 3.x+) | **Learning Curve:** Easy | **Last Release:** htmx-spring-boot v3.x+
 
-![]({{site.baseurl}}/images/ui-htmx.png)
+![](/images/ui-htmx.png)
 
 HTMX brings hypermedia-driven development to modern web apps by adding AJAX, WebSockets, and Server-Sent Events via HTML attributes—no JavaScript needed. The htmx-spring-boot library from Wim Deblauwe (with contributions from Spring team members like Oliver Drotbohm) provides annotations like `@HxRequest`, `@HxTrigger`, and `@HxRefresh`, along with specialized views for redirects and out-of-band swaps. The Spring ViewComponent library by Thomas Schühly takes this further with component-based architecture similar to React/Vue but entirely server-side, where ViewComponents are Spring-managed beans with dependency injection. This approach combines the simplicity of server-side rendering with the interactivity of modern SPAs, using template engines like Thymeleaf or JTE. It's gaining strong traction in the Spring community for teams who want dynamic interfaces without heavy JavaScript frameworks.
 
@@ -158,7 +158,7 @@ public class HelloController {
 ### j2html
 **Status:** Production-ready | **Java:** 8+ | **Learning Curve:** Easy | **Last Release:** v1.6.0 (June 2022, current stable)
 
-![]({{site.baseurl}}/images/ui-j2html.png)
+![](/images/ui-j2html.png)
 
 j2html is not a template engine—it's a type-safe HTML builder for pure Java code. Using a fluent API, you construct HTML with compile-time safety, eliminating risks of unclosed tags, mistyped attributes, or XSS vulnerabilities through automatic escaping. It's extremely fast (100k renders in under 1 second, roughly 1000x faster than Velocity) and enables dynamic reuse of view code that's difficult with templates. j2html works particularly well with lightweight frameworks like Javalin for building APIs that return HTML fragments or generating dynamic emails and forms. While not suitable for traditional websites with large amounts of static HTML or heavy copy-pasted CSS framework markup, it excels when type safety and Java-centric development are priorities.
 
@@ -191,7 +191,7 @@ public class HelloJ2Html {
 ### PrimeFaces
 **Status:** Production-ready | **Java:** 8+ | **Learning Curve:** Easy | **Use Case:** JavaServer Faces (JSF) applications
 
-![]({{site.baseurl}}/images/ui-primefaces.png)
+![](/images/ui-primefaces.png)
 
 PrimeFaces is the premier UI component library for Jakarta EE's JavaServer Faces framework. It provides over 100 rich, modern components including data tables, charts, dialogs, file uploads, and more—all with responsive design built in. PrimeFaces emphasizes ease of use with minimal configuration and extensive documentation, making it straightforward to build professional enterprise web applications. Backed by PrimeTek, a commercial company that ensures consistent development and support, PrimeFaces has become the de facto standard for teams building JSF applications in the Jakarta EE ecosystem.
 
@@ -219,7 +219,7 @@ public class HelloBean implements Serializable {
 ### Jakarta Faces (formerly JSF)
 **Status:** Production-ready, Enterprise standard | **Java:** 8+ | **Learning Curve:** Moderate | **Maintained By:** Eclipse Foundation
 
-![]({{site.baseurl}}/images/ui-jsf.png)
+![](/images/ui-jsf.png)
 
 Jakarta Faces (the evolution of JavaServer Faces under the Jakarta EE umbrella) is a component-focused web framework deeply integrated with enterprise Java. As part of the Jakarta EE specification, it provides standardized UI component development with server-side state management, event handling, and validation. The framework includes drag-and-drop features in supporting IDEs and works seamlessly with other Jakarta EE technologies like CDI, JPA, and Bean Validation. For teams already invested in the Jakarta EE ecosystem, Faces provides a stable, standardized approach to web UI development with broad vendor support and extensive enterprise tooling.
 
@@ -246,7 +246,7 @@ public class HelloFaces {
 ### Thymeleaf
 **Status:** Production-ready | **Java:** 8+ | **Learning Curve:** Easy | **Use Case:** Server-side template engine for Spring Boot
 
-![]({{site.baseurl}}/images/ui-thymeleaf.png)
+![](/images/ui-thymeleaf.png)
 
 Thymeleaf is a modern server-side template engine that emphasizes natural templating—templates are valid HTML that can be viewed directly in browsers without running the application. This makes collaboration with designers easier since templates aren't filled with non-HTML syntax. Thymeleaf integrates deeply with the Spring ecosystem, particularly Spring Boot, where it's often the default templating choice. The framework supports expression language for accessing model data, fragment inclusion for reusable components, and natural formatting for dates, numbers, and text. For Spring Boot applications needing traditional server-side rendered views with good designer-developer collaboration, Thymeleaf is the standard choice.
 
@@ -281,7 +281,7 @@ The Java desktop landscape in 2026 offers everything from mature, battle-tested 
 ### JavaFX
 **Status:** Production-ready | **Java:** 11+ (17+ recommended) | **Learning Curve:** Moderate | **Last Release:** Ongoing (OpenJFX)
 
-![]({{site.baseurl}}/images/ui-javafx.png)
+![](/images/ui-javafx.png)
 
 JavaFX is the modern standard for Java desktop applications. It provides a rich set of UI controls including tables, trees, charts, media players, and even 3D graphics with hardware-accelerated rendering. The framework supports CSS styling for theming, FXML for separating UI markup from logic, and includes Scene Builder for visual UI design. JavaFX's WebView component (WebKit-based) enables hybrid desktop apps that combine native controls with web content. It's cross-platform by default and has been the go-to choice for enterprise desktop applications requiring modern, professional interfaces. Note that JavaFX is maintained separately under the OpenJFX project and is no longer part of the standard JDK distribution.
 
@@ -317,7 +317,7 @@ public class HelloJavaFX extends Application {
 ### JCEF (Java Chromium Embedded Framework)
 **Status:** Production-ready | **Java:** Requires JetBrains Runtime | **Learning Curve:** Moderate-Complex | **Maintained By:** JetBrains + CEF project
 
-![]({{site.baseurl}}/images/ui-jcefmaven.png)
+![](/images/ui-jcefmaven.png)
 
 JCEF is a Java wrapper around the Chromium Embedded Framework (CEF), providing a full Chromium/Blink rendering engine inside Swing applications. It's used extensively in IntelliJ IDEA for markdown previews, browser tools, and throughout the IntelliJ Platform plugin ecosystem. JCEF gives you JavaScript interop, Chrome DevTools access, and modern web rendering capabilities. However, it requires native library distribution and understanding of its multi-process architecture (browser vs renderer processes). JetBrains maintains an active fork that's kept in sync with Chromium updates, making it the de facto standard for embedding modern web content in Java desktop applications.
 
@@ -351,7 +351,7 @@ public class HelloJCEF {
 ### Swing + FlatLaf
 **Status:** Legacy-but-actively-maintained | **Java:** 8+ (11+ recommended for HiDPI) | **Learning Curve:** Easy | **Last Release:** FlatLaf 3.7+ (Dec 2025)
 
-![]({{site.baseurl}}/images/ui-flatlaf.png)
+![](/images/ui-flatlaf.png)
 
 Swing may be a legacy framework, but it's far from dead. The IntelliJ plugin ecosystem relies heavily on Swing, and modern look-and-feel libraries like FlatLaf have completely revitalized its appearance. FlatLaf brings flat, modern design inspired by IntelliJ IDEA and Darcula themes, with built-in light and dark modes, HiDPI/Retina support, and cross-platform consistency. It's actively developed by FormDev Software and used in production by commercial applications like Burp Suite, JOSM (OpenStreetMap editor), and countless IntelliJ plugins. If you're building IntelliJ plugins or maintaining Swing applications, FlatLaf makes them look contemporary with minimal effort.
 
@@ -384,7 +384,7 @@ public class HelloSwingFlatLaf {
 ### Swing-Tree
 **Status:** Production-ready | **Java:** 8+ | **Learning Curve:** Easy | **Last Release:** v0.13.0
 
-![]({{site.baseurl}}/images/ui-swing-tree.png)
+![](/images/ui-swing-tree.png)
 
 Swing-Tree brings declarative, fluent APIs to Swing development—think Jetpack Compose or SwiftUI, but for Swing. Developed by Global TCAD Solutions for their own desktop applications, it eliminates Swing's verbose boilerplate with a clean, lambda-friendly API. The entire framework centers around a single `UI` class that can be statically imported, making Swing development feel modern and expressive. It integrates seamlessly with existing Swing components and works beautifully alongside FlatLaf for modern aesthetics. This is a community-driven library that's well-suited for developers seeking a more contemporary Swing development experience.
 
@@ -417,7 +417,7 @@ public class HelloSwingTree {
 ### NetBeans Platform
 **Status:** Production-ready, Mature | **Java:** 8+ | **Learning Curve:** Steep | **Maintained By:** Apache Software Foundation
 
-![]({{site.baseurl}}/images/ui-netbeans.png)
+![](/images/ui-netbeans.png)
 
 The NetBeans Platform is a full Rich Client Platform (RCP) for building modular desktop applications. NetBeans IDE itself is built on this platform, demonstrating its scalability for large, complex applications. The platform provides 100+ modules covering window management, auto-update systems, file system abstractions, wizards, property sheets, and more. It's Swing-based and includes the Matisse visual GUI builder for drag-and-drop interface design. If you're building complex, modular desktop applications that need plugin architectures and extensive built-in services, NetBeans Platform provides a comprehensive foundation.
 
@@ -450,7 +450,7 @@ public class HelloNetBeans extends ModuleInstall {
 ### Eclipse Rich Client Platform (RCP)
 **Status:** Production-ready, Mature | **Java:** 8+ | **Learning Curve:** Steep | **Maintained By:** Eclipse Foundation
 
-![]({{site.baseurl}}/images/ui-eclipse-rcp.png)
+![](/images/ui-eclipse-rcp.png)
 
 Eclipse RCP is an OSGi-based Rich Client Platform that powers the Eclipse IDE and countless enterprise applications from companies like IBM and SAP. It uses SWT for native widget rendering, giving applications a true native look and feel on each platform. The platform provides complete application infrastructure including window management, perspectives, views, plugin architectures, and update mechanisms. Eclipse RCP applications can support multiple versions of the same library simultaneously thanks to OSGi's sophisticated class loading. While the learning curve is steep due to OSGi and SWT concepts, the result is highly modular, enterprise-grade desktop applications with massive ecosystem support.
 
@@ -487,7 +487,7 @@ public class HelloEclipseRCP {
 ### SnapKit
 **Status:** Production-ready | **Java:** 8+ | **Learning Curve:** Easy-Moderate | **Last Release:** v2025.12 (Dec 2025)
 
-![]({{site.baseurl}}/images/ui-snapkit.png)
+![](/images/ui-snapkit.png)
 
 SnapKit is "Swing 2.0"—a UI toolkit developed by ReportMill that aims to run on both desktop and in the browser. Used to power SnapCode (a Java IDE that runs in a browser), SnapKit can deploy to desktop via Swing or JavaFX, and to browsers via CheerpJ JVM. The framework features XML-based UI files with a visual GUI builder (SnapBuilder), a ViewOwner controller pattern, and support for geometric primitives, effects, and even 3D via WebGL/JOGL. While SnapKit presents an interesting approach for dual-platform development, it remains a niche framework with limited adoption compared to mainstream Java UI toolkits.
 
@@ -521,7 +521,7 @@ public class HelloSnapKit extends WebPage {
 ### JxBrowser
 **Status:** Production-ready, Commercial | **Java:** 17+ | **Learning Curve:** Moderate | **Last Release:** v8.11.0 (2025)
 
-![]({{site.baseurl}}/images/ui-jxbrowser.png)
+![](/images/ui-jxbrowser.png)
 
 JxBrowser is a commercial Chromium integration solution from TeamDev that provides superior architecture compared to JCEF. It supports Swing, JavaFX, and SWT with separate process isolation, regular Chromium upgrades (every 3-4 weeks after stable releases), and comprehensive features including hardware acceleration, HiDPI/Retina support, Chrome extensions, PDF rendering, network interception, and DOM manipulation. The Chromium sandbox is fully enabled on Windows and macOS, providing better security than alternatives. With a 30-day free trial and perpetual licensing starting at $1,799 for indie developers, JxBrowser is the professional choice when you need enterprise-grade Chromium embedding with excellent technical support.
 
@@ -562,7 +562,7 @@ Java's mobile UI landscape in 2026 centers on cross-platform solutions that maxi
 ### Codename One
 **Status:** Production-ready, Mature (since 2012) | **Java:** 8+ (also supports Kotlin) | **Learning Curve:** Easy | **Last Release:** Active (Feb 2026)
 
-![]({{site.baseurl}}/images/ui-codename-one.png)
+![](/images/ui-codename-one.png)
 
 Codename One offers true write-once-run-anywhere capabilities for mobile, desktop, and web from a single Java or Kotlin codebase. What makes it unique is the cloud-based build service that eliminates the need for Mac hardware when building iOS applications—it handles Xcode compilation in the cloud. The framework produces truly native apps (not hybrid WebView apps) by statically compiling bytecode to native code: ParparVM for iOS translates bytecode to C, while TeaVM handles web/PWA targets. With 100% code reuse across platforms, drag-and-drop GUI builder, and fast simulator with hot reload, Codename One has powered applications at banks, governments, and telecom companies including BeRider (Prague scooters), HBZ Mobile (banking), and yHomework (1M+ installs). Founded by ex-Sun Microsystems developers from the LWUIT project, it combines open-source core with commercial build services under GPL + Commercial Exception licensing (free for commercial use).
 
@@ -590,7 +590,7 @@ public class HelloCodenameOne {
 ### Gluon Mobile
 **Status:** Production-ready, Actively Maintained | **Java:** 17+ | **Learning Curve:** Moderate | **Last Release:** JavaFX 25.0.2 (Jan 2026)
 
-![]({{site.baseurl}}/images/ui-gluon.png)
+![](/images/ui-gluon.png)
 
 Gluon Mobile brings JavaFX to iOS and Android platforms, enabling developers to write desktop and mobile applications from a single codebase. Developed by Gluon HQ, who co-lead the OpenJFX project itself, the framework provides commercial JavaFX ports with native integrations for mobile platforms. Gluon provides Scene Builder for drag-and-drop UI design, GluonFX Maven and Gradle plugins for building, and optional cloud build services. The framework supports GraalVM native image compilation for mobile deployment (as iOS has historically required ahead-of-time compilation rather than standard JVM execution) and includes commercial long-term support options. For teams already invested in JavaFX for desktop who want to extend to mobile, Gluon Mobile provides a natural migration path.
 
@@ -635,7 +635,7 @@ Terminal-based UIs remain essential for server administration, development tools
 ### JLine
 **Status:** Production-ready, Very Active | **Java:** 11+ (JLine 4.x), 8+ (JLine 3.x) | **Learning Curve:** Easy-Moderate | **Last Release:** v4.0.0
 
-![]({{site.baseurl}}/images/ui-jline.png)
+![](/images/ui-jline.png)
 
 JLine is Java's alternative to GNU Readline, providing advanced console input handling with portability, flexibility, and deep Java integration. The library offers line editing with Emacs and Vi modes, persistent command history with search, customizable tab completion for commands and file paths, syntax highlighting with custom rules, and password masking. JLine 4.0 brings full JPMS support (proper module-info.java), FFM terminal provider for JDK 22+ with Foreign Function & Memory API, and requires Java 11+ and Maven 4.0+. The modular structure includes terminal abstraction, line reading with completion, a command framework (jline-console), styling support, and built-in commands. Used by major tools like Maven, Gradle, Groovy, and Kotlin REPL, JLine is the standard choice for building interactive shells, REPLs, and sophisticated CLI applications in Java.
 
@@ -665,7 +665,7 @@ public class HelloJLine {
 ### Lanterna
 **Status:** Production-ready, Mature | **Java:** 8+ | **Learning Curve:** Easy | **Last Release:** v3.1.2
 
-![]({{site.baseurl}}/images/ui-lanterna.png)
+![](/images/ui-lanterna.png)
 
 Lanterna is Java's answer to the C curses library for building text-based GUIs in terminal environments—with even more functionality. It's 100% pure Java with no native dependencies, working on any xterm-compatible terminal (konsole, gnome-terminal, putty, xterm, etc.) across Windows, macOS, Linux, and Unix-like systems. The framework provides three layers of abstraction: a low-level terminal layer for direct cursor control, a screen layer using a full-screen buffer/bitmap approach, and a complete GUI layer with windows, buttons, labels, and layouts. Notably, Lanterna bundles a Swing terminal emulator, so you can develop in your IDE (even though it doesn't support ANSI) and deploy unchanged to headless servers. It's perfect for temperature monitoring systems, server administration tools, text-based dashboards, or any headless environment requiring interactive UI.
 
@@ -702,7 +702,7 @@ public class HelloLanterna {
 ### Casciian
 **Status:** Active Development | **Java:** 8+ | **Learning Curve:** Moderate | **Last Release:** v1.0.0
 
-![]({{site.baseurl}}/images/ui-casciian.png)
+![](/images/ui-casciian.png)
 
 Casciian is a sophisticated text-based windowing system inspired by Borland's Turbo Vision, designed for building modern terminal UIs with advanced visual features. It supports translucent windows, layered images, and desktop effects that create a polished, game-like aesthetic—all within a terminal environment. The library works seamlessly across xterm-compatible terminals and can even run inside its own terminal window with full mouse support. Casciian combines the nostalgia of classic text UIs with contemporary features like pulsing button text, window animations, and multiple terminal support, making it perfect for creating visually impressive terminal applications.
 
@@ -737,7 +737,7 @@ public class HelloCasciian {
 ### Latte
 **Status:** Active Development | **Java:** 8+ | **Learning Curve:** Easy-Moderate | **Last Release:** v0.1.1
 
-![]({{site.baseurl}}/images/ui-latte.png)
+![](/images/ui-latte.png)
 
 Latte is a Java port of Golang's Bubble Tea framework, bringing The Elm Architecture's clean separation of concerns to terminal UI development in Java. The framework follows a simple pattern: you define a Model (your application state), implement an `init()` method for initialization, an `update()` method for handling events and state changes, and a `view()` method for rendering the UI. This architecture makes terminal applications predictable, testable, and easy to reason about. Latte handles all the complexity of terminal I/O, event handling, and rendering, letting you focus on your application logic.
 
@@ -785,7 +785,7 @@ public class HelloLatte implements Model {
 ### AsciiTable
 **Status:** Production-ready, Mature | **Java:** 8+ | **Learning Curve:** Easy | **Last Release:** v0.3.2
 
-![]({{site.baseurl}}/images/ui-asciitable.png)
+![](/images/ui-asciitable.png)
 
 AsciiTable is a versatile library for rendering beautifully formatted ASCII tables in terminal applications, perfect for displaying tabular data in CLI tools, monitoring dashboards, and log outputs. The library removes excessive whitespace and provides fine-grained control over every aspect of table appearance: text alignment (left, right, centered, justified), padding characters for all sides, customizable grid styles with various line weights (normal, light, strong, heavy), and configurable margins and frames. Tables can span columns, handle text wrapping, and even convert characters for LaTeX or HTML output, making it suitable for generating documentation or reports.
 

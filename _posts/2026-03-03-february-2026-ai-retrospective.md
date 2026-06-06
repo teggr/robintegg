@@ -48,17 +48,17 @@ However, I got some overwhelmingly positive feedback across all platforms on the
 
 Here's the stats.
 
-![robin tegg february stats]({{site.baseurl}}/images/robintegg-feb-stats.png)
+![robin tegg february stats](/images/robintegg-feb-stats.png)
 
 ## Part 2 - The article becomes a website
 
 I was pretty chuffed at the response to the article  so I then decided to push it even further to create [https://awesome-java-ui.com/](https://awesome-java-ui.com/).
 
-![awesome java ui]({{site.baseurl}}/images/awesome-java-ui.png)
+![awesome java ui](/images/awesome-java-ui.png)
 
 Here I was able to use AI to collate all the feedback and comments from the Reddit thread to compile a full list, then got it to work on creating the website and then crawling the sites for more screenshots, code snippets and other content. 
 
-![awesome java ui feb stats]({{site.baseurl}}/images/awesome-java-ui-feb-stats.png)
+![awesome java ui feb stats](/images/awesome-java-ui-feb-stats.png)
 
 I now have it working pretty autonomously using GitHub issue templates with skills to ensure a consistent approach. I review the output, but it does the work.
 
@@ -66,7 +66,7 @@ Surprisingly this has taken up a lot of my free time this month but my hands are
 
 Here's the reddit posts
 
-![reddit posts]({{site.baseurl}}/images/reddit-posts.png)
+![reddit posts](/images/reddit-posts.png)
 
 # Tools
 

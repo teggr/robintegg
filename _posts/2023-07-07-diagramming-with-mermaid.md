@@ -11,7 +11,7 @@ tags:
   - architecture
 ---
 
-![mermaid-js.png]({{site.baseurl}}/images/mermaid-js.png)
+![mermaid-js.png](/images/mermaid-js.png)
 
 # Mermaid Diagramming
 

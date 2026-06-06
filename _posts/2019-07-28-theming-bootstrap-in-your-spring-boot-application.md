@@ -54,7 +54,7 @@ So I thought it would be worth me investing some time to take a look at how I mi
 
 For this article we are going to customise Bootstrap to use the lovely arctic, north-bluish [Nord colour scheme](https://www.nordtheme.com/) paired with a nice [PT Sans font](https://fonts.google.com/specimen/PT+Sans) from Google. The demo will use the [Album example](https://getbootstrap.com/docs/4.3/examples/album).
 
-![]({{site.baseurl}}/images/customise-bootstrap-for-spring-boot-original.png)
+![](/images/customise-bootstrap-for-spring-boot-original.png)
 
 # How?
 
@@ -156,7 +156,7 @@ Now we have a maven build that will compile the Sass files during the ```generat
 
 Now once the application is started, then we can see the finished result with the new font and cool colour scheme.
 
-![]({{site.baseurl}}/images/customise-bootstrap-for-spring-boot-bootstrap.png)
+![](/images/customise-bootstrap-for-spring-boot-bootstrap.png)
 
 Now that you've got the infrastructure up and running then you can [theme Bootstrap](https://getbootstrap.com/docs/4.3/getting-started/theming/) to your hearts content. Enjoy!
 

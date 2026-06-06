@@ -24,7 +24,7 @@ Alice -> Bob: Another authentication RequestAlice <-- Bob: another authenticatio
 
 and is able to generate a UML diagram.
 
-![]({{site.baseurl}}/images/sequence-diagram.png)
+![](/images/sequence-diagram.png)
 
 The PlantUML site does have a link to an [online demo tool](http://www.plantuml.com/plantuml/uml/) where you can try on the various supported UML diagram types.
 
@@ -138,7 +138,7 @@ sloppy start --var=domain:robintegg-online-editor.sloppy.zone sloppy-online-edit
 
 This makes my application available at http://robintegg-online-editor.sloppy.zone
 
-![]({{site.baseurl}}/images/robintegg-online-editor-1024x402.png)
+![](/images/robintegg-online-editor-1024x402.png)
 
 ## **Summary**
 
@@ -150,4 +150,4 @@ Sloppy.io gives a nice PAAS level of abstraction for deploying containers and do
 
 As for the [Online Editor](https://github.com/teggr/online-editor), next steps are to add some storage features and start using [TravisCI](https://travis-ci.org) to build and deploy the application.
 
-![]({{site.baseurl}}/images/robintegg-online-editor-1024x402.png)
+![](/images/robintegg-online-editor-1024x402.png)

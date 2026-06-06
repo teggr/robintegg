@@ -14,7 +14,7 @@ Back in February I published [Java UI in 2026: The Complete Guide](/2026/02/08/j
 
 Riding that wave of enthusiasm, I took things a step further and turned it into a dedicated website: [https://awesome-java-ui.com/](https://awesome-java-ui.com/).
 
-![awesome java ui website]({{site.baseurl}}/images/awesome-java-ui.png)
+![awesome java ui website](/images/awesome-java-ui.png)
 
 ## What is awesome-java-ui.com?
 
@@ -45,7 +45,7 @@ You can find the project at: [https://github.com/teggr/awesome-java-ui](https://
 
 The site already picked up solid traffic in its first few weeks. Here are the stats from the first month.
 
-![awesome java ui stats]({{site.baseurl}}/images/awesome-java-ui-feb-stats.png)
+![awesome java ui stats](/images/awesome-java-ui-feb-stats.png)
 
 As I wrote in the [February 2026 AI Retrospective](/2026/03/03/february-2026-ai-retrospective), the article and subsequent website were a genuine success story for AI-assisted content creation. The AI agents helped collate community feedback from Reddit threads, crawl project sites for screenshots and code snippets, and keep the content consistent — while I focused on reviewing the output and steering the direction.
 

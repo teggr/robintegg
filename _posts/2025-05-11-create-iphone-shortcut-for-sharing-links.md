@@ -21,7 +21,7 @@ The shortcut I created allows me to share a link from any app (like Chrome) to m
 4. **Save and Name the Shortcut**: Give your shortcut a descriptive name like "Share to My Web Service.".
 5. **Run once**: I did have to run the shortcut at least once manually before it showed up in the Share Sheet.
 
-![]({{site.baseurl}}/images/ios_shortcut.png)
+![](/images/ios_shortcut.png)
 
 ### Why This Is Useful
 
@@ -33,7 +33,7 @@ This shortcut has been a game-changer for me as it doesn't require an installed 
 - Sending links to a custom API for processing.
 - Automating workflows that involve link sharing.
 
-![]({{site.baseurl}}/images/ios_share.png)
+![](/images/ios_share.png)
 
 If you’re looking for a way to streamline your link-sharing process, I highly recommend giving this a try. It’s a simple yet powerful way to integrate your iPhone with your web service.
 

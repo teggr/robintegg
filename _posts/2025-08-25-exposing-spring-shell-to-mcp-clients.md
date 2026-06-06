@@ -84,7 +84,7 @@ java -jar <jar-location>/mcp-cli-demo-0.0.1-SNAPSHOT.jar weather-forecast-by-loc
 
 Local CLI/terminal output for the demo commands:
 
-![Terminal output]({{site.baseurl}}/images/cli-output.png)
+![Terminal output](/images/cli-output.png)
 
 ## Run as an MCP server
 
@@ -108,11 +108,11 @@ A simple mcp.json entry (used by an MCP-capable client) that starts the jar in t
 
 Tool selection and MCP configuration: 
 
-![Terminal output]({{site.baseurl}}/images/mcp-cli-demo.png)
+![Terminal output](/images/mcp-cli-demo.png)
 
 Example Copilot/assistant response using the getAlerts tool:
 
-![Terminal output]({{site.baseurl}}/images/mcp-weather-alerts.png)
+![Terminal output](/images/mcp-weather-alerts.png)
 
 ## Notes and references
 

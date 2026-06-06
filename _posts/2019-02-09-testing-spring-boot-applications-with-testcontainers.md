@@ -25,7 +25,7 @@ In this first part, we are going to concentrate on using the [TestContainers dat
 
 We will be using the [testcontainers-demo](https://github.com/teggr/testcontainers-demo) application as the System under test (SUT). The application routes notification messages from a JMS Queue to a RabbitMQ exchange, storing each notification in a Postgres database. This application also provides a web interface to see a list of all the messages that are routed by the application.
 
-![]({{site.baseurl}}/images/testcontainers-demo.png)
+![](/images/testcontainers-demo.png)
 
 ## What is TestContainers?
 

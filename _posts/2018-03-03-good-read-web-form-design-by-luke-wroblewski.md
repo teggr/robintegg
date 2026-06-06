@@ -10,7 +10,7 @@ tags:
 categories:
   - book review
 ---
-![]({{site.baseurl}}/images/web-form-design-luke-wroblewski.jpg)
+![](/images/web-form-design-luke-wroblewski.jpg)
 
 ## **TL;DR**
 

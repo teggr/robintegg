@@ -17,7 +17,7 @@ I wanted one place to manage the Copilot resources I keep reusing across project
 
 So I've started to put everything into a dedicated repository: [ai-toolkit](https://github.com/teggr/ai-toolkit), and published it at [teggr.github.io/ai-toolkit](https://teggr.github.io/ai-toolkit/).
 
-![ai-toolkit published site screenshot]({{site.baseurl}}/images/ai-toolkit-screenshot.gif)
+![ai-toolkit published site screenshot](/images/ai-toolkit-screenshot.gif)
 
 ## What the repository gives me
 

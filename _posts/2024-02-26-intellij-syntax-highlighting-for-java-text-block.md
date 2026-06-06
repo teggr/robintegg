@@ -38,6 +38,6 @@ var someJs = """
             """;
 ```
 
-![syntax highlighting output]({{site.baseurl}}/images/syntax-highlighting.png)
+![syntax highlighting output](/images/syntax-highlighting.png)
 
 Note that the syntax highlighting support only covers what languages you have available in your version of Intellij, so if you've got the community version you may have a reduced set of languages available.

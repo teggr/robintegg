@@ -10,7 +10,7 @@ tags:
   - j2html
 ---
 
-![j2html.png]({{site.baseurl}}/images/j2html.png)
+![j2html.png](/images/j2html.png)
 
 # Using j2html for rendering web pages with Spring Web MVC
 
