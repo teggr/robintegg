@@ -26,7 +26,7 @@ Before finalizing a blog post, verify:
 - [ ] `image:` field is present in the front matter.
 - [ ] Code examples are complete and working.
 - [ ] Code blocks have appropriate language identifiers.
-- [ ] Images use `{{site.baseurl}}/images/` path.
+- [ ] Images use `/images/` path.
 - [ ] Content leads with practical code examples.
 - [ ] Links to external resources are included.
 - [ ] Markdown formatting is consistent.

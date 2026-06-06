@@ -33,14 +33,14 @@ robintegg/
 Run the site build from the repository root:
 
 ```bash
-jbang --fresh site.electrostatic:electrostatic-cli:0.0.1 build --base-url=http://localhost:8080
-jbang --fresh site.electrostatic:electrostatic-cli:0.0.1 serve --base-url=http://localhost:8080
+jbang --fresh site.electrostatic:electrostatic-cli:0.0.3 build --base-url=http://localhost:8080
+jbang --fresh site.electrostatic:electrostatic-cli:0.0.3 serve --base-url=http://localhost:8080
 ```
 
 Use the production build for deployment checks:
 
 ```bash
-jbang --fresh site.electrostatic:electrostatic-cli:0.0.1 build
+jbang --fresh site.electrostatic:electrostatic-cli:0.0.3 build
 ```
 
 The generated site is written to `generated-site/`.
@@ -50,7 +50,7 @@ The generated site is written to `generated-site/`.
 - Use YAML front matter for every post, book, and podcast entry.
 - Keep post file names in the format `YYYY-MM-DD-title-slug.md`.
 - Use `/images/...` in front matter `image:` fields.
-- Use `{{site.baseurl}}/images/...` for inline image references in Markdown.
+- Use `/images/...` for inline image references in Markdown.
 - Prefer concrete examples, commands, and code blocks in technical posts.
 - Avoid the em dash character (`—`) in prose unless it is clearly necessary.
 
@@ -84,7 +84,7 @@ When editing Markdown content, follow the voice and post-quality guidance in:
 ### Working With Images
 1. Store image files in `_static/images/`.
 2. Reference them from front matter with `/images/<file>`.
-3. Reference them in post bodies with `{{site.baseurl}}/images/<file>`.
+3. Reference them in post bodies with `/images/<file>`.
 
 ## CI/CD And Deployment
 

@@ -207,10 +207,10 @@ Use `.github/skills/post-edit-checks/SKILL.md` for the final review checklist be
 
 ## Images And Assets
 
-Inline images in the post body should be referenced using the `{{site.baseurl}}` prefix so links work locally and when deployed:
+Inline images in the post body should be referenced using the `/images/` path:
 
 ```markdown
-![Image description]({{site.baseurl}}/images/image-name.png)
+![Image description](/images/image-name.png)
 ```
 
 The YAML front matter `image:` field uses the `/images/` path directly:
