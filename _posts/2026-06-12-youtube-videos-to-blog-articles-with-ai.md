@@ -2,6 +2,7 @@
 layout: post
 title: "From YouTube Videos to 5-Minute Blog Articles with AI"
 date: "2026-06-12"
+image: /images/custom-tooling.jpg
 tags:
   - ai
   - workflow
