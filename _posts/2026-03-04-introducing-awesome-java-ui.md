@@ -2,6 +2,7 @@
 layout: post
 title: "Introducing awesome-java-ui.com"
 date: "2026-03-04"
+description: "How a popular guide to Java UI frameworks became a dedicated website, and what awesome-java-ui.com aims to do for the community."
 image: /images/awesome-java-ui.png
 tags:
   - java

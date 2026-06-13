@@ -2,6 +2,7 @@
 layout: post
 title: "From YouTube Videos to 5-Minute Blog Articles with AI"
 date: "2026-06-12"
+description: "A workflow that turns any YouTube URL into a 5-minute readable article using AI, with commentary on the tools and techniques along the way."
 image: /images/youtube-to-article.jpg
 tags:
   - ai
