@@ -2,6 +2,7 @@
 layout: post
 title: "Getting Started with the Java Copilot SDK"
 date: "2026-03-26"
+description: "Using the Java Copilot SDK to write programmable agentic workflows on top of GitHub Copilot instead of relying on Markdown instructions."
 image: /images/java-copilot-sdk.png
 tags:
   - java

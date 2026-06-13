@@ -2,6 +2,7 @@
 layout: post
 title: "A Discovery Agent for Your VSCode Workflow"
 date: "2026-05-13"
+description: "How a dedicated discovery agent bridges the gap between VSCode Copilot's Plan and Ask modes, mapping scope before you commit to a solution."
 image: /images/discovery-agent.png
 tags:
   - ai

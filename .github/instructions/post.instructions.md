@@ -36,6 +36,7 @@ Every blog post must start with YAML front matter enclosed in `---` markers.
 layout: post
 title: "Your Post Title"
 date: "YYYY-MM-DD"
+description: "A short, punchy summary of the post. Aim for 80–160 characters — long enough to hook a reader, short enough to fit a social media preview card."
 ---
 ```
 
@@ -59,6 +60,7 @@ category: reading-list
 layout: post
 title: "Testing Spring Boot applications with TestContainers"
 date: "2019-02-09"
+description: "How to write real integration tests for Spring Boot applications using TestContainers to run databases and services in Docker."
 image: /images/ben-kolde-bs2Ba7t69mM-unsplash.jpg
 tags:
   - spring boot

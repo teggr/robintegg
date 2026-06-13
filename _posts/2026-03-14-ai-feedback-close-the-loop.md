@@ -3,7 +3,7 @@ layout: post
 title: "AI Feedback: Close the Loop"
 date: "2026-03-14"
 image: /images/ai-feedback-close-the-loop.png
-description: "How to build a feedback loop at the end of every AI-assisted ticket, using a reusable Copilot prompt to update instructions and ArchUnit tests so the AI gets smarter session by session."
+description: "How to close the AI feedback loop after every ticket, using a reusable Copilot prompt to update instructions and tests so the AI improves over time."
 tags:
   - ai
   - github copilot

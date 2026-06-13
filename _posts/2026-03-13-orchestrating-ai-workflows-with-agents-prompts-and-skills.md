@@ -2,7 +2,7 @@
 layout: post
 title: "Orchestrating AI Workflows with Copilot Agents, Prompts, and Skills"
 date: "2026-03-13"
-description: "A mental model for AI orchestration that mirrors clean code principles: Agents define the workflow, Prompts execute a phase, and Skills perform the atomic actions."
+description: "A mental model for AI orchestration that mirrors clean code: Agents define the workflow, Prompts execute a phase, and Skills perform the atomic actions."
 image: /images/agents-prompts-skills.png
 tags:
   - ai
