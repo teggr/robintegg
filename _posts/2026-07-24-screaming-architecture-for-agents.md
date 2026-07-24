@@ -3,7 +3,7 @@ layout: post
 title: "Screaming Architecture for Agents"
 date: "2026-07-24"
 description: "AI agents default to three-layer codebases because that's what most public projects use. Here's why that matters and how a reusable skill fixes it."
-image: /images/scs-ai-agents.jpg
+image: /images/screaming-architecture.jpg
 tags:
   - ai
   - github copilot
