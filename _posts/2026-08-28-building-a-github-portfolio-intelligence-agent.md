@@ -2,25 +2,25 @@
 layout: post
 title: "Building a GitHub Portfolio Intelligence Agent"
 date: "2026-08-28"
-description: "How I built devagent: a read-only OpenCode workspace that discovers, analyses, and plans across my entire GitHub portfolio."
+description: "How I built devagent: a read-only Copilot CLI workspace that discovers, analyses, and plans across my entire GitHub portfolio."
 image: /images/my-cloud-agent.jpg
 tags:
   - ai
   - agents
-  - opencode
+  - copilot
   - github
   - workflow
 ---
 
-I already had a remote OpenCode environment running on an Ubuntu VPS (covered in my [previous post](/2026/08/24/setting-up-my-ai-cloud-agent)). It could open repositories, write code, run tests, and use GitHub. What I noticed was that the questions I actually wanted to ask didn't belong to any single repository.
+I already had a remote AI development environment running on an Ubuntu VPS (covered in my [previous post](/2026/08/24/setting-up-my-ai-cloud-agent)). It could open repositories, write code, run tests, and use GitHub. What I noticed was that the questions I actually wanted to ask didn't belong to any single repository.
 
 Questions like: what Spring Boot versions am I running? Which projects are still on Java 17? If I wanted to standardise Maven wrappers, where would I start?
 
-These are portfolio questions. So instead of making OpenCode better at modifying individual repositories, I gave it a persistent workspace containing my GitHub portfolio and taught it how to discover, analyse, and plan across that portfolio. The result is `devagent`.
+These are portfolio questions. So instead of making the agent better at modifying individual repositories, I gave it a persistent workspace containing my GitHub portfolio and taught it how to discover, analyse, and plan across that portfolio. The result is `devagent`.
 
 ## The idea
 
-The concept is simple. Give an OpenCode session its own workspace at `~/devagent/`, populate it with fresh checkouts of my GitHub repositories under `~/devagent/projects/`, and add a small number of skills that explain how to reason about those repositories.
+The concept is simple. Give a Copilot CLI session its own workspace at `~/devagent/`, populate it with fresh checkouts of my GitHub repositories under `~/devagent/projects/`, and add a small number of skills that explain how to reason about those repositories.
 
 The important distinction is that the projects aren't there for development. They're an analysis corpus. The agent's job is to understand them, not modify them.
 
@@ -40,14 +40,15 @@ I already had repositories checked out on the VPS for normal development. I chos
 
 This matters because the two workspaces have different lifecycles. The analysis workspace can be refreshed or rebuilt without touching development work. The agent can inspect the full portfolio without interfering with whatever I happen to be working on.
 
-## OpenCode 2 is the host
+## Copilot CLI is the host
 
-`devagent` is just an OpenCode 2 workspace. The intelligence comes from the combination of OpenCode's context, the repository corpus, GitHub access, and a small set of specialised skills.
+One reason for choosing Copilot CLI over alternatives was consistency: the same model of instructions and skills works across platforms, whether I'm running the agent on the VPS or locally. `devagent` is a Copilot CLI workspace. The intelligence comes from the combination of Copilot's context, the repository corpus, GitHub access, and a small set of specialised skills.
 
-The skills live in `.opencode/skills/`:
+The workspace follows the `.github/` convention for instructions and skills:
 
 ```text
-.opencode/
+.github/
+├── copilot-instructions.md
 └── skills/
     ├── repository-discovery/
     │   └── SKILL.md
@@ -57,7 +58,7 @@ The skills live in `.opencode/skills/`:
         └── SKILL.md
 ```
 
-I separated the responsibilities rather than putting everything into `AGENTS.md`. Each skill has a clear purpose and the system has somewhere natural to grow. If I decide I want security analysis across my repositories, that becomes another skill rather than an ever-growing main prompt.
+I separated the responsibilities rather than putting everything into `copilot-instructions.md`. Each skill has a clear purpose and the system has somewhere natural to grow. If I decide I want security analysis across my repositories, that becomes another skill rather than an ever-growing main prompt.
 
 ## The boundary that matters
 
