@@ -19,9 +19,9 @@ Default to magazine-style landscape imagery. The preferred feel is a polished ed
 
 Avoid robots unless the user specifically asks for them. For AI, agent, and automation posts, prefer workspaces, tools, abstract systems, human-scale scenes, diagrams implied through objects, or editorial metaphors over humanoid robots.
 
-Do not fill the image with writing, sections, labels, UI panels, or diagram callouts. Important textual information should stay in the article, not inside the generated image, unless the user explicitly requests text in the image.
+Do not fill the image with writing, sections, labels, UI panels, or diagram callouts. Important textual information should stay in the article, not inside the generated image.
 
-If text is explicitly requested, use only the article title or another short phrase supplied by the user. Keep it large, sparse, and positioned inside a safe area. Avoid placing text near the bottom edge because robintegg.com image crops and article layouts can cut it off. Prefer the left side, upper-left, upper-right, or upper-center depending on the composition, with generous margin from every edge.
+Include the article title in the image by default. Keep the title large, sparse, and positioned inside a safe area. Avoid placing text near the bottom edge because robintegg.com image crops and article layouts can cut it off. Prefer the left side, upper-left, upper-right, or upper-center depending on the composition, with generous margin from every edge. If the user explicitly asks for no text in the image, omit the title entirely.
 
 Use robintegg.com as the target presentation context. Images may appear on the front page, article pages, previews, and narrower viewports, so the subject and any requested title text must survive cropping. Keep the focal subject away from the very bottom and avoid critical detail at the extreme edges.
 
@@ -53,7 +53,7 @@ Create a short image brief before generation. It must state:
 - **Composition:** a clear focal point, uncluttered framing, and crop-safe negative space
 - **Style:** magazine-style editorial imagery with Bloomberg/Vogue-style polish, adapted to the technical subject
 - **Mood:** practical, thoughtful, and credible
-- **Text plan:** no text by default, or only the supplied title if the user explicitly asks for image text
+- **Text plan:** include the article title by default; omit text only when the user explicitly asks for no text in the image
 - **Avoid:** robots unless specifically requested, watermarks, unreadable code, invented logos, dashboard UI, excessive writing, section labels, and decorative visual clutter
 
 Use technical symbols and abstract structures only when they clarify the subject. A generated image should communicate the article topic without requiring a caption to explain it.
@@ -71,18 +71,18 @@ Magazine-style landscape image with a polished Bloomberg/Vogue editorial feel.
 [Describe the composition, lighting, palette, and visual treatment.]
 Keep the focal subject away from the bottom edge and extreme corners so it works on robintegg.com front page cards and article pages.
 No robots unless specifically requested.
+No UI panels, code snippets, diagram labels, or section headings.
+Include only this title text: "[exact article title]".
+Place the title in a clean crop-safe area away from the bottom edge, preferably left side, upper-left, upper-right, or upper-center with generous margin.
+```
+
+If the user explicitly asks for no text in the image, replace the title lines with:
+
+```text
 No text, letters, numbers, logos, watermarks, UI panels, code snippets, labels, or section headings.
 ```
 
 Generate a wide landscape image suitable for an article header. Use 16:9 as the default for blog imagery where the selected OpenAI image model supports it. When exact 16:9 is unavailable, choose the closest wide landscape size supported by the model.
-
-If the user explicitly asks for title text in the image, replace the final no-text line with:
-
-```text
-Include only this title text: "[exact title]".
-Place the title in a clean crop-safe area away from the bottom edge, preferably left side, upper-left, upper-right, or upper-center with generous margin.
-Do not include subtitles, labels, section headings, body copy, logos, watermarks, UI panels, or code snippets.
-```
 
 ## Script
 
@@ -123,23 +123,29 @@ Use `1792x1024` for wide blog featured images with `dall-e-3`. Use model-support
 
 1. Read the post and derive the visual brief from its actual content.
 2. Check `_static/images/` for an existing image that already fits the article. Reuse it only when it genuinely represents the same subject.
-3. Generate the image with `.github/skills/generate-blog-images/scripts/generate-image.sh`.
-4. Inspect the output at full size. Regenerate it when the focal subject is unclear, details are visibly distorted, the image contains accidental text, or the result looks like a generic stock illustration.
-5. Save the selected image in `_static/images/` with a concise, lowercase, hyphenated filename, such as `spring-ai-mcp-demo.jpg`.
-6. Prefer `jpg` for photographic or full-colour editorial images. Use `png` when sharp edges or transparency are needed. Do not convert an image merely to change its extension.
-7. For a featured image, set the post front matter to its public path:
+3. Before generating, record the image request details in the post's front matter. Add an `image_brief` field containing the subject, composition, style, mood, and text plan from the brief. This preserves the direction so it can be refined or used to regenerate the image later. Example:
+
+   ```yaml
+   image_brief: "Subject: a developer's desk seen from above with a terminal showing a GitHub repository tree. Composition: centred laptop surrounded by scattered printed code printouts. Style: editorial Bloomberg-feel, cool blue lighting. Mood: analytical, focused. Text: article title upper-left."
+   ```
+
+4. Generate the image with `.github/skills/generate-blog-images/scripts/generate-image.sh`.
+5. Inspect the output at full size. Regenerate it when the focal subject is unclear, details are visibly distorted, the image contains accidental text, or the result looks like a generic stock illustration.
+6. Save the selected image in `_static/images/` with a concise, lowercase, hyphenated filename, such as `spring-ai-mcp-demo.jpg`.
+7. Prefer `jpg` for photographic or full-colour editorial images. Use `png` when sharp edges or transparency are needed. Do not convert an image merely to change its extension.
+8. For a featured image, set the post front matter to its public path:
 
    ```yaml
    image: /images/your-image.jpg
    ```
 
-8. For an inline image, add meaningful alt text and reference the same public path:
+9. For an inline image, add meaningful alt text and reference the same public path:
 
    ```markdown
    ![A concise description of the visual content](/images/your-image.jpg)
    ```
 
-9. Run the `post-edit-checks` skill after modifying a post, including its `image:` front matter.
+10. Run the `post-edit-checks` skill after modifying a post, including its `image:` front matter.
 
 ## Alt Text
 
@@ -161,8 +167,8 @@ The completed image should:
 - have one obvious focal point
 - keep important subject detail away from the bottom edge and extreme corners
 - reinforce the article's actual subject and tone
-- avoid embedded text unless explicitly requested
-- use only the title when text is explicitly requested
+- include the article title by default; omit text only when the user explicitly requests no text
+- avoid embedded text other than the article title
 - avoid robots unless specifically requested
 - avoid fabricated branded elements
 - use a filename that clearly relates to the article
