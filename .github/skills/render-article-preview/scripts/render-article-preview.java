@@ -21,7 +21,6 @@ class render_article_preview {
             "main article",
             "main"
     );
-
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             System.err.println("Usage: jbang .github/skills/render-article-preview/scripts/render-article-preview.java <generated-html-path>");
@@ -41,62 +40,12 @@ class render_article_preview {
         Element contentRoot = findContentRoot(document);
 
         System.out.println("# " + title);
-
-        Elements blocks = contentRoot.select("h1, h2, h3, h4, h5, h6, p, pre, blockquote, ul, ol");
-        if (blocks.isEmpty()) {
+        boolean rendered = renderContainer(contentRoot);
+        if (!rendered) {
             String fallback = contentRoot.text().trim();
             if (!fallback.isEmpty()) {
                 System.out.println();
                 System.out.println(fallback);
-            }
-            return;
-        }
-
-        for (Element block : blocks) {
-            String tag = block.tagName();
-            if (hasAncestorTag(block, "li")) {
-                continue;
-            }
-
-            switch (tag) {
-                case "h1", "h2", "h3", "h4", "h5", "h6" -> {
-                    String text = block.text().trim();
-                    if (text.isEmpty()) {
-                        continue;
-                    }
-                    int level = Integer.parseInt(tag.substring(1));
-                    System.out.println();
-                    System.out.println("#".repeat(level) + " " + text);
-                }
-                case "ul", "ol" -> {
-                    renderList(block, 0);
-                }
-                case "blockquote" -> {
-                    String text = flattenWithoutNestedLists(block);
-                    if (text.isEmpty()) {
-                        continue;
-                    }
-                    System.out.println();
-                    System.out.println("> " + text);
-                }
-                case "pre" -> {
-                    String text = block.wholeText().trim();
-                    if (text.isEmpty()) {
-                        continue;
-                    }
-                    System.out.println();
-                    System.out.println("```");
-                    System.out.println(text);
-                    System.out.println("```");
-                }
-                default -> {
-                    String text = block.text().trim();
-                    if (text.isEmpty()) {
-                        continue;
-                    }
-                    System.out.println();
-                    System.out.println(text);
-                }
             }
         }
     }
@@ -128,21 +77,133 @@ class render_article_preview {
         return "Article Preview";
     }
 
-    private static void renderList(Element list, int indentLevel) {
+    private static boolean renderContainer(Element container) {
+        boolean rendered = false;
+        for (Element child : container.children()) {
+            rendered |= renderElement(child);
+        }
+        return rendered;
+    }
+
+    private static boolean renderElement(Element element) {
+        String tag = element.tagName();
+        return switch (tag) {
+            case "h1", "h2", "h3", "h4", "h5", "h6" -> renderHeading(element);
+            case "p" -> renderParagraph(element);
+            case "pre" -> renderCodeBlock(element);
+            case "blockquote" -> renderBlockquote(element);
+            case "ul", "ol" -> renderListBlock(element);
+            case "li" -> false;
+            default -> renderContainer(element);
+        };
+    }
+
+    private static boolean renderHeading(Element heading) {
+        String text = heading.text().trim();
+        if (text.isEmpty()) {
+            return false;
+        }
+        int level = Integer.parseInt(heading.tagName().substring(1));
+        System.out.println();
+        System.out.println("#".repeat(level) + " " + text);
+        return true;
+    }
+
+    private static boolean renderParagraph(Element paragraph) {
+        String text = paragraph.text().trim();
+        if (text.isEmpty()) {
+            return false;
+        }
+        System.out.println();
+        System.out.println(text);
+        return true;
+    }
+
+    private static boolean renderBlockquote(Element blockquote) {
+        Elements paragraphs = blockquote.select("> p");
+        if (!paragraphs.isEmpty()) {
+            boolean wroteAny = false;
+            for (Element paragraph : paragraphs) {
+                String text = paragraph.text().trim();
+                if (text.isEmpty()) {
+                    continue;
+                }
+                System.out.println();
+                System.out.println("> " + text);
+                wroteAny = true;
+            }
+            return wroteAny;
+        }
+
+        String text = flattenWithoutNestedLists(blockquote);
+        if (text.isEmpty()) {
+            return false;
+        }
+
+        System.out.println();
+        for (String line : text.split("\\R+")) {
+            String trimmed = line.trim();
+            if (!trimmed.isEmpty()) {
+                System.out.println("> " + trimmed);
+            }
+        }
+        return true;
+    }
+
+    private static boolean renderCodeBlock(Element pre) {
+        String text = pre.wholeText().trim();
+        if (text.isEmpty()) {
+            return false;
+        }
+        System.out.println();
+        String fence = backtickFenceFor(text);
+        System.out.println(fence);
+        System.out.println(text);
+        System.out.println(fence);
+        return true;
+    }
+
+    private static boolean renderListBlock(Element list) {
+        return renderList(list, 0);
+    }
+
+    private static boolean renderList(Element list, int indentLevel) {
+        boolean ordered = "ol".equals(list.tagName());
+        int position = 1;
+        boolean rendered = false;
         for (Element child : list.children()) {
             if (!"li".equals(child.tagName())) {
                 continue;
             }
             String text = flattenWithoutNestedLists(child);
             if (!text.isEmpty()) {
-                System.out.println("  ".repeat(indentLevel) + "- " + text);
+                String marker = ordered ? position + "." : "-";
+                System.out.println("  ".repeat(indentLevel) + marker + " " + text);
+                rendered = true;
             }
             for (Element nested : child.children()) {
                 if ("ul".equals(nested.tagName()) || "ol".equals(nested.tagName())) {
-                    renderList(nested, indentLevel + 1);
+                    rendered |= renderList(nested, indentLevel + 1);
                 }
             }
+            position++;
         }
+        return rendered;
+    }
+
+    private static String backtickFenceFor(String content) {
+        int longestRun = 0;
+        int currentRun = 0;
+        for (int i = 0; i < content.length(); i++) {
+            if (content.charAt(i) == '`') {
+                currentRun++;
+                longestRun = Math.max(longestRun, currentRun);
+            } else {
+                currentRun = 0;
+            }
+        }
+        int fenceLength = Math.max(3, longestRun + 1);
+        return "`".repeat(fenceLength);
     }
 
     private static String flattenWithoutNestedLists(Element element) {
@@ -151,14 +212,4 @@ class render_article_preview {
         return copy.text().trim();
     }
 
-    private static boolean hasAncestorTag(Element element, String tagName) {
-        Element current = element.parent();
-        while (current != null) {
-            if (tagName.equals(current.tagName())) {
-                return true;
-            }
-            current = current.parent();
-        }
-        return false;
-    }
 }

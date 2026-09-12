@@ -48,6 +48,7 @@ jbang .github/skills/render-article-preview/scripts/render-article-preview.java 
 
 - Include the final rendered article preview in the session response.
 - When updating a PR, include the rendered preview section so reviewers can read the article directly without relying on Markdown diff.
+- Render only the specific article file requested in the task, not unrelated articles in the repository.
 
 ## Output contract
 
