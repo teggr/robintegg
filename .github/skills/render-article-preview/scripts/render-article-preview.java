@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 class render_article_preview {
@@ -120,14 +121,20 @@ class render_article_preview {
     }
 
     private static boolean renderBlockquote(Element blockquote) {
-        Elements paragraphs = blockquote.select("> p");
+        List<String> paragraphs = new ArrayList<>();
+        for (Element child : blockquote.children()) {
+            if (!"p".equals(child.tagName())) {
+                continue;
+            }
+            String text = child.text().trim();
+            if (!text.isEmpty()) {
+                paragraphs.add(text);
+            }
+        }
+
         if (!paragraphs.isEmpty()) {
             boolean wroteAny = false;
-            for (Element paragraph : paragraphs) {
-                String text = paragraph.text().trim();
-                if (text.isEmpty()) {
-                    continue;
-                }
+            for (String text : paragraphs) {
                 System.out.println();
                 System.out.println("> " + text);
                 wroteAny = true;
@@ -175,10 +182,14 @@ class render_article_preview {
             if (!"li".equals(child.tagName())) {
                 continue;
             }
-            String text = flattenWithoutNestedLists(child);
-            if (!text.isEmpty()) {
+            List<String> lines = extractListItemLines(child);
+            if (!lines.isEmpty()) {
+                String indent = "  ".repeat(indentLevel);
                 String marker = ordered ? position + "." : "-";
-                System.out.println("  ".repeat(indentLevel) + marker + " " + text);
+                System.out.println(indent + marker + " " + lines.get(0));
+                for (int i = 1; i < lines.size(); i++) {
+                    System.out.println(indent + "  " + lines.get(i));
+                }
                 rendered = true;
             }
             for (Element nested : child.children()) {
@@ -189,6 +200,33 @@ class render_article_preview {
             position++;
         }
         return rendered;
+    }
+
+    private static List<String> extractListItemLines(Element listItem) {
+        List<String> lines = new ArrayList<>();
+
+        String ownText = listItem.ownText().trim();
+        if (!ownText.isEmpty()) {
+            lines.add(ownText);
+        }
+
+        for (Element child : listItem.children()) {
+            if ("ul".equals(child.tagName()) || "ol".equals(child.tagName())) {
+                continue;
+            }
+            String text = "pre".equals(child.tagName()) ? child.wholeText().trim() : child.text().trim();
+            if (!text.isEmpty()) {
+                lines.add(text);
+            }
+        }
+
+        if (lines.isEmpty()) {
+            String fallback = flattenWithoutNestedLists(listItem);
+            if (!fallback.isEmpty()) {
+                lines.add(fallback);
+            }
+        }
+        return lines;
     }
 
     private static String backtickFenceFor(String content) {
