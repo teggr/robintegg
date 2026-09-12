@@ -14,12 +14,12 @@ import java.util.List;
 
 class render_article_preview {
     private static final List<String> CONTENT_SELECTORS = List.of(
-            "article",
-            "main article",
-            "main",
             ".post-content",
             ".post",
-            ".content"
+            ".content",
+            "article",
+            "main article",
+            "main"
     );
 
     public static void main(String[] args) throws IOException {
@@ -42,7 +42,7 @@ class render_article_preview {
 
         System.out.println("# " + title);
 
-        Elements blocks = contentRoot.select("h1, h2, h3, h4, h5, h6, p, li, pre, blockquote");
+        Elements blocks = contentRoot.select("h1, h2, h3, h4, h5, h6, p, pre, blockquote, ul, ol");
         if (blocks.isEmpty()) {
             String fallback = contentRoot.text().trim();
             if (!fallback.isEmpty()) {
@@ -54,31 +54,46 @@ class render_article_preview {
 
         for (Element block : blocks) {
             String tag = block.tagName();
-            String text = "pre".equals(tag) ? block.wholeText().trim() : block.text().trim();
-            if (text.isEmpty()) {
+            if (hasAncestorTag(block, "li")) {
                 continue;
             }
 
             switch (tag) {
                 case "h1", "h2", "h3", "h4", "h5", "h6" -> {
+                    String text = block.text().trim();
+                    if (text.isEmpty()) {
+                        continue;
+                    }
                     int level = Integer.parseInt(tag.substring(1));
                     System.out.println();
                     System.out.println("#".repeat(level) + " " + text);
                 }
-                case "li" -> {
-                    System.out.println("- " + text);
+                case "ul", "ol" -> {
+                    renderList(block, 0);
                 }
                 case "blockquote" -> {
+                    String text = flattenWithoutNestedLists(block);
+                    if (text.isEmpty()) {
+                        continue;
+                    }
                     System.out.println();
                     System.out.println("> " + text);
                 }
                 case "pre" -> {
+                    String text = block.wholeText().trim();
+                    if (text.isEmpty()) {
+                        continue;
+                    }
                     System.out.println();
                     System.out.println("```");
                     System.out.println(text);
                     System.out.println("```");
                 }
                 default -> {
+                    String text = block.text().trim();
+                    if (text.isEmpty()) {
+                        continue;
+                    }
                     System.out.println();
                     System.out.println(text);
                 }
@@ -111,5 +126,39 @@ class render_article_preview {
             return title;
         }
         return "Article Preview";
+    }
+
+    private static void renderList(Element list, int indentLevel) {
+        for (Element child : list.children()) {
+            if (!"li".equals(child.tagName())) {
+                continue;
+            }
+            String text = flattenWithoutNestedLists(child);
+            if (!text.isEmpty()) {
+                System.out.println("  ".repeat(indentLevel) + "- " + text);
+            }
+            for (Element nested : child.children()) {
+                if ("ul".equals(nested.tagName()) || "ol".equals(nested.tagName())) {
+                    renderList(nested, indentLevel + 1);
+                }
+            }
+        }
+    }
+
+    private static String flattenWithoutNestedLists(Element element) {
+        Element copy = element.clone();
+        copy.select("ul, ol").remove();
+        return copy.text().trim();
+    }
+
+    private static boolean hasAncestorTag(Element element, String tagName) {
+        Element current = element.parent();
+        while (current != null) {
+            if (tagName.equals(current.tagName())) {
+                return true;
+            }
+            current = current.parent();
+        }
+        return false;
     }
 }
