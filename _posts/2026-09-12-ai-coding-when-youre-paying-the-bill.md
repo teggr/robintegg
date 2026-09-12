@@ -113,6 +113,6 @@ The open question for me now is where that sweet spot actually sits. How much ag
 
 - [OpenAI Codex](https://openai.com/index/introducing-codex/)
 - [GitHub Copilot plans](https://github.com/features/copilot/plans)
-- [Setting up my AI Cloud Agent](/2026/08/24/setting-up-my-ai-cloud-agent.html)
-- [June 2026 AI Retrospective](/2026/07/12/june-2026-ai-retrospective.html)
+- [Setting up my AI Cloud Agent](/2026/08/24/setting-up-my-ai-cloud-agent)
+- [June 2026 AI Retrospective](/2026/07/12/june-2026-ai-retrospective)
 - [The Orchestration Tax](https://x.com/addyosmani/status/2059844244907696186?s=46)
