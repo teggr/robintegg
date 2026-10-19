@@ -266,6 +266,14 @@ The second command compiles the TeaVM app and starts its Java static server. Ope
 
 The editor has no persistence, undo/redo, resizing or export. Arrow hit testing checks the shaft, not a separate arrowhead polygon.
 
-Because shapes remain explicit objects in the model, features such as undo and redo could build on recorded changes rather than trying to infer them from canvas pixels. This small editor doesn't implement that history, but the model gives it a clear place to start.
+## Three examples, one idea
 
-Across the series, we've tried browser interaction, asynchronous communication with a backend, and a stateful drawing editor. If you're a Java developer who's been curious about the browser, clone the showcase and try one of the examples. If you know other Java developers who might find this interesting, share the series with them. I'd be interested to see what they build with it.
+We've taken Java from a small guessing game to a web application that talks to a Spring Boot API, then to an interactive drawing editor using Canvas and pointer events.
+
+Each example explored a different challenge, but the underlying idea stayed the same: TeaVM lets us use Java for much of our browser application logic while still working with the web platform.
+
+That doesn't mean we can ignore browser APIs or assume every Java library will work unchanged. It means we have another option for building web applications, and we can use JavaScript where it makes sense rather than treating it as an all-or-nothing choice.
+
+If you're curious, the [TeaVM showcase repository](https://github.com/teggr/teavm-showcase) has all three examples. Build the drawing app, try moving shapes around, and explore how the Java model and Canvas renderer work together.
+
+And if you know a Java developer who has wondered whether Java belongs in the browser, share the series with them. I'd be interested to see what they build with it.
