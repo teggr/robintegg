@@ -11,8 +11,6 @@ tags:
   - web development
 ---
 
-# Building a Drawing App with Java, TeaVM and HTML Canvas
-
 Java in the browser with TeaVM: three examples exploring how far you can take Java on the web, from a small game to a full-stack application and an interactive drawing editor.
 
 In the first article in this series, we took a small Java guessing game and got it running in the browser with TeaVM. The second article went further, building a currency explorer with a Java client, a Spring Boot API, asynchronous JSON requests and a chart rendered with Chart.js.
@@ -41,32 +39,23 @@ Before drawing anything, we need to decide how the application will represent it
 
 One option would be to draw directly onto the canvas whenever the user interacts with it. The problem is that the canvas only contains pixels. It doesn't know that a particular collection of pixels represents a rectangle, or that the rectangle should move when the user drags it.
 
-Instead, the application keeps a model of the drawing in Java. Each shape stores its type, start and end points, and colour. Rectangles and ellipses derive normalized bounds from those points, while arrows retain their direction.
+Instead, the application keeps a model of the drawing in Java. Each shape stores its type, start and end points, and colour. Rectangles and ellipses derive normalized bounds from those points, while arrows retain their direction. The bounds come from the same pair of points regardless of which way the user dragged:
 
 ```java
-public final class DrawingShape {
-    private final ShapeType type;
-    private double startX;
-    private double startY;
-    private double endX;
-    private double endY;
-    private String color;
+public double getLeft() {
+    return Math.min(startX, endX);
+}
 
-    public double getLeft() {
-        return Math.min(startX, endX);
-    }
+public double getTop() {
+    return Math.min(startY, endY);
+}
 
-    public double getTop() {
-        return Math.min(startY, endY);
-    }
+public double getWidth() {
+    return Math.abs(endX - startX);
+}
 
-    public double getWidth() {
-        return Math.abs(endX - startX);
-    }
-
-    public double getHeight() {
-        return Math.abs(endY - startY);
-    }
+public double getHeight() {
+    return Math.abs(endY - startY);
 }
 ```
 
@@ -114,12 +103,18 @@ For example, the Java method declares the arguments and return type, and TeaVM s
 static native double canvasX(HTMLCanvasElement canvas, Event event);
 
 @JSBody(params = { "canvas", "event" }, script = """
+        const bounds = canvas.getBoundingClientRect();
+        return (event.clientY - bounds.top) * canvas.height / bounds.height;
+        """)
+static native double canvasY(HTMLCanvasElement canvas, Event event);
+
+@JSBody(params = { "canvas", "event" }, script = """
         canvas.setPointerCapture(event.pointerId);
         """)
 static native void capturePointer(HTMLCanvasElement canvas, Event event);
 ```
 
-The horizontal coordinate is offset by the canvas's displayed left edge, then scaled from its displayed width to its internal width. `canvasY` applies the same conversion vertically. Without that scaling, pointer positions would be wrong whenever the canvas is displayed at a different size from its drawing surface.
+The interop methods translate the pointer position from the canvas's displayed size to its internal drawing coordinates. Without that scaling, pointer positions would be wrong whenever CSS changes the canvas size.
 
 The app also checks that required elements exist and that the browser returns a 2D context. If either is missing, startup fails with an `IllegalStateException` rather than leaving a blank canvas with no explanation.
 
@@ -133,10 +128,12 @@ For a rectangle, the renderer sets the stroke and fill styles, fills the interio
 context.setStrokeStyle(shape.getColor());
 context.setFillStyle(shape.getColor());
 context.setLineWidth(3);
+if (shape.getType() == ShapeType.RECTANGLE) {
 context.setGlobalAlpha(0.2);
 context.fillRect(shape.getLeft(), shape.getTop(), shape.getWidth(), shape.getHeight());
 context.setGlobalAlpha(1);
 context.strokeRect(shape.getLeft(), shape.getTop(), shape.getWidth(), shape.getHeight());
+}
 ```
 
 Ellipses use `beginPath`, `ellipse`, `fill` and `stroke`. Arrows are drawn as a line segment plus two lines for the arrowhead.
@@ -160,6 +157,10 @@ EventListener<Event> move = event -> {
 };
 EventListener<Event> up = event -> {
     controller.pointerUp(CanvasInterop.canvasX(canvas, event), CanvasInterop.canvasY(canvas, event));
+    renderer.render(controller);
+};
+EventListener<Event> cancel = event -> {
+    controller.pointerCancel();
     renderer.render(controller);
 };
 ```
@@ -235,22 +236,20 @@ public void pointerMove(double x, double y) {
 
 Recolouring changes the appearance of an existing shape without changing its geometry.
 
-The toolbar palette is registered as ordinary DOM click handlers. Java updates the selected model shape, then redraws. If nothing is selected, the application displays a status message instead:
+The toolbar palette is registered as ordinary DOM click handlers. This helper updates the selected model shape, then redraws. If nothing is selected, the application displays a status message instead:
 
 ```java
-requireElement(document, "color-red").addEventListener("click", event -> {
-    if (controller.recolorSelected("#ef4444")) {
-        status.setTextContent("Selected shape recoloured.");
-        renderer.render(controller);
-    } else {
-        status.setTextContent("Select a shape before choosing a colour.");
-    }
-});
+private void registerColor(HTMLDocument document, String id, String color) {
+    requireElement(document, id).addEventListener("click", event -> {
+        if (controller.recolorSelected(color)) {
+            status.setTextContent("Selected shape recoloured.");
+            renderer.render(controller);
+        } else {
+            status.setTextContent("Select a shape before choosing a colour.");
+        }
+    });
+}
 ```
-
-## Where TeaVM fits
-
-The model and controller handle shape state and interaction. TeaVM's JSO bindings expose the DOM and Canvas APIs, while a small `@JSBody` bridge reads pointer properties and requests pointer capture where this version of JSO has no typed wrapper.
 
 ## Try it yourself
 

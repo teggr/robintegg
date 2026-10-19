@@ -10,11 +10,11 @@ tags:
   - javascript
 ---
 
-Java has a long history on the server, but what if we could use it to build interactive applications that run directly in the browser? TeaVM makes that possible by compiling Java bytecode to JavaScript or WebAssembly.
+TeaVM compiles Java bytecode to JavaScript or WebAssembly, which lets Java code run as part of an interactive browser application.
 
 Java in the browser with TeaVM: three examples exploring how far you can take Java on the web, from a small game to a full-stack application and an interactive drawing editor.
 
-I wanted to explore what that means in practice, so I've put together 3 small applications that take us from a simple browser game to a drawing editor. We'll start with a number-guessing game and use it to see how Java code connects to a web page.
+I'll start with a number-guessing game and trace how its Java logic connects to a web page.
 
 ## A little Java game
 
@@ -67,12 +67,15 @@ Once compiled, the Java application can run as part of a web page. The HTML hand
 
 The page needs a number input, a button and somewhere to display the result. When the player clicks the button, we read their guess, pass it to the Java game, and show the returned result.
 
-This is where Java interacts with the browser's Document Object Model (DOM), the API that lets code read and change elements on a web page. The showcase uses TeaVM's typed JSO browser APIs to look up page elements and register both button and keyboard handlers:
+This is where Java interacts with the browser's Document Object Model (DOM), the API that lets code read and change elements on a web page. The showcase uses TeaVM's typed JSO browser APIs to look up page elements and register button, keyboard and restart handlers:
 
 ```java
 HTMLDocument document = HTMLDocument.current();
 guessInput = requireInput(document, "guess");
 feedback = requireElement(document, "feedback");
+guessCount = requireElement(document, "guess-count");
+guessButton = requireElement(document, "guess-button");
+newGameButton = requireElement(document, "new-game-button");
 
 guessButton.addEventListener("click", event -> submitGuess());
 guessInput.addEventListener("keydown", event -> {
@@ -80,9 +83,10 @@ guessInput.addEventListener("keydown", event -> {
         submitGuess();
     }
 });
+newGameButton.addEventListener("click", event -> startNewGame());
 ```
 
-The button and Enter key both call the same Java method. That method reads the input, asks the game model to check the guess, and updates the page. The example uses TeaVM's JSO APIs rather than handwritten JavaScript or `@JSBody`.
+The guess button and Enter key both call the same Java method. The restart button has its own handler. The example uses TeaVM's JSO APIs rather than handwritten JavaScript or `@JSBody`.
 
 ![Number-guessing game running in the browser](/images/teavm-number-guessing.png)
 

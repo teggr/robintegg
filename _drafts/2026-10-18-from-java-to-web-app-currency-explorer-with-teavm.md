@@ -11,8 +11,6 @@ tags:
   - chartjs
 ---
 
-# From Java to Web App: Building a Currency Explorer with TeaVM
-
 Java in the browser with TeaVM: three examples exploring how far you can take Java on the web, from a small game to a full-stack application and an interactive drawing editor.
 
 In the first article, I used [TeaVM](https://teavm.org/) to take a small Java number-guessing game into the browser. It was a useful introduction to the basic idea: write Java, compile it for the browser, and interact with the page without rewriting the application in JavaScript.
@@ -79,6 +77,7 @@ if (amount == null) {
 
 String from = fromInput.getValue();
 String to = toInput.getValue();
+long requestId = ++requestSequence;
 requestInProgress = true;
 submitButton.setAttribute("disabled", "");
 result.setTextContent("");
@@ -95,6 +94,12 @@ The Java client uses TeaVM's `XMLHttpRequest` wrapper to post the form data asyn
 XMLHttpRequest request = new XMLHttpRequest();
 request.open("POST", "/api/conversions", true);
 request.setRequestHeader("Content-Type", "application/json");
+request.setOnReadyStateChange(readyStateEvent -> {
+    if (request.getReadyState() == XMLHttpRequest.DONE) {
+        finishRequest(requestId, request);
+    }
+});
+request.onError(errorEvent -> finishNetworkError(requestId));
 request.send("{\"amount\":" + amount + ",\"from\":\"" + from + "\",\"to\":\"" + to + "\"}");
 ```
 
@@ -114,16 +119,9 @@ The API owns the exchange-rate data and calculation. The client gathers the inpu
 
 ## Handle the response
 
-In the TeaVM client, the `XMLHttpRequest` ready-state handler calls `finishRequest` when the response arrives. The client checks the status, parses the JSON with TeaVM's `JSON.parse` overlay, and updates the page. A non-success status uses the API's error message:
+The ready-state handler calls `finishRequest` when the response arrives, while a network error goes to `finishNetworkError`. The response method ignores stale requests, restores the form and uses the API's error message for non-success statuses:
 
 ```java
-request.setOnReadyStateChange(readyStateEvent -> {
-    if (request.getReadyState() == XMLHttpRequest.DONE) {
-        finishRequest(requestId, request);
-    }
-});
-request.onError(errorEvent -> finishNetworkError(requestId));
-
 private void finishRequest(long requestId, XMLHttpRequest request) {
     if (requestId != requestSequence || !requestInProgress) {
         return;
@@ -138,28 +136,32 @@ private void finishRequest(long requestId, XMLHttpRequest request) {
         status.setTextContent(readApiError(request.getResponseText()));
         return;
     }
+```
 
-    try {
-        ConversionResponseView response =
-                (ConversionResponseView) JSON.parse(request.getResponseText());
-        if (!isValid(response)) {
-            throw new IllegalArgumentException("Invalid conversion response");
-        }
-        result.setTextContent(formatMoney(response.getAmount(), response.getFrom())
-                + " = " + formatMoney(response.getResult(), response.getTo()));
-        status.setTextContent("Rate: 1 " + response.getFrom() + " = "
-                + response.getRate() + " " + response.getTo()
-                + " · Fixture rates as of " + response.getAsOf() + ".");
-        try {
-            ChartInterop.update(response.getHistory(), response.getFrom(), response.getTo());
-        } catch (RuntimeException e) {
-            status.setTextContent(status.getTextContent()
-                    + " The rate history chart could not be updated.");
-        }
-    } catch (RuntimeException e) {
-        result.setTextContent("");
-        status.setTextContent("The server returned an invalid response. Please try again.");
+For a successful status, the client parses the response into a TeaVM JSON overlay and checks the required fields before updating the page:
+
+```java
+try {
+    ConversionResponseView response =
+            (ConversionResponseView) JSON.parse(request.getResponseText());
+    if (!isValid(response)) {
+        throw new IllegalArgumentException("Invalid conversion response");
     }
+    result.setTextContent(formatMoney(response.getAmount(), response.getFrom())
+            + " = " + formatMoney(response.getResult(), response.getTo()));
+    status.setTextContent("Rate: 1 " + response.getFrom() + " = "
+            + response.getRate() + " " + response.getTo()
+            + " · Fixture rates as of " + response.getAsOf() + ".");
+    try {
+        ChartInterop.update(response.getHistory(), response.getFrom(), response.getTo());
+    } catch (RuntimeException e) {
+        status.setTextContent(status.getTextContent()
+                + " The rate history chart could not be updated.");
+    }
+} catch (RuntimeException e) {
+    result.setTextContent("");
+    status.setTextContent("The server returned an invalid response. Please try again.");
+}
 }
 ```
 
