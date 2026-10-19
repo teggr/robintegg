@@ -138,3 +138,5 @@ mvn -f teavm-showcase-number-guessing/pom.xml process-classes exec:java
 ```
 
 The second command compiles the TeaVM app and starts its Java static server. Open <http://localhost:8000/> in a browser, and stop the server with Ctrl+C.
+
+[Next: From Java to Web App: Building a Currency Explorer with TeaVM](/2026-10-18-from-java-to-web-app-currency-explorer-with-teavm.html)
