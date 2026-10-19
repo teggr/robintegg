@@ -10,15 +10,11 @@ tags:
   - javascript
 ---
 
-I've been spending some time looking at TeaVM, and I think it's an interesting project.
+Java has a long history on the server, but what if we could use it to build interactive applications that run directly in the browser? TeaVM makes that possible by compiling Java bytecode to JavaScript or WebAssembly.
 
-TeaVM compiles Java bytecode into JavaScript and WebAssembly. That gives Java developers another way to build applications that run in the browser.
+Java in the browser with TeaVM: three examples exploring how far you can take Java on the web, from a small game to a full-stack application and an interactive drawing editor.
 
-I wanted to put together a few examples to show what that looks like in practice. Rather than compiling a class and stopping at the output, I wanted to take Java code and turn it into something you can interact with in a browser.
-
-Let's start with a number-guessing game. It's a small example, but it gives us a chance to look at the Java code, see where TeaVM fits, and explore how that code interacts with a web page.
-
-<!-- EDITORIAL NOTE: The code, generated output and screenshot below come from the TeaVM showcase repository. Verify them against the current build before publishing. -->
+I wanted to explore what that means in practice, so I've put together 3 small applications that take us from a simple browser game to a drawing editor. We'll start with a number-guessing game and use it to see how Java code connects to a web page.
 
 ## A little Java game
 
@@ -124,6 +120,17 @@ A number-guessing game isn't going to push the boundaries of web application dev
 
 Once the basic setup is in place, the same approach can be taken further. Browser APIs and interfaces give us plenty to explore, though library compatibility and browser integration are practical constraints to understand before choosing this approach for a larger project.
 
-I'll use this example as a starting point and build on it in the next article, where we'll take a more practical look at setting up a Maven project and building a small web application with TeaVM.
+In the next article, we'll take this a step further: a currency explorer that sends asynchronous requests to a Spring Boot API, handles JSON responses and uses Chart.js to visualise the results.
 
 For now, the number game is enough to demonstrate the core idea: TeaVM can compile Java code into JavaScript that runs as part of an interactive browser application.
+
+## Try it yourself
+
+The [TeaVM showcase number-guessing game](https://github.com/teggr/teavm-showcase/tree/main/teavm-showcase-number-guessing) includes the Java source, browser assets and tests. From the showcase repository root, build the app and serve its generated files:
+
+```bash
+mvn -pl teavm-showcase-number-guessing -am package
+python -m http.server 8000 --directory teavm-showcase-number-guessing/target/javascript
+```
+
+Open <http://localhost:8000/> in a browser. Serve the generated directory over HTTP rather than opening the HTML file directly.

@@ -13,6 +13,8 @@ tags:
 
 # Building a Drawing App with Java, TeaVM and HTML Canvas
 
+Java in the browser with TeaVM: three examples exploring how far you can take Java on the web, from a small game to a full-stack application and an interactive drawing editor.
+
 In the first article in this series, we took a small Java guessing game and got it running in the browser with TeaVM. The second article went further, building a currency explorer with a Java client, a Spring Boot API, asynchronous JSON requests and a chart rendered with Chart.js.
 
 For the final article, I wanted to try something a little more interactive.
@@ -275,31 +277,19 @@ The drawing model, shape selection, hit testing and position updates remain ordi
 
 That is the distinction I wanted this example to demonstrate. We're using Java to build an application that participates in the web platform, calling into browser APIs where they fit.
 
-## Building and running the application
+## Try it yourself
 
-The drawing editor is part of the [TeaVM showcase repository](https://github.com/teggr/teavm-showcase), alongside the examples from the earlier articles.
-
-Use Java 17 or newer and Maven 3.9 or newer. From the repository root, build and test the drawing editor, then serve the generated static app:
+The [TeaVM showcase drawing app](https://github.com/teggr/teavm-showcase/tree/main/teavm-showcase-drawing-app) includes the source, tests and browser assets. Use Java 17 or newer and Maven 3.9 or newer. From the showcase repository root, build the app and serve the generated files:
 
 ```bash
 mvn -pl teavm-showcase-drawing-app -am clean verify
 python -m http.server 8000 --directory teavm-showcase-drawing-app/target/javascript
 ```
 
-Open <http://localhost:8000/>. Serve the generated output over HTTP rather than opening the HTML file directly.
+Open <http://localhost:8000/>. Serve the generated output over HTTP rather than opening the HTML file directly. Try drawing a few shapes, selecting one, moving it and changing its colour.
 
-Try drawing a few shapes, selecting one, moving it and changing its colour. The point isn't to produce a feature-rich graphics editor. It's to see how the model, event handling and rendering work together.
+The editor has no persistence, undo/redo, resizing or export. Arrow hit testing checks the shaft, not a separate arrowhead polygon.
 
-The application has no persistence, undo/redo, resizing or export. Its hit testing is intentionally small too: arrow selection checks the shaft, not a separate arrowhead polygon.
+Three examples, three different challenges: browser interaction, asynchronous communication with a backend, and a stateful drawing editor. TeaVM doesn't remove the web platform from the equation. It gives us another way to build for it. We can keep much of our application logic in Java, use browser APIs where they're the right tool, and bring in existing JavaScript libraries when they add value.
 
-## What we've learned
-
-Across these three articles, we've moved from a small guessing game to a browser application that communicates with a server, uses a JavaScript charting library and responds to continuous user interaction.
-
-Each example explored a different part of the same idea.
-
-TeaVM makes it possible to use Java for much of the logic in a browser application. The browser still supplies the platform: its document model, network APIs, drawing capabilities and JavaScript ecosystem.
-
-Interop is the connection between those worlds. In this example, most drawing and DOM work uses TeaVM's JSO bindings, while `@JSBody` provides a small bridge for pointer properties that the typed API doesn't expose. That lets the Java code handle the drawing model and interactions while Canvas renders the result.
-
-That feels like a useful place to finish this series: showing how far we can take a Java application when we work with the browser and its APIs.
+If you're a Java developer who's been curious about the browser, clone the showcase and try one of the examples. If you know other Java developers who might find this interesting, share the series with them. I'd be interested to see what they build with it.

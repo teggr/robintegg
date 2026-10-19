@@ -13,6 +13,8 @@ tags:
 
 # From Java to Web App: Building a Currency Explorer with TeaVM
 
+Java in the browser with TeaVM: three examples exploring how far you can take Java on the web, from a small game to a full-stack application and an interactive drawing editor.
+
 In the first article, I used [TeaVM](https://teavm.org/) to take a small Java number-guessing game into the browser. It was a useful introduction to the basic idea: write Java, compile it for the browser, and interact with the page without rewriting the application in JavaScript.
 
 For the next example, I wanted to try something a little closer to a conventional web application.
@@ -96,6 +98,8 @@ request.setRequestHeader("Content-Type", "application/json");
 request.send("{\"amount\":" + amount + ",\"from\":\"" + from + "\",\"to\":\"" + to + "\"}");
 ```
 
+The request body is assembled as a string in this example. `amount` has already been normalized by `AmountValidator`, and `from` and `to` come from selectors containing only the supported currency codes. The showcase doesn't use a JSON builder here; for arbitrary or user-controlled string values, use a JSON serializer rather than concatenating JSON by hand.
+
 For an amount of 100 GBP converted to EUR, the request body is:
 
 ```json
@@ -172,6 +176,8 @@ private void finishNetworkError(long requestId) {
 }
 ```
 
+So the Java side handles each outcome: it restores the form after a response, shows API or connection errors, and only displays a conversion after parsing and validating a successful JSON response. The chart update is isolated, so a Chart.js failure doesn't hide a valid conversion.
+
 The number-guessing game showed Java responding to browser events. Here, TeaVM's browser wrappers handle the form and asynchronous request, while a small JavaScript interop method hands the returned rate history to Chart.js.
 
 ## Let Chart.js draw the timeline
@@ -230,27 +236,9 @@ const chart = new Chart(canvas, {
 window.currencyRateChart = chart;
 ```
 
-The timeline contains 7 generated sample points, ending at the selected pair's fixed fixture rate. They aren't historical market quotes. Chart.js is served locally with the application, so loading the page doesn't require a CDN request.
+The bridge maps each valid history date to a chart label and each rate to a data point. It destroys the previous chart before drawing the updated one, and leaves the chart clear if the response has no usable points. Here, the timeline contains 7 generated samples ending at the selected pair's fixed fixture rate. They're illustrative, not historical market quotes, and Chart.js is served locally rather than loaded from a CDN.
 
 This is a useful example of treating TeaVM as part of a web stack rather than as a requirement to avoid JavaScript entirely. The application logic can remain in Java while browser APIs and third-party libraries remain available where they make sense.
-
-## Build and run the example
-
-The code lives in the [TeaVM showcase repository](https://github.com/teggr/teavm-showcase), alongside the original number-guessing game.
-
-From the repository root, build and test the currency explorer module:
-
-```bash
-mvn -pl teavm-showcase-currency-converter clean verify
-```
-
-Then run the executable Spring Boot application:
-
-```bash
-java -jar teavm-showcase-currency-converter/target/teavm-showcase-currency-converter-1.0-SNAPSHOT.jar
-```
-
-Open <http://localhost:8080/>. Spring Boot serves the page, the generated TeaVM JavaScript and the API from the same origin.
 
 ## What this demonstrates
 
@@ -261,3 +249,14 @@ It doesn't mean every part of a web application needs to be written in Java, nor
 The best way to judge the approach is to try the application, follow the request from the form to the server and back again, and look at the small interop boundary that hands the dated rate history to Chart.js.
 
 That's what the showcase is for: a working example that makes the idea tangible.
+
+## Try it yourself
+
+The [TeaVM showcase currency explorer](https://github.com/teggr/teavm-showcase/tree/main/teavm-showcase-currency-converter) contains the TeaVM client and Spring Boot API in one module. From the showcase repository root, build it and run the executable application:
+
+```bash
+mvn -pl teavm-showcase-currency-converter clean verify
+java -jar teavm-showcase-currency-converter/target/teavm-showcase-currency-converter-1.0-SNAPSHOT.jar
+```
+
+Open <http://localhost:8080/>. Spring Boot serves the browser app and API from the same origin.
