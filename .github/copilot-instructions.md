@@ -33,14 +33,14 @@ robintegg/
 Run the site build from the repository root:
 
 ```bash
-jbang --fresh site.electrostatic:electrostatic-cli:0.0.3 build --base-url=http://localhost:8080
-jbang --fresh site.electrostatic:electrostatic-cli:0.0.3 serve --base-url=http://localhost:8080
+jbang --fresh io.github.teggr:electrostatic-cli:0.0.4 build --base-url=http://localhost:8080
+jbang --fresh io.github.teggr:electrostatic-cli:0.0.4 serve --base-url=http://localhost:8080
 ```
 
 Use the production build for deployment checks:
 
 ```bash
-jbang --fresh site.electrostatic:electrostatic-cli:0.0.3 build
+jbang --fresh io.github.teggr:electrostatic-cli:0.0.4 build
 ```
 
 The generated site is written to `generated-site/`.
