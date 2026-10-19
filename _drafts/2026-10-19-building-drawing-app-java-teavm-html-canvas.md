@@ -253,14 +253,14 @@ private void registerColor(HTMLDocument document, String id, String color) {
 
 ## Try it yourself
 
-The [TeaVM showcase drawing app](https://github.com/teggr/teavm-showcase/tree/main/teavm-showcase-drawing-app) includes the source, tests and browser assets. Use Java 17 or newer and Maven 3.9 or newer. From the showcase repository root, build the app and serve the generated files:
+The [TeaVM showcase drawing app](https://github.com/teggr/teavm-showcase/tree/main/teavm-showcase-drawing-app) includes the source, tests and browser assets. Use Java 17 or newer and Maven 3.9 or newer. From the showcase repository root, build and test the app, then start its Java static server:
 
 ```bash
 mvn -pl teavm-showcase-drawing-app -am clean verify
-python -m http.server 8000 --directory teavm-showcase-drawing-app/target/javascript
+mvn -f teavm-showcase-drawing-app/pom.xml process-classes exec:java
 ```
 
-Open <http://localhost:8000/>. Serve the generated output over HTTP rather than opening the HTML file directly. Try drawing a few shapes, selecting one, moving it and changing its colour.
+The second command compiles the TeaVM app and starts its Java static server. Open <http://localhost:8000/> and stop the server with Ctrl+C. Try drawing a few shapes, selecting one, moving it and changing its colour.
 
 The editor has no persistence, undo/redo, resizing or export. Arrow hit testing checks the shaft, not a separate arrowhead polygon.
 

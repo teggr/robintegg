@@ -254,7 +254,7 @@ That's what the showcase is for: a working example that makes the idea tangible.
 
 ## Try it yourself
 
-The [TeaVM showcase currency explorer](https://github.com/teggr/teavm-showcase/tree/main/teavm-showcase-currency-converter) contains the TeaVM client and Spring Boot API in one module. From the showcase repository root, build it and run the executable application:
+The [TeaVM showcase currency explorer](https://github.com/teggr/teavm-showcase/tree/main/teavm-showcase-currency-converter) contains the TeaVM client and Spring Boot API in one module. From the showcase repository root, build and test it, then run the executable application:
 
 ```bash
 mvn -pl teavm-showcase-currency-converter clean verify

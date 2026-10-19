@@ -130,11 +130,11 @@ For now, the number game is enough to demonstrate the core idea: TeaVM can compi
 
 ## Try it yourself
 
-The [TeaVM showcase number-guessing game](https://github.com/teggr/teavm-showcase/tree/main/teavm-showcase-number-guessing) includes the Java source, browser assets and tests. From the showcase repository root, build the app and serve its generated files:
+The [TeaVM showcase number-guessing game](https://github.com/teggr/teavm-showcase/tree/main/teavm-showcase-number-guessing) includes the Java source, browser assets and tests. Use Java 17 or newer and Maven 3.9 or newer. From the showcase repository root, run its tests and launch the app:
 
 ```bash
-mvn -pl teavm-showcase-number-guessing -am package
-python -m http.server 8000 --directory teavm-showcase-number-guessing/target/javascript
+mvn -pl teavm-showcase-number-guessing -am test
+mvn -f teavm-showcase-number-guessing/pom.xml process-classes exec:java
 ```
 
-Open <http://localhost:8000/> in a browser. Serve the generated directory over HTTP rather than opening the HTML file directly.
+The second command compiles the TeaVM app and starts its Java static server. Open <http://localhost:8000/> in a browser, and stop the server with Ctrl+C.
