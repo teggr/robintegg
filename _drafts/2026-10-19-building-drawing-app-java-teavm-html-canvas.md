@@ -25,8 +25,6 @@ Not a replacement for Excalidraw, and not a full graphics editor. Just a small a
 
 It brings together a few useful problems. We need to represent the drawing in Java, respond to pointer events in the browser, work out which shape the user has selected, and render the result on screen.
 
-It's also a good opportunity to explore a central idea behind TeaVM: we can write much of our application in Java without giving up the capabilities of the browser.
-
 ## What we're building
 
 The finished application has a canvas and a small toolbar.
@@ -36,8 +34,6 @@ We can choose a rectangle, ellipse or arrow tool, drag on the canvas to create a
 That's enough functionality to feel like a small application rather than a technical demonstration, while keeping the implementation understandable.
 
 ![TeaVM drawing app running in Chrome](/images/teavm-drawing-app.png)
-
-The interesting part isn't any individual shape. It's how we connect Java application logic to the browser's drawing and input APIs.
 
 ## Start with a model of the drawing
 
@@ -143,9 +139,7 @@ context.setGlobalAlpha(1);
 context.strokeRect(shape.getLeft(), shape.getTop(), shape.getWidth(), shape.getHeight());
 ```
 
-Ellipses use `beginPath`, `ellipse`, `fill` and `stroke`. Arrows are drawn as a line segment plus two lines for the arrowhead. The model doesn't need to know those Canvas details. It describes the shape; the renderer knows how to display it.
-
-This keeps the interop focused. We don't need to move the whole application into JavaScript just because the final drawing operation uses a browser API.
+Ellipses use `beginPath`, `ellipse`, `fill` and `stroke`. Arrows are drawn as a line segment plus two lines for the arrowhead.
 
 ## Responding to pointer events
 
@@ -170,11 +164,11 @@ EventListener<Event> up = event -> {
 };
 ```
 
-When the user chooses a drawing tool and drags across the canvas, the controller records the starting point, updates a provisional shape as the pointer moves, then adds it to the model on release if it is large enough to see.
+A drawing gesture has a clear lifecycle: press starts a shape, movement updates its preview, and release commits it to the model.
 
-Pointer capture matters here. `setPointerCapture` keeps delivering movement and release events to the canvas even when the pointer leaves its bounds during a drag. If the browser cancels the gesture, the `pointercancel` handler discards the preview.
+The controller only commits a preview if it is large enough to see.
 
-Coordinates aren't automatically canvas coordinates. The `@JSBody` code above converts page-relative pointer positions to the canvas's intrinsic drawing coordinates, including when CSS changes the displayed size.
+Pointer capture keeps delivering movement and release events to the canvas even when the pointer leaves its bounds during a drag. If the browser cancels the gesture, the `pointercancel` handler discards the preview.
 
 ## Rendering the whole drawing
 
@@ -200,9 +194,7 @@ void render(DrawingController controller) {
 }
 ```
 
-The canvas is a visual representation of the current state, not the place where that state lives. Moving a shape becomes a model update followed by a redraw. Recolouring works the same way, as does adding a new shape.
-
-The app redraws synchronously in response to pointer and toolbar interactions. It doesn't run a separate animation loop. For a small editor, this gives us a predictable rendering model without a more complicated graphics engine.
+Each interaction updates the model, then redraws the whole scene. The app does this synchronously in response to pointer and toolbar events, without a separate animation loop.
 
 ## Selecting and moving shapes
 
@@ -239,10 +231,6 @@ public void pointerMove(double x, double y) {
 }
 ```
 
-Notice how little the Canvas API needs to know about selection. The decision about which shape was clicked belongs to our Java application. The browser reports the pointer event, and the renderer displays the result.
-
-That separation is one of the useful outcomes of keeping a model in Java.
-
 ## Changing a shape's colour
 
 Recolouring changes the appearance of an existing shape without changing its geometry.
@@ -260,22 +248,9 @@ requireElement(document, "color-red").addEventListener("click", event -> {
 });
 ```
 
-We don't need to erase or recolour pixels individually. The next render simply uses the updated model.
-
 ## Where TeaVM fits
 
-By this point, we've used several capabilities that are native to the browser:
-
-- HTML for the page structure.
-- Canvas for drawing.
-- Pointer events for input.
-- JavaScript interop to connect the parts TeaVM's JSO bindings don't expose directly.
-
-TeaVM allows our Java application to run in that environment, but it doesn't remove the need to understand the environment itself.
-
-The drawing model, shape selection, hit testing and position updates remain ordinary Java logic. TeaVM's JSO bindings expose the DOM and Canvas 2D methods to Java. A small `@JSBody` bridge reads pointer properties and requests pointer capture.
-
-That is the distinction I wanted this example to demonstrate. We're using Java to build an application that participates in the web platform, calling into browser APIs where they fit.
+The model and controller handle shape state and interaction. TeaVM's JSO bindings expose the DOM and Canvas APIs, while a small `@JSBody` bridge reads pointer properties and requests pointer capture where this version of JSO has no typed wrapper.
 
 ## Try it yourself
 
@@ -290,6 +265,6 @@ Open <http://localhost:8000/>. Serve the generated output over HTTP rather than 
 
 The editor has no persistence, undo/redo, resizing or export. Arrow hit testing checks the shaft, not a separate arrowhead polygon.
 
-Three examples, three different challenges: browser interaction, asynchronous communication with a backend, and a stateful drawing editor. TeaVM doesn't remove the web platform from the equation. It gives us another way to build for it. We can keep much of our application logic in Java, use browser APIs where they're the right tool, and bring in existing JavaScript libraries when they add value.
+Because shapes remain explicit objects in the model, features such as undo and redo could build on recorded changes rather than trying to infer them from canvas pixels. This small editor doesn't implement that history, but the model gives it a clear place to start.
 
-If you're a Java developer who's been curious about the browser, clone the showcase and try one of the examples. If you know other Java developers who might find this interesting, share the series with them. I'd be interested to see what they build with it.
+Across the series, we've tried browser interaction, asynchronous communication with a backend, and a stateful drawing editor. If you're a Java developer who's been curious about the browser, clone the showcase and try one of the examples. If you know other Java developers who might find this interesting, share the series with them. I'd be interested to see what they build with it.
