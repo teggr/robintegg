@@ -13,7 +13,7 @@ tags:
 
 Java in the browser with TeaVM: three examples exploring how far you can take Java on the web, from a small game to a full-stack application and an interactive drawing editor.
 
-[Previous: TeaVM: Getting Java into the Browser](/2026-10-17-teavm-getting-java-into-the-browser.html)
+[Previous: TeaVM: Getting Java into the Browser](/2026/10/17/teavm-getting-java-into-the-browser.html)
 
 In the first article, I used [TeaVM](https://teavm.org/) to take a small Java number-guessing game into the browser. It was a useful introduction to the basic idea: write Java, compile it for the browser, and interact with the page without rewriting the application in JavaScript.
 
@@ -265,4 +265,4 @@ java -jar teavm-showcase-currency-converter/target/teavm-showcase-currency-conve
 
 Open <http://localhost:8080/>. Spring Boot serves the browser app and API from the same origin.
 
-[Next: Building a Drawing App with Java, TeaVM and HTML Canvas](/2026-10-19-building-drawing-app-java-teavm-html-canvas.html)
+[Next: Building a Drawing App with Java, TeaVM and HTML Canvas](/2026/10/19/building-drawing-app-java-teavm-html-canvas.html)

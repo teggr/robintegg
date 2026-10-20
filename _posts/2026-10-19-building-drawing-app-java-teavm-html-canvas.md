@@ -13,7 +13,7 @@ tags:
 
 Java in the browser with TeaVM: three examples exploring how far you can take Java on the web, from a small game to a full-stack application and an interactive drawing editor.
 
-[Previous: From Java to Web App: Building a Currency Explorer with TeaVM](/2026-10-18-from-java-to-web-app-currency-explorer-with-teavm.html)
+[Previous: From Java to Web App: Building a Currency Explorer with TeaVM](/2026/10/18/from-java-to-web-app-currency-explorer-with-teavm.html)
 
 In the first article in this series, we took a small Java guessing game and got it running in the browser with TeaVM. The second article went further, building a currency explorer with a Java client, a Spring Boot API, asynchronous JSON requests and a chart rendered with Chart.js.
 
