@@ -11,7 +11,7 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up JDK 21
         uses: actions/setup-java@v6.1.0
@@ -19,7 +19,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: ~/.jbang
           key: ${{ runner.os }}-jbang-${{ hashFiles('README.md', 'site-config.xml', '.github/workflows/build-and-deploy.yml') }}
@@ -33,7 +33,7 @@ jobs:
         run: jbang --fresh io.github.teggr:electrostatic-cli:0.0.4 build
 
       - name: Publish
-        uses: South-Paw/action-netlify-cli@1.0.1
+        uses: South-Paw/action-netlify-cli@v2
         id: netlify
         with:
           # be sure to escape any double quotes with a backslash and note that the --json
