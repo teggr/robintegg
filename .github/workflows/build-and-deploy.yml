@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - uses: actions/checkout@v7
 
       - name: Set up JDK 21
@@ -24,13 +23,15 @@ jobs:
           path: ~/.jbang
           key: ${{ runner.os }}-jbang-${{ hashFiles('README.md', 'site-config.xml', '.github/workflows/build-and-deploy.yml') }}
           restore-keys: |
-              ${{ runner.os }}-jbang-
+            ${{ runner.os }}-jbang-
 
       - name: Setup JBang
         uses: jbangdev/setup-jbang@v0.1.1
 
       - name: Build with JBang
-        run: jbang --fresh io.github.teggr:electrostatic-cli:0.0.4 build
+        run: jbang --fresh io.github.teggr:electrostatic-cli:0.0.6 build
+        env:
+          POSTHOG_KEY: ${{ vars.POSTHOG_KEY }}
 
       - name: Publish
         uses: South-Paw/action-netlify-cli@v2
