@@ -29,9 +29,14 @@ jobs:
         uses: jbangdev/setup-jbang@v0.1.1
 
       - name: Build with JBang
-        run: jbang --fresh io.github.teggr:electrostatic-cli:0.0.6 build
+        run: |
+          if [ -z "$POSTHOG_KEY" ]; then
+            echo "::error::The POSTHOG_KEY repository Actions secret must be configured."
+            exit 1
+          fi
+          jbang --fresh io.github.teggr:electrostatic-cli:0.0.6 build
         env:
-          POSTHOG_KEY: ${{ vars.POSTHOG_KEY }}
+          POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
 
       - name: Publish
         uses: South-Paw/action-netlify-cli@v2
