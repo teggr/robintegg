@@ -198,24 +198,11 @@ public class Social {
         return texts;
     }
 
-    /** GitHub Models with the workflow token first, OpenAI as fallback. */
     static String llm(String system, String user) throws Exception {
-        String ghToken = env("GITHUB_TOKEN"), openai = env("OPENAI_API_KEY");
-        if (ghToken == null && openai == null) throw new IllegalStateException("No GITHUB_TOKEN or OPENAI_API_KEY for the LLM");
-        Exception last = null;
-        if (ghToken != null) {
-            try {
-                return chat("https://models.github.ai/inference/chat/completions", ghToken,
-                        Optional.ofNullable(env("GITHUB_MODEL")).orElse("openai/gpt-4.1"), system, user);
-            } catch (Exception e) {
-                last = e;
-                System.err.println("GitHub Models failed: " + e.getMessage());
-            }
-        }
-        if (openai != null)
-            return chat("https://api.openai.com/v1/chat/completions", openai,
-                    Optional.ofNullable(env("OPENAI_MODEL")).orElse("gpt-4.1"), system, user);
-        throw last;
+        String openai = env("OPENAI_API_KEY");
+        if (openai == null) throw new IllegalStateException("No OPENAI_API_KEY for the LLM");
+        return chat("https://api.openai.com/v1/chat/completions", openai,
+                Optional.ofNullable(env("OPENAI_MODEL")).orElse("gpt-4.1"), system, user);
     }
 
     static String chat(String endpoint, String token, String model, String system, String user) throws Exception {
