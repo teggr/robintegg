@@ -8,6 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      models: read
 
     steps:
       - uses: actions/checkout@v7
@@ -27,6 +31,9 @@ jobs:
 
       - name: Setup JBang
         uses: jbangdev/setup-jbang@v0.1.1
+
+      - name: Save live feed for social drafts
+        run: curl -fsSL https://robintegg.com/feed.xml -o "$RUNNER_TEMP/old-feed.xml" || : > "$RUNNER_TEMP/old-feed.xml"
 
       - name: Build with JBang
         run: |
@@ -48,3 +55,27 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Draft social posts
+        continue-on-error: true
+        run: jbang scripts/social/Social.java draft --old-feed "$RUNNER_TEMP/old-feed.xml" --new-feed generated-site/feed.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Open social review pull request
+        continue-on-error: true
+        run: |
+          if [ -z "$(git status --porcelain scripts/social/queue)" ]; then exit 0; fi
+          branch="social/${GITHUB_SHA::7}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add scripts/social/queue
+          git commit -m "Draft social posts for review"
+          git push origin "$branch"
+          gh pr create --base master --head "$branch" \
+            --title "Review social posts" \
+            --body "Edit the text under each platform, or set a platform to \`skipped\`. Merging publishes every platform marked \`ready\`."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
