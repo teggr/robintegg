@@ -37,6 +37,8 @@ import java.util.regex.Pattern;
  *
  * draft   --old-feed old.xml --new-feed new.xml
  *         Finds new articles and writes review files to scripts/social/queue (reviewed through a pull request).
+ * draft-article --url URL
+ *         Writes a review file for one published article.
  * publish [--dry-run]
  *         Publishes every platform marked "ready" in the queue files and marks it "published".
  *
@@ -55,7 +57,7 @@ public class Social {
 
     public static void main(String[] args) throws Exception {
         if (args.length == 0) {
-            System.err.println("usage: draft --old-feed f --new-feed f | publish [--dry-run]");
+            System.err.println("usage: draft --old-feed f --new-feed f | draft-article --url URL | publish [--dry-run]");
             System.exit(2);
         }
         Map<String, String> opts = new HashMap<>();
@@ -66,10 +68,12 @@ public class Social {
         try {
             switch (args[0]) {
                 case "draft" -> draft(Path.of(opts.get("--old-feed")), Path.of(opts.get("--new-feed")));
+                case "draft-article" -> draftArticleByUrl(opts.get("--url"));
                 case "publish" -> publish();
                 default -> throw new IllegalArgumentException("unknown command " + args[0]);
             }
         } catch (Exception e) {
+            if (args[0].equals("draft-article")) throw e;
             // Never fail the surrounding workflow for social posting problems
             System.err.println("::warning::social " + args[0] + " failed: " + e);
         }
@@ -87,14 +91,27 @@ public class Social {
         }
         List<String> fresh = feedLinks(newFeed).stream().filter(l -> !before.contains(l)).limit(MAX_NEW_POSTS).toList();
         System.out.println("New articles: " + fresh);
-        Files.createDirectories(QUEUE_DIR);
-        for (String url : fresh) {
-            Path file = QUEUE_DIR.resolve(slug(url) + ".md");
-            if (Files.exists(file)) continue;
-            Article a = loadArticle(url);
-            Files.writeString(file, render(a, writeTexts(a)));
-            System.out.println("Wrote " + file);
+        for (String url : fresh) draftArticle(url);
+    }
+
+    static void draftArticleByUrl(String url) throws Exception {
+        if (url == null || url.isBlank()) throw new IllegalArgumentException("--url is required");
+        URI uri = URI.create(url);
+        if (!"https".equalsIgnoreCase(uri.getScheme()) || !"robintegg.com".equalsIgnoreCase(uri.getHost())
+                || uri.getUserInfo() != null || uri.getPort() != -1) {
+            throw new IllegalArgumentException("Article URL must be on https://robintegg.com");
         }
+        if (!draftArticle(url)) throw new IllegalStateException("A social draft already exists for " + url);
+    }
+
+    static boolean draftArticle(String url) throws Exception {
+        Files.createDirectories(QUEUE_DIR);
+        Path file = QUEUE_DIR.resolve(slug(url) + ".md");
+        if (Files.exists(file)) return false;
+        Article a = loadArticle(url);
+        Files.writeString(file, render(a, writeTexts(a)));
+        System.out.println("Wrote " + file);
+        return true;
     }
 
     static Set<String> feedLinks(Path feed) throws Exception {
@@ -198,24 +215,11 @@ public class Social {
         return texts;
     }
 
-    /** GitHub Models with the workflow token first, OpenAI as fallback. */
     static String llm(String system, String user) throws Exception {
-        String ghToken = env("GITHUB_TOKEN"), openai = env("OPENAI_API_KEY");
-        if (ghToken == null && openai == null) throw new IllegalStateException("No GITHUB_TOKEN or OPENAI_API_KEY for the LLM");
-        Exception last = null;
-        if (ghToken != null) {
-            try {
-                return chat("https://models.github.ai/inference/chat/completions", ghToken,
-                        Optional.ofNullable(env("GITHUB_MODEL")).orElse("openai/gpt-4.1"), system, user);
-            } catch (Exception e) {
-                last = e;
-                System.err.println("GitHub Models failed: " + e.getMessage());
-            }
-        }
-        if (openai != null)
-            return chat("https://api.openai.com/v1/chat/completions", openai,
-                    Optional.ofNullable(env("OPENAI_MODEL")).orElse("gpt-4.1"), system, user);
-        throw last;
+        String openai = env("OPENAI_API_KEY");
+        if (openai == null) throw new IllegalStateException("No OPENAI_API_KEY for the LLM");
+        return chat("https://api.openai.com/v1/chat/completions", openai,
+                Optional.ofNullable(env("OPENAI_MODEL")).orElse("gpt-4.1"), system, user);
     }
 
     static String chat(String endpoint, String token, String model, String system, String user) throws Exception {
