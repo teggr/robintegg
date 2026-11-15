@@ -33,7 +33,9 @@ jobs:
         uses: jbangdev/setup-jbang@v0.1.1
 
       - name: Save live feed for social drafts
-        run: curl -fsSL https://robintegg.com/feed.xml -o "$RUNNER_TEMP/old-feed.xml" || : > "$RUNNER_TEMP/old-feed.xml"
+        run: |
+          curl -fsSL https://robintegg.com/feed.xml -o "$RUNNER_TEMP/old-feed.xml" || true
+          touch "$RUNNER_TEMP/old-feed.xml"
 
       - name: Build with JBang
         run: |
