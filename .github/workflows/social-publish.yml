@@ -1,0 +1,52 @@
+name: Publish social posts
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'scripts/social/queue/**'
+  workflow_dispatch:
+
+concurrency: social-publish
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6.1.0
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup JBang
+        uses: jbangdev/setup-jbang@v0.1.1
+
+      - name: Publish ready posts
+        run: jbang scripts/social/Social.java publish
+        env:
+          MASTODON_BASE_URL: ${{ secrets.MASTODON_BASE_URL }}
+          MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          LINKEDIN_TOKEN: ${{ secrets.LINKEDIN_TOKEN }}
+          LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+
+      - name: Record published status
+        run: |
+          if [ -z "$(git status --porcelain scripts/social/queue)" ]; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/social/queue
+          git commit -m "Mark social posts as published [skip ci]"
+          git push
