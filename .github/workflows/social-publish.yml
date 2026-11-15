@@ -16,8 +16,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    # Add required reviewers to this environment for an extra approval gate
-    environment: social
     steps:
       - uses: actions/checkout@v7
 

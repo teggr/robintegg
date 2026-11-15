@@ -4,7 +4,7 @@
 
 1. **Draft**: after each deploy, `build-and-deploy.yml` compares the live feed with the new one. For each new article the LLM writes one text per platform into `scripts/social/queue/<slug>.md` and a pull request is opened.
 2. **Review**: edit the text in the PR, or set a platform to `skipped`. Merging the PR is the approval.
-3. **Publish**: `social-publish.yml` runs on merge, posts every platform marked `ready` and commits `published` back. Create a `social` Environment with required reviewers for an extra gate.
+3. **Publish**: `social-publish.yml` runs on merge, posts every platform marked `ready` and commits `published` back.
 
 The LLM is GitHub Models via the workflow `GITHUB_TOKEN`, falling back to `OPENAI_API_KEY`. The repository setting "Allow GitHub Actions to create pull requests" must be enabled.
 
